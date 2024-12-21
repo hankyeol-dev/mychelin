@@ -2,6 +2,8 @@
 Projects/App/ENV/*
 Projects/Domain/ENV/*
 Projects/Data/ENV/*
+Projects/Data/Sources/ENV/*
+
 
 ### macOS ###
 # General
