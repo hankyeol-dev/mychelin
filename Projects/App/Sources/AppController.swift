@@ -1,9 +1,10 @@
 // hankyeol-dev. App
 
 import UIKit
-import Common
 
-final class AppController: UIViewController {
+import CommonUI
+
+final class AppController: BaseVC {
    override func viewDidLoad() {
       super.viewDidLoad()
       view.backgroundColor = .white

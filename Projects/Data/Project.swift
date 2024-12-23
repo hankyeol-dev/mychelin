@@ -16,5 +16,6 @@ let project = Project.make(
       .external(name: Library.rxSwift.rawValue),
       .external(name: Library.rxmoya.rawValue),
       .external(name: Library.moya.rawValue)
-   ]
+   ],
+   additionalFiles: [.glob(pattern: "Sources/ENV/*")]
 )

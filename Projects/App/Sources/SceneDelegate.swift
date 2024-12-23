@@ -1,6 +1,7 @@
 // hankyeol-dev.
 
 import UIKit
+import Auth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
    
@@ -13,7 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
    ) {
       guard let scene = (scene as? UIWindowScene) else { return }
       window = UIWindow(windowScene: scene)
-      window?.rootViewController = UINavigationController(rootViewController: AppController())
+      window?.rootViewController = UINavigationController(rootViewController: AuthEntryVC())
       window?.makeKeyAndVisible()
    }
    
