@@ -23,17 +23,9 @@ public struct LoginInputType: Encodable {
 
 public struct JoinOutputType: Decodable {
    let userId: String
-   let email: String
-   let nick: String
-   let accessToken: String
-   let refreshToken: String
    
    enum CodingKeys: String, CodingKey {
       case userId = "user_id"
-      case email
-      case nick
-      case accessToken
-      case refreshToken
    }
 }
 
@@ -55,3 +47,7 @@ public struct LoginOutputType: Decodable {
    }
 }
 
+public struct TokenOutputType: Decodable {
+   let accessToken: String
+   let refreshToken: String
+}
