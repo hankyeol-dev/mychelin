@@ -3,14 +3,13 @@
 import UIKit
 
 import RxSwift
+import ReactorKit
 
 public protocol BaseViewControllerType: UIViewController {
    var disposeBag: DisposeBag { get }
    
    func setSubviews()
    func setLayouts()
-   func bindActions()
-   func bindStates()
 }
 
 open class BaseVC: UIViewController, BaseViewControllerType {
@@ -29,8 +28,6 @@ open class BaseVC: UIViewController, BaseViewControllerType {
    
    open func setSubviews() {}
    open func setLayouts() {}
-   open func bindActions() {}
-   open func bindStates() {}
 }
 
 public extension BaseVC {
