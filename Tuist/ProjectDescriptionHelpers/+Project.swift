@@ -15,7 +15,8 @@ public extension Project {
       needResources: Bool = false,
       targetResources: ResourceFileElements? = nil,
       targetDependencies: [TargetDependency] = [],
-      targetBaseSettings: ProjectDescription.SettingsDictionary = [:]
+      targetBaseSettings: ProjectDescription.SettingsDictionary = [:],
+      additionalFiles: [FileElement] = []
    ) -> Project {
       Project(
          name: module.toName,
@@ -47,7 +48,8 @@ public extension Project {
                runAction: .runAction(configuration: ProjectConfiguration.debugConfig)
             )
          ],
-         fileHeaderTemplate: .string("hankyeol-dev. \(module.toName)")
+         fileHeaderTemplate: .string("hankyeol-dev. \(module.toName)"),
+         additionalFiles: additionalFiles
       )
    }
 }
