@@ -19,16 +19,15 @@ extension AuthRepository: AuthRepositoryType {
          let dto: JoinInputType = .init(email: joinInput.email,
                                         password: joinInput.password,
                                         nick: joinInput.nick)
-//         NetworkProvider.request(AuthRouter.join(dto), of: JoinOutputType.self) { result in
-//            switch result {
-//            case let .success(output):
-//               userProvider.setStringValue(.userId, value: output.userId)
-//               single(.success(.success(true)))
-//            case let .failure(error):
-//               single(.success(.failure(error)))
-//            }
-//         }
-         single(.success(.success(true)))
+         NetworkProvider.request(AuthRouter.join(dto), of: JoinOutputType.self) { result in
+            switch result {
+            case let .success(output):
+               userProvider.setStringValue(.userId, value: output.userId)
+               single(.success(.success(true)))
+            case let .failure(error):
+               single(.success(.failure(error)))
+            }
+         }
          return Disposables.create()
       }
    }
