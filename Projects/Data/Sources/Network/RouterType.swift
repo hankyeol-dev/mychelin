@@ -8,6 +8,7 @@ public protocol RouterType: TargetType {}
 
 public extension RouterType {
    var baseURL: URL { .init(string: DataConfiguration.baseURL)! }
+   var validationType: ValidationType { .successCodes }
    
    func baseHeaderFields() -> [String: String] {
       return [DataConfiguration.HeaderKeys.secretKey.rawValue: DataConfiguration.secret]

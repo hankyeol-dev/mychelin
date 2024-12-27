@@ -5,6 +5,7 @@ import Domain
 import RxSwift
 import Moya
 import RxMoya
+import Alamofire
 
 public protocol NetworkProviderType {
    static func request<T: RouterType, D: Decodable>(
@@ -19,11 +20,12 @@ public struct NetworkProvider: NetworkProviderType {
       of output: D.Type,
       _ completion: @escaping (Result<D, NetworkErrors>) -> Void
    ) {
-      let provider = MoyaProvider<T>()
+      let provider = MoyaProvider<T>(session: Session(interceptor: NetworkProvider()))
       provider.request(router) {
          switch $0 {
          case let .success(res):
             let response = responseHandler(res, D.self)
+            print(response)
             switch response {
             case let .success(output):
                completion(.success(output))
@@ -31,6 +33,9 @@ public struct NetworkProvider: NetworkProviderType {
                completion(.failure(error))
             }
          case let .failure(error):
+            if let res = error.response {
+               print(try! res.map(CommonOutputType.self))
+            }
             completion(.failure(errorHandler(error)))
          }
       }
@@ -56,5 +61,31 @@ public struct NetworkProvider: NetworkProviderType {
       return error.errorCode == 6
       ? .noNetwork
       : .unknown
+   }
+}
+
+extension NetworkProvider: RequestInterceptor {
+   public func retry(_ request: Request,
+                     for session: Session,
+                     dueTo error: any Error,
+                     completion: @escaping (RetryResult) -> Void) {
+      guard let res = request.task?.response as? HTTPURLResponse,
+            res.statusCode == 419
+      else {
+         completion(.doNotRetryWithError(error))
+         return
+      }
+      let refreshToken = UserDefaultsProvider.shared.getStringValue(.refreshToken)
+      NetworkProvider.request(AuthRouter.refreshToken(refreshToken: refreshToken),
+                              of: TokenOutputType.self) { result in
+         switch result {
+         case let .success(output):
+            UserDefaultsProvider.shared.setStringValue(.accessToken, value: output.accessToken)
+            UserDefaultsProvider.shared.setStringValue(.refreshToken, value: output.refreshToken)
+            completion(.retry)
+         case let .failure(error):
+            completion(.doNotRetryWithError(error))
+         }
+      }
    }
 }

@@ -10,7 +10,7 @@ public protocol UserServiceType: AnyObject {
 }
 
 public final class UserDefaultsProvider: UserServiceType {
-   static let shared: UserDefaultsProvider = .init()
+   public static let shared: UserDefaultsProvider = .init()
    private var userInfo: UserDefaultsObjectType = UserDefaultsObject()
    
    private init() {}
