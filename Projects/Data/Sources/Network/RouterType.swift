@@ -10,12 +10,22 @@ public extension RouterType {
    var baseURL: URL { .init(string: DataConfiguration.baseURL)! }
    var validationType: ValidationType { .successCodes }
    
-   func baseHeaderFields() -> [String: String] {
-      return [DataConfiguration.HeaderKeys.secretKey.rawValue: DataConfiguration.secret]
+   private func baseHeaderFields(_ needToken: Bool, _ contentType: ContentType) -> [String: String] {
+      var baseHeaders = [headerConfig.secretKey.rawValue: headerConfigValue.secret.rawValue]
+      if needToken {
+         baseHeaders[headerConfig.authKey.rawValue] = UserDefaultsProvider.shared.getStringValue(.accessToken)
+      }
+      baseHeaders[headerConfig.contentKey.rawValue] = contentType == .base
+      ? headerConfigValue.contentJson.rawValue
+      : headerConfigValue.contentMultipart.rawValue
+      
+      return baseHeaders
    }
    
-   func generateHeaderFields(_ fields: [String: String]) -> [String: String] {
-      var base = baseHeaderFields()
+   func generateHeaderFields(_ needToken: Bool,
+                             _ contentType: ContentType = .base,
+                             _ fields: [String: String]) -> [String: String] {
+      var base = baseHeaderFields(needToken, contentType)
       for (key, value) in fields { base[key] = value }
       return base
    }
@@ -28,4 +38,9 @@ public extension RouterType {
       }
       return converted
    }
+}
+
+public enum ContentType {
+   case base
+   case multipart
 }

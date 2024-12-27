@@ -1,7 +1,6 @@
 // hankyeol-dev. Data
 
 import Foundation
-import Domain
 import Moya
 
 public enum AuthRouter {
@@ -9,6 +8,7 @@ public enum AuthRouter {
    case join(JoinInputType)
    case login(LoginInputType)
    case refreshToken(refreshToken: String)
+   case withdraw
 }
 
 extension AuthRouter: RouterType {
@@ -18,6 +18,7 @@ extension AuthRouter: RouterType {
       case .join: return "/users/join"
       case .login: return "/users/login"
       case .refreshToken: return "/auth/refresh"
+      case .withdraw: return "/users/withdraw"
       }
    }
    
@@ -25,7 +26,7 @@ extension AuthRouter: RouterType {
       switch self {
       case .validEmail, .join, .login:
             return .post
-      case .refreshToken:
+      case .refreshToken, .withdraw:
             return .get
       }
    }
@@ -49,23 +50,23 @@ extension AuthRouter: RouterType {
    public var headers: [String : String]? {
       switch self {
       case .validEmail:
-         let fields: [String: String] = [
-            headerConfig.contentKey.rawValue: config.contentJson
-         ]
-         return generateHeaderFields(fields)
+         return generateHeaderFields(false, .base, [:])
       case .join, .login:
          let fields: [String: String] = [
-            headerConfig.productIdKey.rawValue: config.productId,
-            headerConfig.contentKey.rawValue: config.contentJson
+            headerConfig.productIdKey.rawValue: headerConfigValue.productId.rawValue
          ]
-         return generateHeaderFields(fields)
+         return generateHeaderFields(false, .base, fields)
       case let .refreshToken(refreshToken):
          let fields: [String: String] = [
-            headerConfig.productIdKey.rawValue: config.productId,
-            headerConfig.refreshTokenKey.rawValue: refreshToken,
-            headerConfig.contentKey.rawValue: config.contentJson
+            headerConfig.productIdKey.rawValue: headerConfigValue.productId.rawValue,
+            headerConfig.refreshTokenKey.rawValue: refreshToken
          ]
-         return generateHeaderFields(fields)
+         return generateHeaderFields(false, .base, fields)
+      case .withdraw:
+         let fields: [String: String] = [
+            headerConfig.productIdKey.rawValue: headerConfigValue.productId.rawValue
+         ]
+         return generateHeaderFields(true, .base, fields)
       }
    }
 }
