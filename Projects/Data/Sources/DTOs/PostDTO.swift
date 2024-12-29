@@ -2,6 +2,8 @@
 
 import Foundation
 
+/// Input
+
 public struct PostInputType: Encodable {
    let category: String
    let title: String
@@ -52,8 +54,16 @@ public struct UploadFileInputType: Encodable {
    }
 }
 
+public struct CommentInputType: Encodable {
+   public let content: String
+}
+
+/// Query
+
 public struct GetPostQueryType {
    public let next: String
    public let limit: Int = 5
    public let category: String
 }
+
+
