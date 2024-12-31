@@ -118,3 +118,11 @@ public struct CommentOutputType: Decodable {
       case creator
    }
 }
+
+public struct PostLikeOutputType: Decodable {
+   public let like: Bool
+   
+   enum CodingKeys: String, CodingKey {
+      case like = "like_status"
+   }
+}

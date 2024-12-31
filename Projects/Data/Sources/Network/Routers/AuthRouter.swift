@@ -61,7 +61,7 @@ extension AuthRouter: RouterType {
             headerConfig.productIdKey.rawValue: headerConfigValue.productId.rawValue,
             headerConfig.refreshTokenKey.rawValue: refreshToken
          ]
-         return generateHeaderFields(false, .base, fields)
+         return generateHeaderFields(true, .base, fields)
       case .withdraw:
          let fields: [String: String] = [
             headerConfig.productIdKey.rawValue: headerConfigValue.productId.rawValue
