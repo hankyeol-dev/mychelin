@@ -10,6 +10,8 @@ import RxSwift
 import RxCocoa
 
 public final class AuthEntryVC: BaseVC {
+   public var disposeBag: DisposeBag = .init()
+   
    private let appTitle: UILabel = .init().then {
       $0.font = .systemFont(ofSize: 20, weight: .bold)
       $0.textColor = .black

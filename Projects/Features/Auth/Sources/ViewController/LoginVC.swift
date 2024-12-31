@@ -3,11 +3,14 @@ import UIKit
 
 import CommonUI
 import Domain
+import Profile
 
 import SnapKit
 import ReactorKit
 
 public final class LoginVC: BaseVC {
+   public var disposeBag: DisposeBag = .init()
+   
    private let emailField: RoundedTextField = .init(placeholder: "이메일을 입력해주세요.",
                                                     keyboardType: .emailAddress,
                                                     selectedTitle: "Email")
@@ -110,7 +113,9 @@ extension LoginVC: View {
       reactor.state.map({ $0.isLogined })
          .distinctUntilChanged()
          .bind(with: self) { vc, isLogined in
-            print("vc: \(isLogined)")
+            if isLogined {
+               vc.switchVC(ProfileVC())
+            }
          }.disposed(by: disposeBag)
    }
 }
