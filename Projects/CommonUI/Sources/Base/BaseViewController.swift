@@ -6,15 +6,11 @@ import RxSwift
 import ReactorKit
 
 public protocol BaseViewControllerType: UIViewController {
-   var disposeBag: DisposeBag { get }
-   
    func setSubviews()
    func setLayouts()
 }
 
-open class BaseVC: UIViewController, BaseViewControllerType {
-   public var disposeBag: DisposeBag = .init()
-   
+open class BaseVC: UIViewController, BaseViewControllerType {   
    open override func viewDidLoad() {
       super.viewDidLoad()
       view.backgroundColor = .white
