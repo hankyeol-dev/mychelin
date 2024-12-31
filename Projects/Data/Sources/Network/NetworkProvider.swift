@@ -21,11 +21,11 @@ public struct NetworkProvider: NetworkProviderType {
       _ completion: @escaping (Result<D, NetworkErrors>) -> Void
    ) {
       let provider = MoyaProvider<T>(session: Session(interceptor: NetworkProvider()))
+      print(provider)
       provider.request(router) {
          switch $0 {
          case let .success(res):
             let response = responseHandler(res, D.self)
-            print(response)
             switch response {
             case let .success(output):
                completion(.success(output))
@@ -34,6 +34,7 @@ public struct NetworkProvider: NetworkProviderType {
             }
          case let .failure(error):
             if let res = error.response {
+               print("failure:", res)
                print(try! res.map(CommonOutputType.self))
             }
             completion(.failure(errorHandler(error)))
@@ -70,7 +71,7 @@ extension NetworkProvider: RequestInterceptor {
                      dueTo error: any Error,
                      completion: @escaping (RetryResult) -> Void) {
       guard let res = request.task?.response as? HTTPURLResponse,
-            res.statusCode == 419
+            (res.statusCode == 403 || res.statusCode == 419)
       else {
          completion(.doNotRetryWithError(error))
          return
@@ -84,6 +85,7 @@ extension NetworkProvider: RequestInterceptor {
             UserDefaultsProvider.shared.setStringValue(.refreshToken, value: output.refreshToken)
             completion(.retry)
          case let .failure(error):
+            print("retry: ", error)
             completion(.doNotRetryWithError(error))
          }
       }

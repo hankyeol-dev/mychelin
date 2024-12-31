@@ -8,7 +8,9 @@ public enum PostRouter {
    case uploadFiles(input: UploadFileInputType)
    case getPost(postId: String)
    case getPosts(query: GetPostQueryType)
+   case getPostsByUser(userId: String, query: GetPostQueryType)
    case getLikedPosts(query: GetPostQueryType)
+   case getLiked2Posts(query: GetPostQueryType)
    case comments(postId: String, input: CommentInputType)
    case postLike(postId: String, Bool)
    case postLike2(postId: String, Bool)
@@ -21,7 +23,9 @@ extension PostRouter: RouterType {
       case .uploadFiles: return "/posts/files"
       case let .getPost(postId): return "/posts/\(postId)"
       case .getPosts: return "/posts"
+      case let .getPostsByUser(userId, _): return "/posts/users/\(userId)"
       case .getLikedPosts: return "/posts/likes/me"
+      case .getLiked2Posts: return "/posts/likes-2/me"
       case let .comments(postId, _): return "posts/\(postId)/comments"
       case let .postLike(postId, _): return "posts/\(postId)/like"
       case let .postLike2(postId, _): return "posts/\(postId)/like-2"
@@ -30,7 +34,7 @@ extension PostRouter: RouterType {
    
    public var method: Moya.Method {
       switch self {
-      case .getPosts, .getPost, .getLikedPosts:
+      case .getPosts, .getPost, .getPostsByUser, .getLikedPosts, .getLiked2Posts:
          return .get
       case .uploadPost, .uploadFiles, .comments, .postLike, .postLike2:
          return .post
@@ -47,7 +51,10 @@ extension PostRouter: RouterType {
             return MultipartFormData(provider: .data($0), name: "files", fileName: "file")
          })
          return .uploadMultipart(files)
-      case let .getPosts(query), let .getLikedPosts(query):
+      case let .getPosts(query),
+         let .getLikedPosts(query),
+         let .getLiked2Posts(query),
+         let .getPostsByUser(_, query):
          let queries: [String: String] = [
             "next": query.next.isEmpty ? "" : query.next,
             "limit": String(query.limit),

@@ -1,11 +1,15 @@
 // hankyeol-dev.
 
 import UIKit
+
 import Auth
+import Profile
+import Data
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
    
    var window: UIWindow?
+   var isLoggedIn: Bool = UserDefaultsProvider.shared.getBoolValue()
    
    func scene(
       _ scene: UIScene,
@@ -13,8 +17,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       options connectionOptions: UIScene.ConnectionOptions
    ) {
       guard let scene = (scene as? UIWindowScene) else { return }
+      let vc = isLoggedIn ? ProfileVC() : AuthEntryVC()
+      
       window = UIWindow(windowScene: scene)
-      window?.rootViewController = UINavigationController(rootViewController: AuthEntryVC())
+      window?.rootViewController = UINavigationController(rootViewController: vc)
       window?.makeKeyAndVisible()
    }
    

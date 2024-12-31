@@ -9,6 +9,8 @@ import SnapKit
 import ReactorKit
 
 public final class JoinVC: BaseVC {
+   public var disposeBag: DisposeBag = .init()
+   
    private let emailField: RoundedTextField = .init(placeholder: "이메일을 입력해주세요.",
                                                     keyboardType: .emailAddress,
                                                     selectedTitle: "Email")

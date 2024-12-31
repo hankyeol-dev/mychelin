@@ -51,3 +51,15 @@ public struct TokenOutputType: Decodable {
    let accessToken: String
    let refreshToken: String
 }
+
+public struct WithdrawOutputType: Decodable {
+   let userId: String
+   let email: String
+   let nick: String
+   
+   enum CodingKeys: String, CodingKey {
+      case userId = "user_id"
+      case email
+      case nick
+   }
+}

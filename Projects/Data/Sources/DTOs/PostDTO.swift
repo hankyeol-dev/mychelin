@@ -5,53 +5,22 @@ import Foundation
 /// Input
 
 public struct PostInputType: Encodable {
-   let category: String
-   let title: String
-   let price: Int
-   let content: String
-   let content1: String?
-   let content2: String?
-   let content3: String?
-   let content4: String?
-   let content5: String?
-   let files: [String]?
-   let logitude: Float?
-   let latitude: Float?
-   
-   public init(
-      category: String,
-      title: String,
-      price: Int,
-      content: String, 
-      content1: String?,
-      content2: String?,
-      content3: String?, 
-      content4: String?,
-      content5: String?,
-      files: [String]?,
-      logitude: Float?,
-      latitude: Float?) {
-      self.category = category
-      self.title = title
-      self.price = price
-      self.content = content
-      self.content1 = content1
-      self.content2 = content2
-      self.content3 = content3
-      self.content4 = content4
-      self.content5 = content5
-      self.files = files
-      self.logitude = logitude
-      self.latitude = latitude
-   }
+   public let category: String
+   public let title: String
+   public let price: Int?
+   public let content: String
+   public let content1: String?
+   public let content2: String?
+   public let content3: String?
+   public let content4: String?
+   public let content5: String?
+   public let files: [String]?
+   public let logitude: Float?
+   public let latitude: Float?
 }
 
 public struct UploadFileInputType: Encodable {
-   let files: [Data]
-   
-   public init(files: [Data]) {
-      self.files = files
-   }
+   public let files: [Data]
 }
 
 public struct CommentInputType: Encodable {
@@ -66,4 +35,94 @@ public struct GetPostQueryType {
    public let category: String
 }
 
+/// Output
 
+public struct PostsFileOutputType: Decodable {
+   public let files: [String]
+}
+
+public struct PostUploadOutputType: Decodable {
+   public let postId: String
+   
+   enum CodingKeys: String, CodingKey {
+      case postId = "post_id"
+   }
+}
+
+public struct PostOutputType: Decodable {
+   public let postId: String
+   public let category: String
+   public let tile: String
+   public let price: Int?
+   public let content: String
+   public let content1: String?
+   public let content2: String?
+   public let content3: String?
+   public let content4: String?
+   public let content5: String?
+   public let createdAt: String
+   public let creator: MinProfileOutputType
+   public let files: [String]
+   public let likes: [String]
+   public let likes2: [String]
+   public let buyers: [String]
+   public let hashTag: [String]
+   public let comments: [CommentOutputType]
+   public let geolocation: GEOLocation
+   public let distance: Double?
+   
+   enum CodingKeys: String, CodingKey {
+      case postId = "post_id"
+      case category
+      case tile
+      case price
+      case content
+      case content1
+      case content2
+      case content3
+      case content4
+      case content5
+      case createdAt
+      case creator
+      case files
+      case likes
+      case likes2
+      case buyers
+      case hashTag
+      case comments
+      case geolocation
+      case distance
+   }
+}
+
+public struct PostListOutputType: Decodable {
+   public let data: [PostOutputType]
+   public let next: String
+   
+   enum CodingKeys: String, CodingKey {
+      case data
+      case next = "next_cursor"
+   }
+}
+
+public struct CommentOutputType: Decodable {
+   public let commentId: String
+   public let content: String
+   public let createdAt: String
+   public let creator: MinProfileOutputType
+   
+   enum CodingKeys: String, CodingKey {
+      case commentId = "comment_id"
+      case content
+      case createdAt
+      case creator
+   }
+}
+
+public struct PostLikeOutputType: Decodable {
+   public let like: Bool
+   
+   enum CodingKeys: String, CodingKey {
+      case like = "like_status"
+   }
+}

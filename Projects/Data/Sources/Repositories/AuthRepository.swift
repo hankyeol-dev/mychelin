@@ -62,6 +62,7 @@ extension AuthRepository: AuthRepositoryType {
             of: TokenOutputType.self) { result in
                switch result {
                case let .success(output):
+                  print("authRepository: ", output)
                   userProvider.setStringValue(.accessToken, value: output.accessToken)
                   userProvider.setStringValue(.refreshToken, value: output.refreshToken)
                   userProvider.setBoolValue(.isLogined, value: true)
