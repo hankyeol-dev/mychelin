@@ -7,7 +7,7 @@ import Data
 
 import ReactorKit
 
-public final class ProfileReactor: @preconcurrency Reactor {
+public final class MeProfileReactor: @preconcurrency Reactor {
    private let disposeBag: DisposeBag = .init()
    private let userUsecase: UserUsecaseType = UserUsecase(
       authRepository: AuthRepository(),
@@ -31,7 +31,7 @@ public final class ProfileReactor: @preconcurrency Reactor {
    deinit { print(#function) }
 }
 
-extension ProfileReactor {
+extension MeProfileReactor {
    public func mutate(action: Action) -> Observable<Mutation> {
       switch action {
       case .didLoad:

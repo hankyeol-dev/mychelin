@@ -17,6 +17,7 @@ let project = Project.make(
       .external(name: Library.rxCocoa.rawValue),
       .external(name: Library.rxSwift.rawValue),
       .external(name: Library.textField.rawValue),
-      .external(name: Library.then.rawValue)
+      .external(name: Library.then.rawValue),
+      .external(name: Library.kingfisher.rawValue)
    ]
 )

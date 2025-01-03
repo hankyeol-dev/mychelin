@@ -114,7 +114,7 @@ extension LoginVC: View {
          .distinctUntilChanged()
          .bind(with: self) { vc, isLogined in
             if isLogined {
-               vc.switchVC(ProfileVC())
+               vc.switchVC(MeProfileVC())
             }
          }.disposed(by: disposeBag)
    }

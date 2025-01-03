@@ -19,6 +19,7 @@ let project = Project.make(
       .external(name: Library.snapkit.rawValue),
       .external(name: Library.rxSwift.rawValue),
       .external(name: Library.rxCocoa.rawValue),
-      .external(name: Library.reactorKit.rawValue)
+      .external(name: Library.reactorKit.rawValue),
+      .external(name: Library.kingfisher.rawValue)
    ]
 )
