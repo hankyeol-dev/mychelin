@@ -11,7 +11,7 @@ public enum NetworkErrors: Error {
    
    case tokenExpired
    
-   var toErrorMessage: String {
+   public var toErrorMessage: String {
       switch self {
       case .unknown:
          return "알 수 없는 에러가 발생했습니다."

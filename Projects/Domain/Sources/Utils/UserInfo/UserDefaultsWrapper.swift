@@ -1,4 +1,4 @@
-// hankyeol-dev. Data
+// hankyeol-dev. Domain
 
 import Foundation
 

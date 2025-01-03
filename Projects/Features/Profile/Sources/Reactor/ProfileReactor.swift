@@ -7,7 +7,7 @@ import Data
 
 import ReactorKit
 
-public final class ProfileReactor: Reactor {
+public final class ProfileReactor: @preconcurrency Reactor {
    private let disposeBag: DisposeBag = .init()
    private let userUsecase: UserUsecaseType = UserUsecase(
       authRepository: AuthRepository(),
@@ -17,6 +17,7 @@ public final class ProfileReactor: Reactor {
    
    public struct State {
       var profileObject: MeProfileVO?
+      var errorMessage: String?
    }
    
    public enum Action {
@@ -36,20 +37,21 @@ extension ProfileReactor {
       case .didLoad:
          userUsecase.getMe()
             .asObservable()
-            .map(Mutation.didLoad)
+            .map({ Mutation.didLoad($0) })
       }
    }
    
+   @MainActor
    public func reduce(state: State, mutation: Mutation) -> State {
       var newState = state
       
       switch mutation {
       case let .didLoad(result):
          switch result {
-         case let .success(profile):
-            newState.profileObject = profile
+         case let .success(vo):
+            newState.profileObject = vo
          case let .failure(error):
-            UserDefaultsProvider.shared.setBoolValue(.isLogined, value: false)
+            newState.errorMessage = error.toErrorMessage
          }
       }
       

@@ -1,15 +1,15 @@
-// hankyeol-dev. Data
+// hankyeol-dev. domain
 
 import Foundation
 
-public protocol UserServiceType: AnyObject {
+public protocol UserDefaultsProviderType: AnyObject {
    func getStringValue(_ key: UserDefaultsKeys) -> String
    func setStringValue(_ key: UserDefaultsKeys, value: String)
    func getBoolValue() -> Bool
    func setBoolValue(_ key: UserDefaultsKeys, value: Bool)
 }
 
-public final class UserDefaultsProvider: UserServiceType {
+public final class UserDefaultsProvider: UserDefaultsProviderType {
    public static let shared: UserDefaultsProvider = .init()
    private var userInfo: UserDefaultsObjectType = UserDefaultsObject()
    

@@ -12,6 +12,7 @@ let project = Project.make(
    module: .domain,
    product: .framework,
    targetDependencies: [
-      .external(name: Library.rxSwift.rawValue)
+      .external(name: Library.rxSwift.rawValue),
+      .external(name: Library.kingfisher.rawValue)
    ]
 )

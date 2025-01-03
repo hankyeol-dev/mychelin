@@ -1,13 +1,13 @@
 // hankyeol-dev. Data
 
 import Foundation
-
+import Domain
 import Moya
 
 public protocol RouterType: TargetType {}
 
 public extension RouterType {
-   var baseURL: URL { .init(string: DataConfiguration.baseURL)! }
+   var baseURL: URL { .init(string: env.baseURL)! }
    var validationType: ValidationType { .successCodes }
    
    private func baseHeaderFields(_ needToken: Bool, _ contentType: ContentType) -> [String: String] {

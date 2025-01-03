@@ -36,8 +36,9 @@ extension ProfileVC: View {
    
    private func bindStates(reactor: ProfileReactor) {
       reactor.state.map({ $0.profileObject })
+         .debug("view - profileObject")
          .bind(with: self) { vc, vo in
-            if let vo { print(vo) }
+            if let vo { print("view: ", vo) }
          }.disposed(by: disposeBag)
    }
 }
