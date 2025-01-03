@@ -1,5 +1,5 @@
 {
-  "originHash" : "6ffc0604b9753e4fd2b70545bf5fff7983f5de02244990db04ab20820fdab40c",
+  "originHash" : "9f7f4adb7f9aa3767be5c5c6405e9646997c472242d83d47b9ad0ad8e4517460",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -11,21 +11,21 @@
       }
     },
     {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:onevcat/Kingfisher.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "f4befcec768c578be17818f120329674f6e9a4d6"
+      }
+    },
+    {
       "identity" : "moya",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Moya/Moya.git",
       "state" : {
         "revision" : "c263811c1f3dbf002be9bd83107f7cdc38992b26",
         "version" : "15.0.3"
-      }
-    },
-    {
-      "identity" : "nuke",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kean/Nuke.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "1d748d4eac8db894ea3c4abfc504a87c902834bf"
       }
     },
     {

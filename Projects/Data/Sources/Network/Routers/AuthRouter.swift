@@ -1,6 +1,7 @@
 // hankyeol-dev. Data
 
 import Foundation
+import Domain
 import Moya
 
 public enum AuthRouter {

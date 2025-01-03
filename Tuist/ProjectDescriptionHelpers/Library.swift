@@ -11,7 +11,7 @@ public enum Library: String {
    case rxSwift = "RxSwift"
    case rxCocoa = "RxCocoa"
    case reactorKit = "ReactorKit"
-   case nuke = "Nuke"
+   case kingfisher = "Kingfisher"
    case moya = "Moya"
    case rxmoya = "RxMoya"
    case then = "Then"

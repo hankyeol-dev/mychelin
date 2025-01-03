@@ -2,10 +2,11 @@
 
 import Foundation
 import Domain
+
 import RxSwift
 import Moya
 import RxMoya
-import Alamofire
+import Kingfisher
 
 public protocol NetworkProviderType {
    static func request<T: RouterType, D: Decodable>(
@@ -41,6 +42,7 @@ public struct NetworkProvider: NetworkProviderType {
                   case let .success(token):
                      UserDefaultsProvider.shared.setStringValue(.accessToken, value: token.accessToken)
                      UserDefaultsProvider.shared.setStringValue(.refreshToken, value: token.refreshToken)
+                     KingfisherManager.shared.setImageRequestHeader()
                      request(router, of: output, completion)
                   case let .failure(error):
                      completion(.failure(error))
