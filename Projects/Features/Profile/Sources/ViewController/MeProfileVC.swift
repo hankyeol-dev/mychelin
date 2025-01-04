@@ -8,11 +8,18 @@ import Domain
 import SnapKit
 import ReactorKit
 import RxCocoa
+import Then
+import Reusable
+import RxDataSources
 
 public final class MeProfileVC: BaseVC {
    public var disposeBag: DisposeBag = .init()
    
-   private let profileImage: CircleLazyImage = .init(round: 28)
+   private let profileTableView: UITableView = .init().then {
+      $0.register(cellType: ProfileInfoCell.self)
+      $0.rowHeight = UITableView.automaticDimension
+      $0.contentInsetAdjustmentBehavior = .never
+   }
    
    public override func viewDidLoad() {
       super.viewDidLoad()
@@ -27,15 +34,14 @@ public final class MeProfileVC: BaseVC {
    
    public override func setSubviews() {
       super.setSubviews()
-      view.addSubviews(profileImage)
+      view.addSubview(profileTableView)
    }
    
    public override func setLayouts() {
       super.setLayouts()
-      let safeAreaInset: CGFloat = 20.0
-      profileImage.snp.makeConstraints { make in
-         make.leading.top.equalTo(view.safeAreaLayoutGuide).inset(safeAreaInset)
-         make.size.equalTo(56.0)
+      profileTableView.snp.makeConstraints { make in
+         make.top.equalToSuperview()
+         make.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
       }
    }
 }
@@ -51,11 +57,19 @@ extension MeProfileVC: View {
    }
    
    private func bindStates(reactor: MeProfileReactor) {
-      reactor.state.map({ $0.profileObject })
-         .bind(with: self) { vc, vo in
-            if let vo, let profileImage = vo.profileImage {
-               vc.profileImage.setImage(profileImage)
-            }
-         }.disposed(by: disposeBag)
+      let dataSource = RxTableViewSectionedReloadDataSource<MeProfileSection.Model> { data, tableView, index, item in
+         switch item {
+         case let .info(sectionItem):
+            let cell = tableView.dequeueReusableCell(for: index) as ProfileInfoCell
+            cell.setCell(sectionItem)
+            return cell
+         }
+      }
+      
+      reactor.state.map({ [$0.infoSection] })
+         .distinctUntilChanged()
+         .observe(on: MainScheduler.instance)
+         .bind(to: self.profileTableView.rx.items(dataSource: dataSource))
+         .disposed(by: disposeBag)
    }
 }

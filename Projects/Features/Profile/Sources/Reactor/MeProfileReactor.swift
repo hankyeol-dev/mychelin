@@ -6,6 +6,7 @@ import Domain
 import Data
 
 import ReactorKit
+import RxDataSources
 
 public final class MeProfileReactor: @preconcurrency Reactor {
    private let disposeBag: DisposeBag = .init()
@@ -18,6 +19,14 @@ public final class MeProfileReactor: @preconcurrency Reactor {
    public struct State {
       var profileObject: MeProfileVO?
       var errorMessage: String?
+      var infoSection = MeProfileSection.Model(
+         model: .info,
+         items: []
+      )
+//      var editSection = MeProfileSection.Model(
+//         model: .edit,
+//         items: []
+//      )
    }
    
    public enum Action {
@@ -50,6 +59,7 @@ extension MeProfileReactor {
          switch result {
          case let .success(vo):
             newState.profileObject = vo
+            newState.infoSection = .init(model: .info, items: [MeProfileSection.Items.info(vo)])
          case let .failure(error):
             newState.errorMessage = error.toErrorMessage
          }
