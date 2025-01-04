@@ -34,6 +34,10 @@ extension CircleLazyImage {
       imageView.setImage(urlString)
    }
    
+   public func setDefaultImage(_ image: UIImage) {
+      imageView.image = image
+   }
+   
    private func setRounds(_ round: CGFloat) {
       layer.cornerRadius = round
       layer.masksToBounds = true
