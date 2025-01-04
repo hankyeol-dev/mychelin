@@ -11,6 +11,7 @@ import ProjectDescriptionHelpers
 let project = Project.make(
    module: .commonUI,
    product: .framework,
+   needResources: true,
    targetDependencies: [
       .project(target: Module.domain.toName, path: Module.domain.toPath),
       .external(name: Library.snapkit.rawValue),
@@ -18,6 +19,8 @@ let project = Project.make(
       .external(name: Library.rxSwift.rawValue),
       .external(name: Library.textField.rawValue),
       .external(name: Library.then.rawValue),
-      .external(name: Library.kingfisher.rawValue)
+      .external(name: Library.kingfisher.rawValue),
+      .external(name: Library.rxData.rawValue),
+      .external(name: Library.reusable.rawValue)
    ]
 )
