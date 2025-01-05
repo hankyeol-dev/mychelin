@@ -20,10 +20,12 @@ open class BaseVC: UIViewController, BaseViewControllerType {
    open override func viewWillLayoutSubviews() {
       super.viewWillLayoutSubviews()
       setLayouts()
+      setViews()
    }
    
    open func setSubviews() {}
    open func setLayouts() {}
+   open func setViews() {}
 }
 
 public extension BaseVC {

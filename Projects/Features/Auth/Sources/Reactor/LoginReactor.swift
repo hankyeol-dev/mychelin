@@ -7,7 +7,7 @@ import Data
 
 public final class LoginReactor: Reactor {
    private let authUsecase: AuthUsecaseType = AuthUsecase(authRepository: AuthRepository())
-   private let userProvider: UserServiceType = UserDefaultsProvider.shared
+   private let userProvider: UserDefaultsProviderType = UserDefaultsProvider.shared
    public var initialState: State = .init()
    
    public struct State {

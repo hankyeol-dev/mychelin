@@ -7,7 +7,7 @@ import Foundation
 
 /// OutputVO
 
-public struct MeProfileVO {
+public struct MeProfileVO: Equatable {
    public let userId: String
    public let nick: String
    public let profileImage: String?

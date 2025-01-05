@@ -1,5 +1,5 @@
 {
-  "originHash" : "9f7f4adb7f9aa3767be5c5c6405e9646997c472242d83d47b9ad0ad8e4517460",
+  "originHash" : "e9412768c57bcec08aa3b3cf129500f304ba96f90be4014bbca60a8b479663fe",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -44,6 +44,24 @@
       "state" : {
         "revision" : "8fa33f09c6f6621a2aa536d739956d53b84dd139",
         "version" : "3.2.0"
+      }
+    },
+    {
+      "identity" : "reusable",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AliSoftware/Reusable.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "85e8ef7b2441433ffed2fc8cf4942961b70a83f6"
+      }
+    },
+    {
+      "identity" : "rxdatasources",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:RxSwiftCommunity/RxDataSources.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "bbfea3869f5492580563c676acda729c64fa489e"
       }
     },
     {

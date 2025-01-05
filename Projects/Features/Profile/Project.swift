@@ -18,7 +18,10 @@ let project = Project.make(
       .project(target: Module.commonUI.toName, path: Module.commonUI.toPath),
       .external(name: Library.snapkit.rawValue),
       .external(name: Library.rxSwift.rawValue),
+      .external(name: Library.rxData.rawValue),
       .external(name: Library.rxCocoa.rawValue),
-      .external(name: Library.reactorKit.rawValue)
+      .external(name: Library.reactorKit.rawValue),
+      .external(name: Library.kingfisher.rawValue),
+      .external(name: Library.reusable.rawValue)
    ]
 )
