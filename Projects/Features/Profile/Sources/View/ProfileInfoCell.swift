@@ -20,7 +20,7 @@ final class ProfileInfoCell: BaseTableViewCell {
    
    override func setSubviews() {
       super.setSubviews()
-      addSubview(infoBox)
+      contentView.addSubview(infoBox)
       infoBox.addSubviews(profileImage, profileNick, followBox)
       followBox.addStackSubviews(following, follower)
    }
@@ -29,21 +29,21 @@ final class ProfileInfoCell: BaseTableViewCell {
       super.setLayouts()
       let safeAreaInset: CGFloat = 20.0
       infoBox.snp.makeConstraints { make in
-         make.top.horizontalEdges.equalToSuperview()
+         make.edges.equalToSuperview()
       }
       profileImage.snp.makeConstraints { make in
-         make.leading.top.equalTo(safeAreaLayoutGuide).inset(safeAreaInset)
+         make.leading.top.equalTo(contentView.safeAreaLayoutGuide).inset(safeAreaInset)
          make.size.equalTo(56.0)
       }
       profileNick.snp.makeConstraints { make in
-         make.leading.equalTo(safeAreaLayoutGuide).inset(safeAreaInset)
+         make.leading.equalTo(contentView.safeAreaLayoutGuide).inset(safeAreaInset)
          make.top.equalTo(profileImage.snp.bottom).offset(20.0)
       }
       followBox.snp.makeConstraints { make in
-         make.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(safeAreaInset)
+         make.horizontalEdges.equalTo(contentView.safeAreaLayoutGuide).inset(safeAreaInset)
          make.top.equalTo(profileNick.snp.bottom).offset(20.0)
          make.height.equalTo(40.0)
-         make.bottom.equalTo(infoBox.snp.bottom).inset(safeAreaInset)
+         make.bottom.equalTo(contentView.snp.bottom).inset(safeAreaInset)
       }
    }
    
