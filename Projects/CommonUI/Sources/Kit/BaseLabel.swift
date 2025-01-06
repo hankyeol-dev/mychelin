@@ -56,4 +56,8 @@ public final class BaseLabel: UILabel {
    public func setText(_ text: String) {
       self.text = text
    }
+   
+   public func setTextColor(_ color: UIColor) {
+      self.textColor = color
+   }
 }

@@ -17,6 +17,10 @@ public final class MeProfileVC: BaseVC {
    
    private let profileTableView: UITableView = .init().then {
       $0.register(cellType: ProfileInfoCell.self)
+      $0.register(cellType: DividerCell.self)
+      $0.register(cellType: IconMenuCell.self)
+      $0.sectionIndexColor = .clear
+      $0.separatorColor = .clear
       $0.rowHeight = UITableView.automaticDimension
       $0.contentInsetAdjustmentBehavior = .never
    }
@@ -54,6 +58,11 @@ extension MeProfileVC: View {
    
    private func bindActions(reactor: MeProfileReactor) {
       reactor.action.onNext(.didLoad)
+      
+      profileTableView.rx.itemSelected
+         .map({ indexPath in Reactor.Action.tapMenu(indexPath: [indexPath.section, indexPath.row]) })
+         .bind(to: reactor.action)
+         .disposed(by: disposeBag)
    }
    
    private func bindStates(reactor: MeProfileReactor) {
@@ -63,13 +72,26 @@ extension MeProfileVC: View {
             let cell = tableView.dequeueReusableCell(for: index) as ProfileInfoCell
             cell.setCell(sectionItem)
             return cell
+         case .divider:
+            let cell = tableView.dequeueReusableCell(for: index) as DividerCell
+            return cell
+         case let .edit(sectionMenu), let .post(sectionMenu):
+            let cell = tableView.dequeueReusableCell(for: index) as IconMenuCell
+            cell.setCell(sectionMenu.icon, sectionMenu.label)
+            return cell
+         case let .logout(sectionMenu):
+            let cell = tableView.dequeueReusableCell(for: index) as IconMenuCell
+            cell.setCell(sectionMenu.icon, sectionMenu.label, .errors)
+            return cell
          }
       }
       
-      reactor.state.map({ [$0.infoSection] })
-         .distinctUntilChanged()
-         .observe(on: MainScheduler.instance)
-         .bind(to: self.profileTableView.rx.items(dataSource: dataSource))
-         .disposed(by: disposeBag)
+      reactor.state.map({
+         [$0.infoSection, $0.divider, $0.editSection, $0.divider, $0.postSection, $0.divider, $0.logoutSection]
+      })
+      .distinctUntilChanged()
+      .observe(on: MainScheduler.instance)
+      .bind(to: profileTableView.rx.items(dataSource: dataSource))
+      .disposed(by: disposeBag)
    }
 }

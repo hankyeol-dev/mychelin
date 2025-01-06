@@ -7,6 +7,7 @@ import Data
 
 import ReactorKit
 import RxDataSources
+import UIKit
 
 public final class MeProfileReactor: @preconcurrency Reactor {
    private let disposeBag: DisposeBag = .init()
@@ -23,18 +24,32 @@ public final class MeProfileReactor: @preconcurrency Reactor {
          model: .info,
          items: []
       )
-//      var editSection = MeProfileSection.Model(
-//         model: .edit,
-//         items: []
-//      )
+      var editSection = MeProfileSection.Model(
+         model: .edit,
+         items: []
+      )
+      var divider = MeProfileSection.Model(
+         model: .divider,
+         items: []
+      )
+      var postSection = MeProfileSection.Model(
+         model: .post,
+         items: []
+      )
+      var logoutSection = MeProfileSection.Model(
+         model: .logout,
+         items: []
+      )
    }
    
    public enum Action {
       case didLoad
+      case tapMenu(indexPath: [Int])
    }
    
    public enum Mutation {
       case didLoad(Result<MeProfileVO, NetworkErrors>)
+      case tapMenu(indexPath: [Int])
    }
    
    deinit { print(#function) }
@@ -47,6 +62,8 @@ extension MeProfileReactor {
          userUsecase.getMe()
             .asObservable()
             .map({ Mutation.didLoad($0) })
+      case let .tapMenu(indexPath):
+            .just(Mutation.tapMenu(indexPath: indexPath))
       }
    }
    
@@ -59,12 +76,23 @@ extension MeProfileReactor {
          switch result {
          case let .success(vo):
             newState.profileObject = vo
-            newState.infoSection = .init(model: .info, items: [MeProfileSection.Items.info(vo)])
+            newState.infoSection = .init(model: .info, items: [.info(vo)])
+            newState.divider = .init(model: .divider, items: [.divider])
+            newState.editSection = .init(model: .edit,
+                                         items: [.edit(.init(icon: .id, label: "내 정보 관리"))])
+            newState.postSection = .init(model: .post,
+                                         items: [
+                                          .post(.init(icon: .posts, label: "내가 작성한 글")),
+                                          .post(.init(icon: .like, label: "내가 좋아요한 글"))
+                                         ])
+            newState.logoutSection = .init(model: .logout,
+                                           items: [.logout(.init(icon: .xMark, label: "로그아웃"))])
          case let .failure(error):
             newState.errorMessage = error.toErrorMessage
          }
+      case let .tapMenu(indexPath):
+         newState
       }
-      
       return newState
    }
 }

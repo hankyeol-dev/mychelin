@@ -13,19 +13,22 @@ public struct MeProfileSection {
    public enum Sections: Equatable {
       case info
       case divider
-//      case edit
-//      case post
-//      case logout
+      case edit
+      case post
+      case logout
    }
    
    public enum Items: Equatable {
       case info(MeProfileVO)
-//      case edit(MeProfileVO)
-//      case post(MePostsListItem)
+      case divider
+      case edit(MeProfileMenuItem)
+      case post(MeProfileMenuItem)
+      case logout(MeProfileMenuItem)
    }
 }
 
-public struct MePostsListItem: ItemType {
-   public let cellTitle: String
-   public let post: [String]
+public struct MeProfileMenuItem: Equatable {
+   public let icon: UIImage
+   public let label: String
 }
+
