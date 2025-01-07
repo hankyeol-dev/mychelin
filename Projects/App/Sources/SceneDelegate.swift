@@ -3,7 +3,8 @@
 import UIKit
 
 import Auth
-import Profile
+//import Profile
+import Map
 import Domain
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -17,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       options connectionOptions: UIScene.ConnectionOptions
    ) {
       guard let scene = (scene as? UIWindowScene) else { return }
-      let vc = isLoggedIn ? MeProfileVC() : AuthEntryVC()
+      let vc = isLoggedIn ? MapVC() : AuthEntryVC()
       
       window = UIWindow(windowScene: scene)
       window?.rootViewController = UINavigationController(rootViewController: vc)

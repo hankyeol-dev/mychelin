@@ -16,6 +16,7 @@ let project = Project.make(
    targetDependencies: [
       .project(target: Module.auth.toName, path: Module.auth.toPath),
       .project(target: Module.profile.toName, path: Module.profile.toPath),
+      .project(target: Module.map.toName, path: Module.map.toPath),
       .project(target: Module.domain.toName, path: Module.domain.toPath),
       .project(target: Module.data.toName, path: Module.data.toPath),
       .external(name: Library.rxSwift.rawValue)

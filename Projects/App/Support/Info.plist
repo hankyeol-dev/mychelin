@@ -52,5 +52,11 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>위치기반 서비스를 활용하기 위해 권한 동의가 필요합니다.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>위치기반 서비스를 활용하기 위해 권한 동의가 필요합니다.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>위치기반 서비스를 활용하기 위해 권한 동의가 필요합니다.</string>
 </dict>
 </plist>

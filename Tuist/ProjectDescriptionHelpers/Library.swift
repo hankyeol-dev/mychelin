@@ -15,6 +15,8 @@ public enum Library: String {
    case kingfisher = "Kingfisher"
    case moya = "Moya"
    case rxmoya = "RxMoya"
+   case rxMap = "RxMKMapView"
+   case rxLocation = "RxCoreLocation"
    case then = "Then"
    case snapkit = "SnapKit"
    case textField = "SkyFloatingLabelTextField"
