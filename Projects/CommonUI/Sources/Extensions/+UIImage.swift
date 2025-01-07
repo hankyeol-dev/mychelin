@@ -13,4 +13,5 @@ public extension UIImage {
    static let following = UIImage(resource: .following)
    static let id = UIImage(resource: .id)
    static let xMark = UIImage(resource: .xMark)
+   static let pin = UIImage(resource: .pin)
 }
