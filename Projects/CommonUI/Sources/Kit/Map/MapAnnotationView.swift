@@ -7,8 +7,7 @@ import SnapKit
 
 public final class MapAnnotationView: MKAnnotationView {
    private let pinView: UIImageView = .init().then {
-      $0.image = .pin
-      $0.image?.withRenderingMode(.alwaysTemplate)
+      $0.image = .pin.withRenderingMode(.alwaysTemplate)
    }
    
    public override init(annotation: MKAnnotation?, reuseIdentifier: String?) {

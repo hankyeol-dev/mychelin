@@ -14,7 +14,9 @@ public final class AddressBox: BaseView {
       $0.contentMode = .scaleAspectFit
       $0.tintColor = .grayMd
    }
-   private let address: BaseLabel = .init(.init(style: .base))
+   private let address: BaseLabel = .init(.init(style: .subtitle)).then {
+      $0.textColor = .grayLg
+   }
    
    override func setSubviews() {
       super.setSubviews()
@@ -42,5 +44,9 @@ public final class AddressBox: BaseView {
    
    public func setAddress(_ addressString: String) {
       address.setText(addressString)
+   }
+   
+   public func setBackground(_ color: UIColor) {
+      back.backgroundColor = color
    }
 }
