@@ -1,5 +1,5 @@
 {
-  "originHash" : "e9412768c57bcec08aa3b3cf129500f304ba96f90be4014bbca60a8b479663fe",
+  "originHash" : "91617f4e90c6ed41d67955b6e3067bcdf47617f8fa08b5727fb234a3a3605660",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -56,12 +56,30 @@
       }
     },
     {
+      "identity" : "rxcorelocation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RxSwiftCommunity/RxCoreLocation.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "8c4b301640e84c258018a82a105678ae287576a7"
+      }
+    },
+    {
       "identity" : "rxdatasources",
       "kind" : "remoteSourceControl",
       "location" : "git@github.com:RxSwiftCommunity/RxDataSources.git",
       "state" : {
         "branch" : "main",
         "revision" : "bbfea3869f5492580563c676acda729c64fa489e"
+      }
+    },
+    {
+      "identity" : "rxmkmapview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RxSwiftCommunity/RxMKMapView.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "945bed46348bb6f8bd966a0ebce93e063b0571bc"
       }
     },
     {

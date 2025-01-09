@@ -3,7 +3,6 @@
 import UIKit
 
 import Auth
-import Profile
 import Domain
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -17,10 +16,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       options connectionOptions: UIScene.ConnectionOptions
    ) {
       guard let scene = (scene as? UIWindowScene) else { return }
-      let vc = isLoggedIn ? MeProfileVC() : AuthEntryVC()
       
       window = UIWindow(windowScene: scene)
-      window?.rootViewController = UINavigationController(rootViewController: vc)
+      window?.rootViewController = isLoggedIn
+      ? MainTabbarController()
+      : UINavigationController(rootViewController: AuthEntryVC())
+      
       window?.makeKeyAndVisible()
    }
    

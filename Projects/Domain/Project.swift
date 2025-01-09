@@ -14,6 +14,7 @@ let project = Project.make(
    targetDependencies: [
       .external(name: Library.rxSwift.rawValue),
       .external(name: Library.kingfisher.rawValue),
-      .external(name: Library.rxData.rawValue)
+      .external(name: Library.rxData.rawValue),
+      .external(name: Library.rxLocation.rawValue)
    ]
 )
