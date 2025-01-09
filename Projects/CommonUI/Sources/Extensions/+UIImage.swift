@@ -17,4 +17,5 @@ public extension UIImage {
    static let writePost = UIImage(resource: .pencil)
    static let profile = UIImage(resource: .profile)
    static let xmarkOutline = UIImage(resource: .xmarkOutline)
+   static let leftOutline = UIImage(resource: .left)
 }
