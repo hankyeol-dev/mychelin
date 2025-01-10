@@ -19,6 +19,7 @@ public final class LocationService: NSObject {
    public let locationSubject: BehaviorSubject<CLLocationCoordinate2D> = .init(
       value: .init(latitude: env.defaultLat, longitude: env.defaultLon)
    )
+   public let locationDong: BehaviorSubject<String> = .init(value: "")
    public let locationAddress: BehaviorSubject<String> = .init(value: "")
    
    private override init() {
@@ -47,6 +48,7 @@ public final class LocationService: NSObject {
       geocoder.reverseGeocodeLocation(location) { [weak self] placemark, error in
          guard error == nil else { return }
          guard let placemark = placemark?.first else { return }
+         self?.locationDong.onNext("\(placemark.subLocality ?? "동 없음")")
          self?.locationAddress.onNext("\(placemark.locality ?? "") \(placemark.name ?? "")")
       }
    }
