@@ -21,7 +21,10 @@ public final class WritePostVC: BaseVC {
       $0.setImage(image, for: .normal)
       $0.tintColor = .black
    }
-   private let scrollView: UIScrollView = .init().then { $0.backgroundColor = .grayXs }
+   private let scrollView: UIScrollView = .init().then {
+      $0.backgroundColor = .grayXs
+      $0.showsVerticalScrollIndicator = false
+   }
    private let back: UIView = .init()
    private let locationField: RoundedField = .init("장소 위치").then {
       $0.fieldDisabled()
@@ -70,7 +73,7 @@ public final class WritePostVC: BaseVC {
       map.snp.makeConstraints { make in
          make.top.equalTo(guide).inset(inset)
          make.horizontalEdges.equalTo(guide).inset(inset)
-         make.height.equalTo(100.0)
+         make.height.equalTo(150.0)
       }
       mapPin.snp.makeConstraints { make in
          make.center.equalToSuperview()

@@ -63,8 +63,8 @@ final class MainTabbarController: UITabBarController {
    
    private func setTabbar() {
       delegate = self
-      tabBar.unselectedItemTintColor = .graySm
-      tabBar.tintColor = .grayLg
+      tabBar.unselectedItemTintColor = .grayMd
+      tabBar.tintColor = .black
       tabBar.backgroundColor = .white
       viewControllers = TabPage.allCases.map(\.toViewController)
    }
@@ -73,8 +73,14 @@ final class MainTabbarController: UITabBarController {
 extension MainTabbarController: UITabBarControllerDelegate {
    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
       if viewController == tabBarController.viewControllers?[1] {
-         let vc = UINavigationController(rootViewController: WritePostMapVC())
-         vc.modalPresentationStyle = .fullScreen
+         let vc = /*UINavigationController(rootViewController: WritePostMapVC())*/ PostTypeBottomSheetVC()
+
+         if let sheet = vc.sheetPresentationController {
+            sheet.detents = [.custom(resolver: { _ in 200.0 })]
+            sheet.prefersGrabberVisible = true
+         }
+         
+//         vc.modalPresentationStyle = .fullScreen
          present(vc, animated: true)
          return false
       } else { return true }

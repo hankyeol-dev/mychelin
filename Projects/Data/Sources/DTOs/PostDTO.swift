@@ -1,6 +1,7 @@
 // hankyeol-dev. Data
 
 import Foundation
+import Domain
 
 /// Input
 
@@ -52,7 +53,7 @@ public struct PostUploadOutputType: Decodable {
 public struct PostOutputType: Decodable {
    public let postId: String
    public let category: String
-   public let tile: String
+   public let title: String
    public let price: Int?
    public let content: String
    public let content1: String?
@@ -74,7 +75,7 @@ public struct PostOutputType: Decodable {
    enum CodingKeys: String, CodingKey {
       case postId = "post_id"
       case category
-      case tile
+      case title
       case price
       case content
       case content1
@@ -93,6 +94,10 @@ public struct PostOutputType: Decodable {
       case geolocation
       case distance
    }
+   
+   var toGetPostVO: GetPostVO {
+      return .init(postId: postId, category: category, title: title, likes: likes.count)
+   }
 }
 
 public struct PostListOutputType: Decodable {
@@ -102,6 +107,10 @@ public struct PostListOutputType: Decodable {
    enum CodingKeys: String, CodingKey {
       case data
       case next = "next_cursor"
+   }
+   
+   var toGetPostListVO: GetPostListVO {
+      return .init(data: data.map({ $0.toGetPostVO }))
    }
 }
 
