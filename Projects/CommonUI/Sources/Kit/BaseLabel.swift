@@ -49,6 +49,7 @@ public final class BaseLabel: UILabel {
    
    public convenience init(_ setting: LabelSetting) {
       self.init()
+      text = setting.text
       font = setting.style.toFont
       textColor = setting.style == .error ? .systemRed : setting.color
    }
