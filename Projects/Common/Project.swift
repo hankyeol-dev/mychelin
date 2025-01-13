@@ -11,5 +11,6 @@ import ProjectDescriptionHelpers
 let project = Project.make(
    module: .common,
    product: .framework,
+   needResources: true,
    targetDependencies: []
 )
