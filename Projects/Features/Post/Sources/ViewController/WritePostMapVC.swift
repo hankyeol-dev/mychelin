@@ -81,7 +81,7 @@ public final class WritePostMapVC: BaseVC {
    public override func setViews() {
       super.setViews()
       mapView.delegate = self
-      titleLabel.setText("글에 등록할 주소를 입력해주세요.")
+      titleLabel.setText("장소를 등록해주세요.")
    }
    
    private func setDismissButton() {
