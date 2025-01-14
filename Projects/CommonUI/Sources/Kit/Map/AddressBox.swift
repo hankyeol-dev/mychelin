@@ -49,4 +49,6 @@ public final class AddressBox: BaseView {
    public func setBackground(_ color: UIColor) {
       back.backgroundColor = color
    }
+   
+   public func getAddress() -> String { address.text ?? "" }
 }
