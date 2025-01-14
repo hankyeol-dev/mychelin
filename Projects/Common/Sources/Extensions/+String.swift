@@ -10,4 +10,9 @@ public extension String {
       formatter.formatOptions = [.withInternetDateTime]
       return formatter.date(from: target) ?? Date()
    }
+   
+   func toSnakeCategory() -> Self {
+      let splitWhitespace = self.split(separator: " ")
+      return splitWhitespace.joined(separator: "_")
+   }
 }
