@@ -21,6 +21,7 @@ let project = Project.make(
       .external(name: Library.then.rawValue),
       .external(name: Library.kingfisher.rawValue),
       .external(name: Library.rxData.rawValue),
-      .external(name: Library.reusable.rawValue)
+      .external(name: Library.reusable.rawValue),
+      .external(name: Library.nMap.rawValue)
    ]
 )

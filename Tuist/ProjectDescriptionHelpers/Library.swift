@@ -23,4 +23,5 @@ public enum Library: String {
    case textField = "SkyFloatingLabelTextField"
    case reusable = "Reusable"
    case dropdown = "DropDown"
+   case nMap = "NMapsMap"
 }
