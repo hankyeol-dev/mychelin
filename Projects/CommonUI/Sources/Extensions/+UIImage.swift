@@ -18,4 +18,5 @@ public extension UIImage {
    static let profile = UIImage(resource: .profile)
    static let xmarkOutline = UIImage(resource: .xmarkOutline)
    static let leftOutline = UIImage(resource: .left)
+   static let userLocation = UIImage(resource: .userLocation)
 }

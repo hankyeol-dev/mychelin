@@ -1,5 +1,7 @@
 // hankyeol-dev.
 import UIKit
+import NMapsMap
+import Domain
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -7,6 +9,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       _ application: UIApplication,
       didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
    ) -> Bool {
+      NMFAuthManager.shared().clientId = nMapConfig.clientId.rawValue
       return true
    }
 

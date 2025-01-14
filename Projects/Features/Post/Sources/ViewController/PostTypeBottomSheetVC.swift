@@ -17,7 +17,7 @@ public final class PostTypeBottomSheetVC: BaseVC {
    private var selectedButton: BehaviorSubject<SelectedType?> = .init(value: nil)
    
    private let sheetTitleLabel: BaseLabel = .init(
-      .init(text: "작성할 항목을 선택해주세요.", style: .largeTitle)
+      .init(text: "작성할 항목을 선택해주세요.", style: .title)
    )
    private let buttonStack: UIStackView = .init().then {
       $0.axis = .vertical
@@ -38,7 +38,9 @@ public final class PostTypeBottomSheetVC: BaseVC {
    
    public override func viewDidDisappear(_ animated: Bool) {
       super.viewDidDisappear(animated)
-      
+      if let selectedType = try? selectedButton.value() {
+         didDisappearHandler?(selectedType)
+      }
    }
    
    public override func setSubviews() {
@@ -53,12 +55,17 @@ public final class PostTypeBottomSheetVC: BaseVC {
       let guide = view.safeAreaLayoutGuide
       sheetTitleLabel.snp.makeConstraints { make in
          make.top.horizontalEdges.equalTo(guide).inset(inset)
+         make.height.equalTo(30.0)
       }
       buttonStack.snp.makeConstraints { make in
          make.top.equalTo(sheetTitleLabel.snp.bottom).offset(inset)
-         make.horizontalEdges.equalTo(guide).inset(inset)
-         make.bottom.equalTo(guide).inset(inset)
+         make.horizontalEdges.bottom.equalTo(guide).inset(inset)
       }
+   }
+   
+   public override func setViews() {
+      super.setViews()
+      view.backgroundColor = .graySm
    }
    
    private func bind() {

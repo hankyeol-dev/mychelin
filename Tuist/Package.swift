@@ -16,12 +16,15 @@ let packageSettings = PackageSettings(
       "RxDataSources": .framework,
       "RxMKMapView": .framework,
       "RxCoreLocation": .framework,
+      "RxGesture": .framework,
       "ReactorKit": .framework,
       "Kingfisher": .framework,
       "Then": .framework,
       "SnapKit": .framework,
       "SkyFloatingLabelTextField": .framework,
-      "Reusable": .framework
+      "Reusable": .framework,
+      "DropDown": .framework,
+      "NMapsMap": .framework
    ],
    baseSettings: .settings(configurations: [
       .debug(name: ProjectConfiguration.debugConfig)
@@ -46,7 +49,10 @@ let package = Package(
       .package(url: "https://github.com/devxoul/Then.git", from: "3.0.0"),
       .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.7.1"),
       .package(url: "https://github.com/Skyscanner/SkyFloatingLabelTextField.git", from: "3.8.0"),
-      .package(url: "https://github.com/AliSoftware/Reusable.git", branch: "main")
+      .package(url: "https://github.com/AliSoftware/Reusable.git", branch: "main"),
+      .package(url: "https://github.com/AssistoLab/DropDown.git", branch: "master"),
+      .package(url: "https://github.com/RxSwiftCommunity/RxGesture.git", branch: "main"),
+      .package(url: "https://github.com/navermaps/SPM-NMapsMap.git", branch: "main")
    ],
    targets: [
       .target(name: "Slp2_Project", dependencies: ["RxMoya", "ReactiveMoya"])

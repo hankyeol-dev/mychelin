@@ -1,5 +1,5 @@
 {
-  "originHash" : "91617f4e90c6ed41d67955b6e3067bcdf47617f8fa08b5727fb234a3a3605660",
+  "originHash" : "c3dc35a05774e891c7e5127ac59a6d22494eabacf3e06992392a631c49d26bb1",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
         "version" : "5.10.2"
+      }
+    },
+    {
+      "identity" : "dropdown",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AssistoLab/DropDown.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "2ab6f6ce19f0117d1a76ea043ef8f57722c65d16"
       }
     },
     {
@@ -74,6 +83,15 @@
       }
     },
     {
+      "identity" : "rxgesture",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RxSwiftCommunity/RxGesture.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e9f94dfd39efe5b2914ac9463d4193b9e340779c"
+      }
+    },
+    {
       "identity" : "rxmkmapview",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RxSwiftCommunity/RxMKMapView.git",
@@ -107,6 +125,24 @@
       "state" : {
         "revision" : "2842e6e84e82eb9a8dac0100ca90d9444b0307f4",
         "version" : "5.7.1"
+      }
+    },
+    {
+      "identity" : "spm-nmapsgeometry",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/navermaps/SPM-NMapsGeometry.git",
+      "state" : {
+        "revision" : "436d5e2e684f557faf5ef5862fd6633a42d7af11",
+        "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "spm-nmapsmap",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/navermaps/SPM-NMapsMap.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "606cb2df9bcffcf6df62ba00d0322965a4c730e9"
       }
     },
     {

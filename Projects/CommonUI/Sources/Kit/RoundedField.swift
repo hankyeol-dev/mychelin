@@ -6,7 +6,7 @@ import SnapKit
 
 public final class RoundedField: BaseView {
    private let label: BaseLabel = .init(.init(style: .subtitle))
-   private let textField: UITextField = .init().then {
+   public let textField: UITextField = .init().then {
       $0.layer.cornerRadius = 10.0
       $0.backgroundColor = .graySm
       $0.tintColor = .black

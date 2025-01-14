@@ -15,31 +15,22 @@ public final class LocationService: NSObject {
       $0.desiredAccuracy = kCLLocationAccuracyBest
       $0.distanceFilter = kCLDistanceFilterNone
    }
-   
-   public let locationSubject: BehaviorSubject<CLLocationCoordinate2D> = .init(
-      value: .init(latitude: env.defaultLat, longitude: env.defaultLon)
-   )
-   public let locationDong: BehaviorSubject<String> = .init(value: "")
-   public let locationAddress: BehaviorSubject<String> = .init(value: "")
-   
+ 
    private override init() {
       super.init()
       locationManager.delegate = self
    }
    
-   public func startUpdateLocation(_ completionHanlder: @escaping () -> Void) {
+   public func startUpdateLocation(_ completionHanlder: @escaping (CLLocationCoordinate2D) -> Void) {
       let status = locationManager.authorizationStatus
       if status == .notDetermined || status == .denied {
          locationManager.requestWhenInUseAuthorization()
       }
       if status == .authorizedAlways || status == .authorizedWhenInUse {
-         completionHanlder()
+         if let location = locationManager.location?.coordinate {
+            completionHanlder(location)
+         }
       }
-   }
-      
-   public func updateLocation(_ location: CLLocationCoordinate2D) {
-      locationSubject.onNext(location)
-      convertToAddress(location)
    }
    
    private func convertToAddress(_ coordinate: CLLocationCoordinate2D) {
@@ -48,8 +39,8 @@ public final class LocationService: NSObject {
       geocoder.reverseGeocodeLocation(location) { [weak self] placemark, error in
          guard error == nil else { return }
          guard let placemark = placemark?.first else { return }
-         self?.locationDong.onNext("\(placemark.subLocality ?? "동 없음")")
-         self?.locationAddress.onNext("\(placemark.locality ?? "") \(placemark.name ?? "")")
+//         self?.locationDong.onNext("\(placemark.subLocality ?? "동 없음")")
+//         self?.locationAddress.onNext("\(placemark.locality ?? "") \(placemark.name ?? "")")
       }
    }
 }
@@ -64,7 +55,7 @@ extension LocationService: CLLocationManagerDelegate {
             return
          }
          
-         updateLocation(location.coordinate)
+//         updateLocation(location.coordinate)
       }
    }
 }
