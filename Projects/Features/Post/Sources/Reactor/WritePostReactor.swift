@@ -7,8 +7,7 @@ import ReactorKit
 
 public final class WritePostReactor: Reactor {
    private let disposeBag: DisposeBag = .init()
-   private let locationService: LocationService = .shared
-   
+     
    public var initialState: State = .init()
    
    public struct State {
@@ -17,34 +16,28 @@ public final class WritePostReactor: Reactor {
    }
    
    public enum Action {
-      case didLoad
+      case didLoad(CLLocationCoordinate2D?, String)
    }
    
    public enum Mutation {
-      case didLoad
+      case didLoad(CLLocationCoordinate2D?, String)
    }
 }
 
 extension WritePostReactor {
    public func mutate(action: Action) -> Observable<Mutation> {
       switch action {
-      case .didLoad:
-         return .just(.didLoad)
+      case let .didLoad(location, address):
+         return .just(.didLoad(location, address))
       }
    }
    
    public func reduce(state: State, mutation: Mutation) -> State {
       var newState = state
       switch mutation {
-      case .didLoad:
-         locationService.locationSubject
-            .subscribe { location in
-               newState.location = location
-            }.disposed(by: disposeBag)
-         locationService.locationAddress
-            .subscribe { address in
-               newState.address = address
-            }.disposed(by: disposeBag)
+      case let .didLoad(location, address):
+         newState.location = location
+         newState.address = address
       }
       return newState
    }
