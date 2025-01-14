@@ -18,6 +18,34 @@ public struct PostInputType: Encodable {
    public let files: [String]?
    public let logitude: Float?
    public let latitude: Float?
+   
+   public init(
+      category: String,
+      title: String,
+      price: Int? = nil,
+      content: String,
+      content1: String? = nil,
+      content2: String? = nil,
+      content3: String? = nil,
+      content4: String? = nil,
+      content5: String? = nil,
+      files: [String]? = nil,
+      logitude: Float? = nil,
+      latitude: Float? = nil
+   ) {
+      self.category = category
+      self.title = title
+      self.price = price
+      self.content = content
+      self.content1 = content1
+      self.content2 = content2
+      self.content3 = content3
+      self.content4 = content4
+      self.content5 = content5
+      self.files = files
+      self.logitude = logitude
+      self.latitude = latitude
+   }
 }
 
 public struct UploadFileInputType: Encodable {
@@ -32,7 +60,7 @@ public struct CommentInputType: Encodable {
 
 public struct GetPostQueryType {
    public let next: String
-   public let limit: Int = 5
+   public let limit: Int = 10
    public let category: String
 }
 
@@ -67,7 +95,7 @@ public struct PostOutputType: Decodable {
    public let likes: [String]
    public let likes2: [String]
    public let buyers: [String]
-   public let hashTag: [String]
+   public let hashTags: [String]
    public let comments: [CommentOutputType]
    public let geolocation: GEOLocation
    public let distance: Double?
@@ -89,7 +117,7 @@ public struct PostOutputType: Decodable {
       case likes
       case likes2
       case buyers
-      case hashTag
+      case hashTags
       case comments
       case geolocation
       case distance
@@ -97,6 +125,19 @@ public struct PostOutputType: Decodable {
    
    var toGetPostVO: GetPostVO {
       return .init(postId: postId, category: category, title: title, likes: likes.count)
+   }
+   
+   var toCreateCurationOutputVO: CreateCurationOutputVO {
+      return .init(postId: postId)
+   }
+   
+   var toGetCurationOutputVO: GetCurationOutputVO {
+      return .init(
+         curationId: postId,
+         curationName: category,
+         curationFirstCategory: title,
+         curationColorIndex: content1 == nil ? 0 : Int(content1!) ?? 0,
+         curationMakePublic: content2 == nil ? 0 : Int(content2!) ?? 0)
    }
 }
 
@@ -111,6 +152,10 @@ public struct PostListOutputType: Decodable {
    
    var toGetPostListVO: GetPostListVO {
       return .init(data: data.map({ $0.toGetPostVO }))
+   }
+   
+   var toGetCurationPostListVO: GetCurationPostListVO {
+      return .init(data: data.map({ $0.toGetPostVO }), next: next)
    }
 }
 
