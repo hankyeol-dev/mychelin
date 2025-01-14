@@ -11,7 +11,9 @@ import Then
 import SnapKit
 
 public final class WritePostVC: BaseVC {
-   public  var disposeBag: DisposeBag = .init()
+   public var disposeBag: DisposeBag = .init()
+   private var location: CLLocationCoordinate2D?
+   private var address: String = ""
    
    private let xButton: UIButton = .init().then {
       $0.setImage(.xmarkOutline, for: .normal)
@@ -100,6 +102,11 @@ public final class WritePostVC: BaseVC {
       navigationItem.setRightBarButton(.init(customView: xButton), animated: true)
       navigationItem.setLeftBarButton(.init(customView: backButton), animated: true)
    }
+   
+   public func setLocation(_ location: CLLocationCoordinate2D, _ address: String) {
+      self.location = location
+      self.address = address
+   }
 }
 
 extension WritePostVC: View {
@@ -117,13 +124,14 @@ extension WritePostVC: View {
          vc.navigationController?.popViewController(animated: true)
       }.disposed(by: disposeBag)
       
-      reactor.action.onNext(.didLoad)
+      reactor.action.onNext(.didLoad(location, address))
    }
    
    private func bindStates(_ reactor: WritePostReactor) {
       reactor.state.map(\.location)
          .compactMap({ $0 })
          .bind(with: self) { vc, location in
+            print(location)
             let region: MKCoordinateRegion = .init(center: location,
                                                    latitudinalMeters: 50,
                                                    longitudinalMeters: 50)
@@ -131,6 +139,7 @@ extension WritePostVC: View {
          }.disposed(by: disposeBag)
       reactor.state.map(\.address)
          .bind(with: self) { vc, address in
+            print(address)
             vc.locationField.setTextField(address)
          }.disposed(by: disposeBag)
    }

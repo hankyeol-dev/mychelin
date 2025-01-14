@@ -1,38 +1,43 @@
 // hankyeol-dev. Post
 
 import UIKit
-import MapKit
+import CoreLocation
+
 import CommonUI
 
+import NMapsMap
 import RxCocoa
 import ReactorKit
-import RxMKMapView
 import SnapKit
 import Then
 
 public final class WritePostMapVC: BaseVC {
    public var disposeBag: DisposeBag = .init()
+   private let locationManager: CLLocationManager = .init().then {
+      $0.requestWhenInUseAuthorization()
+      $0.desiredAccuracy = kCLLocationAccuracyBest
+   }
+   
    private let xButton: UIButton = .init().then {
       $0.setImage(.xmarkOutline, for: .normal)
       $0.tintColor = .grayLg
    }
-   private let mapView: MKMapView = .init().then {
-      $0.register(MapAnnotationView.self,
-                  forAnnotationViewWithReuseIdentifier: String(describing: MapAnnotationView.self))
-      $0.showsUserLocation = true
+   private let mapView: NMFMapView = .init().then {
+      $0.allowsZooming = true
+      $0.allowsScrolling = true
    }
+   private let userLocationButton: UserLocationButton = .init()
    private let mapPin: UIImageView = .init().then {
       $0.image = .pin.withRenderingMode(.alwaysTemplate)
       $0.tintColor = .errors
    }
-   
    private let locationBox: UIStackView = .init().then {
       $0.backgroundColor = .white
       $0.axis = .vertical
       $0.spacing = 10.0
       $0.distribution = .fillEqually
    }
-   private let titleLabel: BaseLabel = .init(.init(style: .title))
+   private let titleLabel: BaseLabel = .init(.init(text: "장소를 등록해주세요.", style: .title))
    private let addressBox: AddressBox = .init().then { $0.setBackground(.grayXs) }
    private let nextButton: RoundedButton = .init("위치 설정", backgroundColor: .greenMd, baseColor: .white)
    
@@ -40,23 +45,13 @@ public final class WritePostMapVC: BaseVC {
    
    public override func viewDidLoad() {
       super.viewDidLoad()
-      setDismissButton()
-   }
-   
-   public override func viewWillAppear(_ animated: Bool) {
-      super.viewWillAppear(animated)
-      self.reactor = WritePostMapReactor()
-   }
-   
-   public override func viewWillDisappear(_ animated: Bool) {
-      super.viewWillDisappear(animated)
-      self.reactor = nil
+      bind()
    }
    
    public override func setSubviews() {
       super.setSubviews()
-      view.addSubviews(mapView, locationBox)
-      mapView.addSubview(mapPin)
+      view.addSubviews(mapView, locationBox, userLocationButton)
+      mapView.addSubviews(mapPin)
       locationBox.addStackSubviews(titleLabel, addressBox, nextButton)
    }
    
@@ -72,6 +67,11 @@ public final class WritePostMapVC: BaseVC {
          make.size.equalTo(inset * 2)
          make.center.equalToSuperview()
       }
+      userLocationButton.snp.makeConstraints { make in
+         make.size.equalTo(40.0)
+         make.bottom.equalTo(locationBox.snp.top).offset(inset)
+         make.trailing.equalTo(view.safeAreaLayoutGuide).inset(-inset)
+      }
       locationBox.snp.makeConstraints { make in
          make.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide).inset(inset)
          make.height.equalTo(160.0)
@@ -80,86 +80,69 @@ public final class WritePostMapVC: BaseVC {
    
    public override func setViews() {
       super.setViews()
-      mapView.delegate = self
-      titleLabel.setText("장소를 등록해주세요.")
-   }
-   
-   private func setDismissButton() {
+      mapView.addCameraDelegate(delegate: self)
       navigationItem.setRightBarButton(.init(customView: xButton), animated: true)
    }
-}
-
-extension WritePostMapVC: MKMapViewDelegate {
-   private func setMapLocation(_ location: CLLocationCoordinate2D) {
-      let region: MKCoordinateRegion = .init(center: location,
-                                             latitudinalMeters: 100,
-                                             longitudinalMeters: 100)
-      mapView.setRegion(region, animated: true)
-   }
    
-   private func addAnnotation(_ location: CLLocationCoordinate2D) {
-      let annotation = AnnotationType(pinColor: .greenMd, coordinate: location)
-      oldAnnotation = annotation
-      mapView.addAnnotation(annotation)
-   }
-   
-   private func setupAnnotation(annotation: AnnotationType, _ mapView: MKMapView) -> MKAnnotationView {
-      return mapView.dequeueReusableAnnotationView(
-         withIdentifier: String(describing: MapAnnotationView.self),
-         for: annotation)
-   }
-   
-   public func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-      reactor?.action.onNext(.moveLocation(mapView.centerCoordinate))
-   }
-   
-   public func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
-      guard !annotation.isKind(of: MKUserLocation.self) else { return nil }
-      var annotationView: MKAnnotationView?
-      if let pin = annotation as? AnnotationType {
-         annotationView = setupAnnotation(annotation: pin, mapView)
-      }
-      return annotationView
-   }
-}
-
-extension WritePostMapVC: View {
-   public func bind(reactor: WritePostMapReactor) {
-      bindActions(reactor)
-      bindStates(reactor)
-   }
-   
-   private func bindActions(_ reactor: WritePostMapReactor) {
-      reactor.action.onNext(.didLoad)
-      
+   private func bind() {
       xButton.rx.tap
          .bind(with: self) { vc, _ in
             vc.dismiss(animated: true)
          }.disposed(by: disposeBag)
       
+      userLocationButton.rx.tap
+         .bind(with: self) { vc, _ in
+            vc.locationManagerDidChangeAuthorization(vc.locationManager)
+         }.disposed(by: disposeBag)
+      
       nextButton.rx.tap
-         .map({ Reactor.Action.tapNextButton })
-         .bind(to: reactor.action)
-         .disposed(by: disposeBag)
+         .bind(with: self) { vc, _ in
+            let pushedVC = WritePostVC()
+            let location = vc.mapView.cameraPosition.target
+            pushedVC.setLocation(
+               .init(latitude: location.lat, longitude: location.lng), vc.addressBox.getAddress()
+            )
+            vc.pushToVC(WritePostVC())
+         }.disposed(by: disposeBag)
+      
+      self.locationManagerDidChangeAuthorization(locationManager)
+   }
+}
+
+extension WritePostMapVC: NMFMapViewCameraDelegate {
+   public func mapViewCameraIdle(_ mapView: NMFMapView) {
+      let location = mapView.cameraPosition.target
+      convertToAddress(
+         .init(latitude: location.lat, longitude: location.lng)
+      ) { [weak self] address in
+         self?.addressBox.setAddress(address)
+      }
+   }
+}
+
+extension WritePostMapVC: CLLocationManagerDelegate {
+   public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+      let status = manager.authorizationStatus
+      if status == .denied || status == .notDetermined {
+         manager.requestWhenInUseAuthorization()
+      }
+      if status == .authorizedAlways || status == .authorizedWhenInUse {
+         manager.startUpdatingLocation()
+         guard let location = manager.location?.coordinate else { return }
+         mapView.moveToLocation(.init(lat: location.latitude, lng: location.longitude))
+      }
    }
    
-   private func bindStates(_ reactor: WritePostMapReactor) {
-      reactor.state.compactMap(\.currentLocation)
-         .bind(with: self) { vc, location in
-            vc.setMapLocation(location)
-         }.disposed(by: disposeBag)
-      
-      reactor.state.compactMap(\.currentAddress)
-         .filter({ !$0.isEmpty })
-         .bind(with: self) { vc, address in
-            vc.addressBox.setAddress(address)
-         }.disposed(by: disposeBag)
-      
-      reactor.state.map(\.isTapNextButton)
-         .bind(with: self) { vc, isTapped in
-            if isTapped {
-               vc.pushToVC(WritePostVC())
-            }
-         }.disposed(by: disposeBag)
+   private func convertToAddress(
+      _ coordinate: CLLocationCoordinate2D,
+      _ addressHandler: @escaping (String) -> Void
+   ) {
+      let geocoder = CLGeocoder()
+      let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+      geocoder.reverseGeocodeLocation(location) { placemark, error in
+         guard error == nil else { return }
+         guard let placemark = placemark?.first else { return }
+         addressHandler("\(placemark.locality ?? "") \(placemark.name ?? "")")
+      }
    }
 }
