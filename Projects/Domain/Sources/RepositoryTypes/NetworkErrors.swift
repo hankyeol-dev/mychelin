@@ -10,6 +10,7 @@ public enum NetworkErrors: Error {
    case noData
    
    case tokenExpired
+   case allTokensExpired
    
    public var toErrorMessage: String {
       switch self {
@@ -23,6 +24,8 @@ public enum NetworkErrors: Error {
          return "데이터가 없습니다."
       case .tokenExpired:
          return "토큰이 만료되었습니다."
+      case .allTokensExpired:
+         return "모든 토큰이 만료되었습니다."
       }
    }
 }
