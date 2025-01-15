@@ -75,6 +75,27 @@ public struct NetworkProvider: NetworkProviderType {
       }
    }
    
+   public static func nSearch(
+      _ query: String,
+      _ completion: @escaping (Result<NaverSearchOutput, NetworkErrors>) ->  Void
+   ) {
+      let provider = MoyaProvider<NaverSearchRouter>()
+      provider.request(.search(query: query)) { result in
+         switch result {
+         case let .success(res):
+            do {
+               completion(.success(try res.map(NaverSearchOutput.self)))
+            } catch {
+               print("naver-search-error: ", error)
+               completion(.failure(.noData))
+            }
+         case let .failure(error):
+            print("naver-search-moya-error: ", error)
+            completion(.failure(.noData))
+         }
+      }
+   }
+   
    private static func errorHandler(_ error: MoyaError) -> NetworkErrors {
       guard let res = error.response else {
          print("errorHandler - MoyaError: ", error)
