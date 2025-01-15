@@ -22,6 +22,11 @@ public final class WritePostMapVC: BaseVC {
       $0.setImage(.xmarkOutline, for: .normal)
       $0.tintColor = .grayLg
    }
+   private let backButton: UIButton = .init().then {
+      let image: UIImage = .leftOutline.withRenderingMode(.alwaysTemplate)
+      $0.setImage(image, for: .normal)
+      $0.tintColor = .black
+   }
    private let mapView: NMFMapView = .init().then {
       $0.allowsZooming = true
       $0.allowsScrolling = true
@@ -82,12 +87,18 @@ public final class WritePostMapVC: BaseVC {
       super.setViews()
       mapView.addCameraDelegate(delegate: self)
       navigationItem.setRightBarButton(.init(customView: xButton), animated: true)
+      navigationItem.setLeftBarButton(.init(customView: backButton), animated: true)
    }
    
    private func bind() {
       xButton.rx.tap
          .bind(with: self) { vc, _ in
             vc.dismiss(animated: true)
+         }.disposed(by: disposeBag)
+      
+      backButton.rx.tap
+         .bind(with: self) { vc, _ in
+            vc.navigationController?.popViewController(animated: true)
          }.disposed(by: disposeBag)
       
       userLocationButton.rx.tap
