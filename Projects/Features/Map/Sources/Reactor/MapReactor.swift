@@ -7,7 +7,7 @@ import ReactorKit
 import Data
 import Domain
 
-public final class MapReactor: NSObject, Reactor {
+public final class MapReactor: Reactor {
    private let disposeBag: DisposeBag = .init()
    private let locationManager: CLLocationManager = .init().then {
       $0.desiredAccuracy = kCLLocationAccuracyBest
@@ -86,7 +86,7 @@ extension MapReactor {
    }
 }
 
-extension MapReactor: CLLocationManagerDelegate {
+extension MapReactor {
    public func startUpdateLocation(_ handler: @escaping (CLLocationCoordinate2D) -> Void) {
       let status = locationManager.authorizationStatus
       if status == .notDetermined || status == .denied {

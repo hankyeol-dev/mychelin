@@ -15,6 +15,7 @@ let project = Project.make(
       .external(name: Library.reactorKit.rawValue),
       .external(name: Library.rxMap.rawValue),
       .external(name: Library.rxLocation.rawValue),
-      .external(name: Library.nMap.rawValue)
+      .external(name: Library.nMap.rawValue),
+      .external(name: Library.tabman.rawValue)
    ]
 )
