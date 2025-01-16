@@ -34,24 +34,6 @@ public struct NetworkProvider: NetworkProviderType {
          case let .failure(error):
             let errors = errorHandler(error)
             switch errors {
-            case .allTokensExpired:
-               print("request - allTokenExpired")
-               let autoLoginInput: LoginInputType = .init(email: env.tempEmail,
-                                                          password: env.tempPW)
-               request(
-                  AuthRouter.login(autoLoginInput),
-                  of: LoginOutputType.self
-               ) { result in
-                  switch result {
-                  case let .success(token):
-                     UserDefaultsProvider.shared.setStringValue(.accessToken, value: token.accessToken)
-                     UserDefaultsProvider.shared.setStringValue(.refreshToken, value: token.refreshToken)
-                     KingfisherManager.shared.setImageRequestHeader()
-                     request(router, of: output, completion)
-                  case let .failure(error):
-                     completion(.failure(error))
-                  }
-               }
             case .tokenExpired:
                let refreshToken = UserDefaultsProvider.shared.getStringValue(.refreshToken)
                request(
@@ -77,10 +59,11 @@ public struct NetworkProvider: NetworkProviderType {
    
    public static func nSearch(
       _ query: String,
+      _ start: Int = 1,
       _ completion: @escaping (Result<NaverSearchOutput, NetworkErrors>) ->  Void
    ) {
       let provider = MoyaProvider<NaverSearchRouter>()
-      provider.request(.search(query: query)) { result in
+      provider.request(.search(query: query, start: start)) { result in
          switch result {
          case let .success(res):
             do {

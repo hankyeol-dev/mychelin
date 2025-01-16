@@ -6,7 +6,8 @@ import RxSwift
 public protocol PostUsecaseType {
    func getPosts(query: GEOSearchQueryVO) -> Single<Result<GetPostListVO, NetworkErrors>>
    func getCuration(curationId: String) -> Single<Result<GetCurationOutputVO, NetworkErrors>>
-   func getCuraitonPosts(query: GetCurationPostsInputVO) -> Single<Result<GetCurationPostListVO, NetworkErrors>>
+   func getCurations() -> Single<Result<GetPostListVO, NetworkErrors>>
+   func getCurationPosts(query: GetCurationPostsInputVO) -> Single<Result<GetCurationPostListVO, NetworkErrors>>
    
    func createCuration(input: CreateCurationInputVO) -> Single<Result<CreateCurationOutputVO, NetworkErrors>>
 }
@@ -26,8 +27,11 @@ extension PostUsecase: PostUsecaseType {
    public func getCuration(curationId: String) -> Single<Result<GetCurationOutputVO, NetworkErrors>> {
       return postRepository.getCuration(curationId: curationId)
    }
-   public func getCuraitonPosts(query: GetCurationPostsInputVO) -> Single<Result<GetCurationPostListVO, NetworkErrors>> {
-      return postRepository.getCuraitonPosts(query: query)
+   public func getCurations() -> Single<Result<GetPostListVO, NetworkErrors>> {
+      return postRepository.getCurations()
+   }
+   public func getCurationPosts(query: GetCurationPostsInputVO) -> Single<Result<GetCurationPostListVO, NetworkErrors>> {
+      return postRepository.getCurationPosts(query: query)
    }
 }
 

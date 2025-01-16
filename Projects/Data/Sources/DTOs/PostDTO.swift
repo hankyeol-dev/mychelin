@@ -142,7 +142,7 @@ public struct PostOutputType: Decodable {
 }
 
 public struct PostListOutputType: Decodable {
-   public let data: [PostOutputType]
+   public var data: [PostOutputType]
    public let next: String
    
    enum CodingKeys: String, CodingKey {

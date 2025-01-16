@@ -4,7 +4,7 @@ import Foundation
 import RxSwift
 
 public protocol SearchUsecaseType {
-   func nLocationSearch(query: String) -> Single<Result<[NaverSearchVO], NetworkErrors>>
+   func nLocationSearch(query: String, start: Int) -> Single<Result<[NaverSearchVO], NetworkErrors>>
 }
 
 public struct SearchUsecase {
@@ -15,7 +15,7 @@ public struct SearchUsecase {
 }
 
 extension SearchUsecase: SearchUsecaseType {
-   public func nLocationSearch(query: String) -> Single<Result<[NaverSearchVO], NetworkErrors>> {
-      return searchRepository.nLocationSearch(query: query)
+   public func nLocationSearch(query: String, start: Int) -> Single<Result<[NaverSearchVO], NetworkErrors>> {
+      return searchRepository.nLocationSearch(query: query, start: start)
    }
 }

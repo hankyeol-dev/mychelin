@@ -23,18 +23,20 @@ public struct GEOSearchQueryVO {
 }
 
 public struct CreateCurationInputVO {
-   public let firstCategory: String
+   /// superCategory -> content
+   /// curationName -> title
+   public let superCateogry: String
    public let curationName: String
    public let curationColorIndex: Int
    public let curationMakePublic: Int
    
    public init(
-      firstCategory: String,
+      superCateogry: String,
       curationName: String,
       curationColorIndex: Int,
       curationMakePublic: Int
    ) {
-      self.firstCategory = firstCategory
+      self.superCateogry = superCateogry
       self.curationName = curationName
       self.curationColorIndex = curationColorIndex
       self.curationMakePublic = curationMakePublic

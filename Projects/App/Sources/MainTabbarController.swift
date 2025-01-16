@@ -41,7 +41,7 @@ public enum TabPage: Int, CaseIterable {
       var vc: UIViewController
       switch self {
       case .home:
-         vc = MapVC()
+         vc = /*MapVC()*/ PostMapTabVC()
       case .writePost:
          vc = WritePostMapVC()
       case .chat:
@@ -73,14 +73,25 @@ final class MainTabbarController: UITabBarController {
 extension MainTabbarController: UITabBarControllerDelegate {
    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
       if viewController == tabBarController.viewControllers?[1] {
-         let vc = /*UINavigationController(rootViewController: WritePostMapVC())*/ PostTypeBottomSheetVC()
+         let vc = PostTypeBottomSheetVC()
 
          if let sheet = vc.sheetPresentationController {
             sheet.detents = [.custom(resolver: { _ in 200.0 })]
             sheet.prefersGrabberVisible = true
          }
          
-//         vc.modalPresentationStyle = .fullScreen
+         vc.didDisappearHandler = { [weak self] selectedType in
+            var presentedVC: UIViewController
+            switch selectedType {
+            case .curation:
+               presentedVC = UINavigationController(rootViewController: WritePostCurationVC())
+            case .post:
+               presentedVC = UINavigationController(rootViewController: WritePostMapVC())
+            }
+            presentedVC.modalPresentationStyle = .fullScreen
+            self?.present(presentedVC, animated: true)
+         }
+         
          present(vc, animated: true)
          return false
       } else { return true }
