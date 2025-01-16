@@ -25,7 +25,8 @@ let packageSettings = PackageSettings(
       "Reusable": .framework,
       "DropDown": .framework,
       "NMapsMap": .framework,
-      "Tabman": .staticFramework
+      "Tabman": .staticFramework,
+      "Cosmos": .staticFramework
    ],
    baseSettings: .settings(configurations: [
       .debug(name: ProjectConfiguration.debugConfig)
@@ -54,7 +55,8 @@ let package = Package(
       .package(url: "https://github.com/AssistoLab/DropDown.git", branch: "master"),
       .package(url: "https://github.com/RxSwiftCommunity/RxGesture.git", branch: "main"),
       .package(url: "https://github.com/navermaps/SPM-NMapsMap.git", branch: "main"),
-      .package(url: "https://github.com/uias/Tabman.git", branch: "main")
+      .package(url: "https://github.com/uias/Tabman.git", branch: "main"),
+      .package(url: "https://github.com/evgenyneu/Cosmos.git", branch: "master")
    ],
    targets: [
       .target(name: "Slp2_Project", dependencies: ["RxMoya", "ReactiveMoya"])

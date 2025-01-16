@@ -25,4 +25,5 @@ public enum Library: String {
    case dropdown = "DropDown"
    case nMap = "NMapsMap"
    case tabman = "Tabman"
+   case cosmos = "Cosmos"
 }

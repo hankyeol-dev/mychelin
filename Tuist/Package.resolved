@@ -1,5 +1,5 @@
 {
-  "originHash" : "4715edbc53e7a2a2ab0ca08adf99e61b11a51f267cf8d8761ea7b65429bc87d0",
+  "originHash" : "a5535ab59bd11b6c98dcd6d44ea1a506027c1c1953c5fd0dfc5398bd93cc7e13",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
         "version" : "5.10.2"
+      }
+    },
+    {
+      "identity" : "cosmos",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/evgenyneu/Cosmos.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "aebcb0e3ee9631845d9be8cf628e819bb3a01570"
       }
     },
     {

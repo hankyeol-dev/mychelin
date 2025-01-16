@@ -17,6 +17,7 @@ let project = Project.make(
       .external(name: Library.rxMap.rawValue),
       .external(name: Library.rxGesture.rawValue),
       .external(name: Library.dropdown.rawValue),
-      .external(name: Library.nMap.rawValue)
+      .external(name: Library.nMap.rawValue),
+      .external(name: Library.cosmos.rawValue)
    ]
 )
