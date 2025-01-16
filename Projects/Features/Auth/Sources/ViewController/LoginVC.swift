@@ -3,7 +3,7 @@ import UIKit
 
 import CommonUI
 import Domain
-import Profile
+//import Profile
 
 import SnapKit
 import ReactorKit
@@ -114,7 +114,7 @@ extension LoginVC: View {
          .distinctUntilChanged()
          .bind(with: self) { vc, isLogined in
             if isLogined {
-               vc.switchVC(MeProfileVC())
+               
             }
          }.disposed(by: disposeBag)
    }

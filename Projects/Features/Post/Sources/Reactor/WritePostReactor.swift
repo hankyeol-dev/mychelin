@@ -1,43 +1,59 @@
 // hankyeol-dev. Post
 
 import Foundation
-import MapKit
 import Domain
+import Data
 import ReactorKit
 
 public final class WritePostReactor: Reactor {
    private let disposeBag: DisposeBag = .init()
+   private let postUsecase: PostUsecaseType = PostUsecase(postRepository: PostRepository())
+   private let userId: String = UserDefaultsProvider.shared.getStringValue(.userId)
      
    public var initialState: State = .init()
    
    public struct State {
-      var location: CLLocationCoordinate2D? = nil
-      var address: String = ""
+      var curations: [String] = ["선택 안함"]
+      var selectedCuration: String = ""
    }
    
    public enum Action {
-      case didLoad(CLLocationCoordinate2D?, String)
+      case didLoad
+      case selectCuration(String)
    }
    
    public enum Mutation {
-      case didLoad(CLLocationCoordinate2D?, String)
+      case fetchCurations(Result<GetPostListVO, NetworkErrors>)
+      case setCuration(String)
    }
 }
 
 extension WritePostReactor {
    public func mutate(action: Action) -> Observable<Mutation> {
       switch action {
-      case let .didLoad(location, address):
-         return .just(.didLoad(location, address))
+      case .didLoad:
+         return .concat([
+            postUsecase.getCurations()
+               .asObservable()
+               .map({ .fetchCurations($0) })
+         ])
+      case let .selectCuration(curation):
+         return .just(.setCuration(curation))
       }
    }
    
    public func reduce(state: State, mutation: Mutation) -> State {
       var newState = state
       switch mutation {
-      case let .didLoad(location, address):
-         newState.location = location
-         newState.address = address
+      case let .fetchCurations(output):
+         switch output {
+         case let .success(vo):
+            newState.curations.append(contentsOf: vo.data.map({ $0.title }))
+         case let .failure(error):
+            print(error)
+         }
+      case let .setCuration(curation):
+         newState.selectedCuration = curation
       }
       return newState
    }

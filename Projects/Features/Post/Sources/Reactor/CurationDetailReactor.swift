@@ -37,7 +37,7 @@ extension CurationDetailReactor {
             .asObservable()
             .map({ .fetchCurationDetail($0) })
       case let .fetchCurationPosts(category, next):
-         return postUsecase.getCuraitonPosts(query: .init(category: category, next: next))
+         return postUsecase.getCurationPosts(query: .init(category: category, next: next))
             .asObservable()
             .map({ .fetchCurationPosts($0) })
       }

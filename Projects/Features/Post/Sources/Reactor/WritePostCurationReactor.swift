@@ -59,8 +59,8 @@ extension WritePostCurationReactor {
             let colorIndex = initialState.curationColors.filter({ $0.1 }).first?.0.rawValue
          {
             let input: CreateCurationInputVO = .init(
-               firstCategory: category.toKorean,
-               curationName: initialState.curationName.toSnakeCategory(),
+               superCateogry: category.toKorean,
+               curationName: initialState.curationName,
                curationColorIndex: colorIndex,
                curationMakePublic: initialState.curationMakePublic ? 0 : 1
             )

@@ -8,6 +8,7 @@ import Data
 public final class WritePostMapSearchReactor: Reactor {
    private let disposeBag: DisposeBag = .init()
    private let searchUsecase: SearchUsecaseType = SearchUsecase(searchRepository: SearchRepository())
+   
    public var initialState: State = .init()
    
    public struct State {
@@ -29,10 +30,11 @@ extension WritePostMapSearchReactor {
    public func mutate(action: Action) -> Observable<Mutation> {
       switch action {
       case let .query(query):
-         searchUsecase.nLocationSearch(query: query)
+         return searchUsecase.nLocationSearch(query: query, start: 1)
             .asObservable()
             .map({ .searching($0) })
-      case .empty: .just(.empty)
+      case .empty:
+         return .just(.empty)
       }
    }
    

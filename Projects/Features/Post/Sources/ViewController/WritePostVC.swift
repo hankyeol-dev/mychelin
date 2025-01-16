@@ -1,17 +1,22 @@
 // hankyeol-dev. Post
 
 import UIKit
-import MapKit
+import CoreLocation
 
 import CommonUI
+
 import RxSwift
 import RxCocoa
 import ReactorKit
+import RxGesture
 import Then
 import SnapKit
+import DropDown
+import Cosmos
 
 public final class WritePostVC: BaseVC {
    public var disposeBag: DisposeBag = .init()
+   
    private var location: CLLocationCoordinate2D?
    private var address: String = ""
    
@@ -24,23 +29,47 @@ public final class WritePostVC: BaseVC {
       $0.tintColor = .black
    }
    private let scrollView: UIScrollView = .init().then {
-      $0.backgroundColor = .grayXs
+      $0.backgroundColor = .clear
       $0.showsVerticalScrollIndicator = false
    }
    private let back: UIView = .init()
    private let locationField: RoundedField = .init("장소 위치").then {
       $0.fieldDisabled()
    }
-   private let map: MKMapView = .init().then {
-      $0.layer.cornerRadius = 10.0
-      $0.isScrollEnabled = false
-   }
-   private let mapPin: UIImageView = .init().then {
-      $0.image = .pin.withRenderingMode(.alwaysTemplate)
-      $0.tintColor = .errors
-   }
+   
    private let locationNameField: RoundedField = .init("장소 이름", placeholder: "장소에 대한 대략적인 이름")
-   private let bottomView: UIView = .init().then { $0.backgroundColor = .grayLg }
+   private let curationTitle: BaseLabel = .init(
+      .init(text: "큐레이션 지정 (선택)", style: .subtitle))
+   private let curationDrop: RoundedDropdown = .init("연결할 큐레이션을 선택해주세요.")
+   private let dropDown: DropDown = .init().then {
+      $0.backgroundColor = .grayXs
+      $0.textColor = .grayLg
+      $0.selectedTextColor = .white
+      $0.selectionBackgroundColor = .grayMd
+      $0.dismissMode = .automatic
+      $0.layer.cornerRadius = 10.0
+   }
+   private let starRatingTitle: BaseLabel = .init(
+      .init(text: "장소는 어떤가요? (선택)", style: .subtitle))
+   private let starRatingBox: UIView = .init().then {
+      $0.backgroundColor = .grayXs
+      $0.layer.cornerRadius = 10.0
+   }
+   private let starRating: CosmosView = .init().then {
+      $0.settings.starSize = 30.0
+      $0.settings.starMargin = 20.0
+      $0.settings.totalStars = 5
+      $0.settings.fillMode = .half
+      $0.settings.minTouchRating = 0.0
+      $0.rating = 0
+      
+      $0.settings.filledImage = .starFill
+      $0.settings.emptyImage = .starUnFill
+      $0.settings.emptyColor = .grayMd
+      $0.settings.filledColor = .greenMd
+   }
+   
+   private let bottomView: UIView = .init().then { $0.backgroundColor = .clear }
    
    public override func viewDidLoad() {
       super.viewDidLoad()
@@ -56,8 +85,13 @@ public final class WritePostVC: BaseVC {
       super.setSubviews()
       view.addSubview(scrollView)
       scrollView.addSubview(back)
-      back.addSubviews(map, locationField, locationNameField, bottomView)
-      map.addSubview(mapPin)
+      back.addSubviews(
+         locationField, locationNameField,
+         curationTitle, curationDrop,
+         starRatingTitle, starRatingBox,
+         bottomView
+      )
+      starRatingBox.addSubview(starRating)
    }
    
    public override func setLayouts() {
@@ -72,16 +106,8 @@ public final class WritePostVC: BaseVC {
          make.width.equalTo(scrollView.snp.width)
          make.verticalEdges.equalTo(scrollView)
       }
-      map.snp.makeConstraints { make in
-         make.top.equalTo(guide).inset(inset)
-         make.horizontalEdges.equalTo(guide).inset(inset)
-         make.height.equalTo(150.0)
-      }
-      mapPin.snp.makeConstraints { make in
-         make.center.equalToSuperview()
-      }
       locationField.snp.makeConstraints { make in
-         make.top.equalTo(map.snp.bottom).offset(inset)
+         make.top.equalTo(guide).inset(inset)
          make.horizontalEdges.equalTo(guide).inset(inset)
          make.height.equalTo(70.0)
       }
@@ -90,10 +116,31 @@ public final class WritePostVC: BaseVC {
          make.horizontalEdges.equalTo(guide).inset(inset)
          make.height.equalTo(70.0)
       }
-      bottomView.snp.makeConstraints { make in
-         make.top.equalTo(locationNameField.snp.bottom).offset(inset)
+      curationTitle.snp.makeConstraints { make in
+         make.top.equalTo(locationNameField.snp.bottom).offset(verticalSpace)
          make.horizontalEdges.equalTo(guide).inset(inset)
-         make.height.equalTo(1000)
+      }
+      curationDrop.snp.makeConstraints { make in
+         make.top.equalTo(curationTitle.snp.bottom).offset(10.0)
+         make.horizontalEdges.equalTo(guide).inset(inset)
+         make.height.equalTo(40.0)
+      }
+      starRatingTitle.snp.makeConstraints { make in
+         make.top.equalTo(curationDrop.snp.bottom).offset(20.0)
+         make.horizontalEdges.equalTo(guide).inset(inset)
+      }
+      starRatingBox.snp.makeConstraints { make in
+         make.top.equalTo(starRatingTitle.snp.bottom).offset(verticalSpace)
+         make.horizontalEdges.equalTo(guide).inset(inset)
+         make.height.equalTo(60.0)
+      }
+      starRating.snp.makeConstraints { make in
+         make.center.equalTo(starRatingBox.snp.center)
+      }
+      bottomView.snp.makeConstraints { make in
+         make.top.equalTo(starRatingBox.snp.bottom)
+         make.horizontalEdges.equalTo(guide).inset(inset)
+         make.height.equalTo(inset)
          make.bottom.equalTo(guide)
       }
    }
@@ -106,6 +153,7 @@ public final class WritePostVC: BaseVC {
    public func setLocation(_ location: CLLocationCoordinate2D, _ address: String) {
       self.location = location
       self.address = address
+      locationField.textField.text = address
    }
 }
 
@@ -116,6 +164,8 @@ extension WritePostVC: View {
    }
    
    private func bindActions(_ reactor: WritePostReactor) {
+      reactor.action.onNext(.didLoad)
+
       xButton.rx.tap.bind(with: self) { vc, _ in
          vc.dismiss(animated: true)
       }.disposed(by: disposeBag)
@@ -123,24 +173,33 @@ extension WritePostVC: View {
       backButton.rx.tap.bind(with: self) { vc, _ in
          vc.navigationController?.popViewController(animated: true)
       }.disposed(by: disposeBag)
+
+      curationDrop.rx.tapGesture()
+         .when(.recognized)
+         .bind(with: self) { vc, _ in
+            vc.locationNameField.resignFirstResponder()
+            vc.dropDown.show()
+         }.disposed(by: disposeBag)
       
-      reactor.action.onNext(.didLoad(location, address))
+      starRating.didTouchCosmos = { rating in }
    }
    
    private func bindStates(_ reactor: WritePostReactor) {
-      reactor.state.map(\.location)
-         .compactMap({ $0 })
-         .bind(with: self) { vc, location in
-            print(location)
-            let region: MKCoordinateRegion = .init(center: location,
-                                                   latitudinalMeters: 50,
-                                                   longitudinalMeters: 50)
-            vc.map.setRegion(region, animated: false)
-         }.disposed(by: disposeBag)
-      reactor.state.map(\.address)
-         .bind(with: self) { vc, address in
-            print(address)
-            vc.locationField.setTextField(address)
+      reactor.state.map(\.curations)
+         .filter({ !$0.isEmpty })
+         .bind(with: self) { vc, curations in
+            vc.dropDown.dataSource = curations
+            vc.dropDown.anchorView = vc.curationDrop
+            vc.dropDown.bottomOffset = CGPoint(x: 0.0, y: 45.0)
+            vc.dropDown.selectionAction = { [weak vc] _, curation in
+               vc?.reactor?.action.onNext(.selectCuration(curation))
+            }
+         }
+         .disposed(by: disposeBag)
+      reactor.state.map(\.selectedCuration)
+         .filter({ !$0.isEmpty })
+         .bind(with: self) { vc, curation in
+            vc.curationDrop.setLabel(curation)
          }.disposed(by: disposeBag)
    }
 }

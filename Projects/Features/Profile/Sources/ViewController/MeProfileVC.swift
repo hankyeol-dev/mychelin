@@ -33,7 +33,6 @@ public final class MeProfileVC: BaseVC {
    
    public override func viewWillDisappear(_ animated: Bool) {
       super.viewWillDisappear(animated)
-      self.reactor = nil
    }
    
    public override func setSubviews() {
