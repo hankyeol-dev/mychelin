@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.make(
-   module: .post,
+   module: .chat,
    product: .framework,
    targetDependencies: [
       .project(target: Module.data.toName, path: Module.data.toPath),
@@ -13,11 +13,5 @@ let project = Project.make(
       .external(name: Library.rxSwift.rawValue),
       .external(name: Library.rxCocoa.rawValue),
       .external(name: Library.reactorKit.rawValue),
-      .external(name: Library.rxLocation.rawValue),
-      .external(name: Library.rxMap.rawValue),
-      .external(name: Library.rxGesture.rawValue),
-      .external(name: Library.dropdown.rawValue),
-      .external(name: Library.nMap.rawValue),
-      .external(name: Library.cosmos.rawValue)
    ]
 )

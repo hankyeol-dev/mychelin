@@ -1,9 +1,12 @@
 // hankyeol-dev.
 
 import UIKit
+import CoreLocation
 
 import Auth
 import Domain
+import Post
+import Map
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
    
@@ -18,9 +21,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       guard let scene = (scene as? UIWindowScene) else { return }
       
       window = UIWindow(windowScene: scene)
-      window?.rootViewController = isLoggedIn
-      ? MainTabbarController()
-      : UINavigationController(rootViewController: AuthEntryVC())
+      let vc = WritePostVC()
+      vc.setLocation(
+         .init(latitude: 37.47705368834194, longitude: 126.96382238950132),
+         "서울 관악구 봉천동 1693-39")
+      window?.rootViewController = UINavigationController(rootViewController: vc)
+//      window?.rootViewController = isLoggedIn
+//      ? MainTabbarController()
+//      : UINavigationController(rootViewController: AuthEntryVC())
       
       window?.makeKeyAndVisible()
    }

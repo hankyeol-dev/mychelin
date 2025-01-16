@@ -8,6 +8,8 @@ import CommonUI
 import SnapKit
 import ReactorKit
 import RxCoreLocation
+import Tabman
+import Pageboy
 
 public final class MapVC: BaseVC {
    public var disposeBag: DisposeBag = .init()
@@ -106,36 +108,33 @@ extension MapVC: View {
    }
 }
 
-//extension MapVC: MKMapViewDelegate {
-//   public func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-//      let location: CLLocationCoordinate2D = .init(
-//         latitude: mapView.centerCoordinate.latitude,
-//         longitude: mapView.centerCoordinate.longitude)
-//      locationService.updateLocation(location)
-//   }
-//   
-//   public func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
-//      guard !annotation.isKind(of: MKUserLocation.self) else { return nil }
-//      var annotationView: MKAnnotationView?
-//      if let pin = annotation as? AnnotationType {
-//         annotationView = setupAnnotation(annotation: pin, mapView)
-//      }
-//      return annotationView
-//   }
-//   
-//   public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-//      print(view)
-//   }
-//   
-//   private func setupAnnotation(annotation: AnnotationType, _ mapView: MKMapView) -> MKAnnotationView {
-//      return mapView.dequeueReusableAnnotationView(
-//         withIdentifier: String(describing: MapAnnotationView.self),
-//         for: annotation)
-//   }
-//   
-//   private func addAnnotation(_ location: CLLocationCoordinate2D) {
-//      let annotation = AnnotationType(pinColor: .greenMd, coordinate: location)
-////      mapView.removeAnnotations(mapView.annotations)
-//      mapView.addAnnotation(annotation)
-//   }
-//}
+extension MapVC: MKMapViewDelegate {
+   public func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+      
+   }
+   
+   public func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
+      guard !annotation.isKind(of: MKUserLocation.self) else { return nil }
+      var annotationView: MKAnnotationView?
+      if let pin = annotation as? AnnotationType {
+         annotationView = setupAnnotation(annotation: pin, mapView)
+      }
+      return annotationView
+   }
+   
+   public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+      print(view)
+   }
+   
+   private func setupAnnotation(annotation: AnnotationType, _ mapView: MKMapView) -> MKAnnotationView {
+      return mapView.dequeueReusableAnnotationView(
+         withIdentifier: String(describing: MapAnnotationView.self),
+         for: annotation)
+   }
+   
+   private func addAnnotation(_ location: CLLocationCoordinate2D) {
+      let annotation = AnnotationType(pinColor: .greenMd, coordinate: location)
+//      mapView.removeAnnotations(mapView.annotations)
+      mapView.addAnnotation(annotation)
+   }
+}

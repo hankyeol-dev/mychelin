@@ -8,7 +8,7 @@ public final class RoundedField: BaseView {
    private let label: BaseLabel = .init(.init(style: .subtitle))
    public let textField: UITextField = .init().then {
       $0.layer.cornerRadius = 10.0
-      $0.backgroundColor = .graySm
+      $0.backgroundColor = .grayXs
       $0.tintColor = .black
       $0.leftViewMode = .always
       $0.leftView = UIView(frame: .init(x: 0, y: 0, width: 20.0, height: 20.0))

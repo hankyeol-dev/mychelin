@@ -24,4 +24,6 @@ public enum Library: String {
    case reusable = "Reusable"
    case dropdown = "DropDown"
    case nMap = "NMapsMap"
+   case tabman = "Tabman"
+   case cosmos = "Cosmos"
 }

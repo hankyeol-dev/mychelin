@@ -19,4 +19,6 @@ public extension UIImage {
    static let xmarkOutline = UIImage(resource: .xmarkOutline)
    static let leftOutline = UIImage(resource: .left)
    static let userLocation = UIImage(resource: .userLocation)
+   static let starUnFill = UIImage(resource: .starUnFill)
+   static let starFill = UIImage(resource: .starFill)
 }
