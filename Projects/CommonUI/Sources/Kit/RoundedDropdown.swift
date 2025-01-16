@@ -6,7 +6,7 @@ import Then
 
 public final class RoundedDropdown: BaseView {
    private let label: BaseLabel = .init(
-      .init(text: "", style: .subtitle, color: .systemGray3))
+      .init(text: "", style: .base, color: .systemGray3))
    private let arrow: UIButton = .init().then {
       let image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
       $0.setImage(image, for: .normal)
@@ -35,7 +35,7 @@ public final class RoundedDropdown: BaseView {
    
    override func setView() {
       super.setView()
-      backgroundColor = .graySm
+      backgroundColor = .grayXs
       layer.cornerRadius = 10.0
       clipsToBounds = true
    }
