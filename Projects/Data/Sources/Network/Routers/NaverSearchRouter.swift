@@ -5,7 +5,7 @@ import Moya
 import Domain
 
 public enum NaverSearchRouter {
-   case search(query: String)
+   case search(query: String, start: Int)
 }
 
 extension NaverSearchRouter: TargetType {
@@ -14,10 +14,11 @@ extension NaverSearchRouter: TargetType {
    public var method: Moya.Method { return .get }
    public var task: Moya.Task {
       switch self {
-      case let .search(query):
+      case let .search(query, start):
          let queryString: [String: Any] = [
             "query": query,
-            "display": 5
+            "display": 5,
+            "start": start
          ]
          return .requestParameters(parameters: queryString, encoding: URLEncoding.queryString)
       }

@@ -54,7 +54,26 @@ extension PostRepository: PostRepositoryType {
          return Disposables.create()
       }
    }
-   public func getCuraitonPosts(query: GetCurationPostsInputVO) -> Single<Result<GetCurationPostListVO, NetworkErrors>> {
+   public func getCurations() -> Single<Result<GetPostListVO, NetworkErrors>> {
+      return Single.create { single in
+         NetworkProvider.request(
+            PostRouter.getPosts(query: .init(next: "", category: "curations")),
+            of: PostListOutputType.self
+         ) { result in
+            switch result {
+            case let .success(output):
+               var newOutput = output
+               let userId = UserDefaultsProvider.shared.getStringValue(.userId)
+               newOutput.data = output.data.filter({ $0.creator.userId == userId })
+               single(.success(.success(newOutput.toGetPostListVO)))
+            case let .failure(error):
+               single(.success(.failure(error)))
+            }
+         }
+         return Disposables.create()
+      }
+   }
+   public func getCurationPosts(query: GetCurationPostsInputVO) -> Single<Result<GetCurationPostListVO, NetworkErrors>> {
       return Single.create { single in
          let query: GetPostQueryType = .init(next: query.next, category: query.category)
          NetworkProvider.request(PostRouter.getPosts(query: query),
@@ -74,9 +93,9 @@ extension PostRepository: PostRepositoryType {
 extension PostRepository {
    public func createCuration(input: CreateCurationInputVO) -> Single<Result<CreateCurationOutputVO, NetworkErrors>> {
       return Single.create { single in
-         let input: PostInputType = .init(category: input.curationName,
-                                          title: input.firstCategory,
-                                          content: "",
+         let input: PostInputType = .init(category: "curations",
+                                          title: input.curationName,
+                                          content: input.superCateogry,
                                           content1: String(input.curationColorIndex),
                                           content2: String(input.curationMakePublic))
          NetworkProvider.request(
