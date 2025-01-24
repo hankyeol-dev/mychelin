@@ -26,4 +26,5 @@ public enum Library: String {
    case nMap = "NMapsMap"
    case tabman = "Tabman"
    case cosmos = "Cosmos"
+   case iqKeyboard = "IQKeyboardManagerSwift"
 }

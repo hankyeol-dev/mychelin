@@ -58,7 +58,7 @@ final class ProfileInfoCell: BaseTableViewCell {
 extension ProfileInfoCell {
    func setCell(_ item: MeProfileVO) {
       if let image = item.profileImage {
-         profileImage.setImage(image)
+         profileImage.setMockImage(image)
       } else {
          profileImage.setDefaultImage(UIImage(systemName: "person")!)
       }

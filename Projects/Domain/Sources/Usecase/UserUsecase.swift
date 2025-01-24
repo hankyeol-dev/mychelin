@@ -3,18 +3,18 @@
 import Foundation
 import RxSwift
 
-public protocol UserUsecaseType: CommonUsecaseType {
+public protocol UserUsecaseType {
    func getMe() -> Single<Result<MeProfileVO, NetworkErrors>>
 }
 
-public struct UserUsecase: UserUsecaseType {
+public struct UserUsecase {
    private let userRepository: UserRepositoryType
-   public let authRepository: AuthRepositoryType
-   public init(authRepository: AuthRepositoryType, userRepository: UserRepositoryType) {
-      self.authRepository = authRepository
+   public init(userRepository: UserRepositoryType) {
       self.userRepository = userRepository
    }
-   
+}
+
+extension UserUsecase: UserUsecaseType {
    public func getMe() -> Single<Result<MeProfileVO, NetworkErrors>> {
       return userRepository.getMe()
    }

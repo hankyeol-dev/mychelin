@@ -22,6 +22,7 @@ let project = Project.make(
       .project(target: Module.domain.toName, path: Module.domain.toPath),
       .project(target: Module.data.toName, path: Module.data.toPath),
       .external(name: Library.rxSwift.rawValue),
-      .external(name: Library.nMap.rawValue)
+      .external(name: Library.nMap.rawValue),
+      .external(name: Library.iqKeyboard.rawValue)
    ]
 )
