@@ -3,6 +3,10 @@ Projects/App/ENV/*
 Projects/Domain/Sources/ENV/*
 Projects/Data/ENV/*
 Projects/Data/Sources/ENV/*
+Projects/Domain/Sources/Mock/*
+Projects/Data/Sources/Mock/*
+
+
 
 
 ### macOS ###

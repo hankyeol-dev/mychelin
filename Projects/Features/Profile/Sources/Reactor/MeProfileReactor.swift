@@ -7,13 +7,11 @@ import Data
 
 import ReactorKit
 import RxDataSources
-import UIKit
 
-public final class MeProfileReactor: @preconcurrency Reactor {
+public final class MeProfileReactor: Reactor {
    private let disposeBag: DisposeBag = .init()
    private let userUsecase: UserUsecaseType = UserUsecase(
-      authRepository: AuthRepository(),
-      userRepository: UserRepository())
+      userRepository: UserRepositoryMock())
    
    public var initialState: State = .init()
    
@@ -67,7 +65,6 @@ extension MeProfileReactor {
       }
    }
    
-   @MainActor
    public func reduce(state: State, mutation: Mutation) -> State {
       var newState = state
       
@@ -91,7 +88,7 @@ extension MeProfileReactor {
             newState.errorMessage = error.toErrorMessage
          }
       case let .tapMenu(indexPath):
-         newState
+         print(indexPath)
       }
       return newState
    }

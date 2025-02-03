@@ -38,4 +38,8 @@ public extension UIImageView {
          }
       }
    }
+   
+   func setMockImage(_ urlString: String) {
+      self.kf.setImage(with: URL(string: urlString))
+   }
 }

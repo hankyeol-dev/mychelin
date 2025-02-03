@@ -34,6 +34,10 @@ extension CircleLazyImage {
       imageView.setImage(urlString)
    }
    
+   public func setMockImage(_ urlString: String) {
+      imageView.setMockImage(urlString)
+   }
+   
    public func setDefaultImage(_ image: UIImage) {
       imageView.image = image
    }
