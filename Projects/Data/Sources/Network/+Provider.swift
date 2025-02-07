@@ -16,7 +16,7 @@ extension MoyaProvider {
                } catch {
                   continuation.resume(throwing: NetworkErrors.noData)
                }
-            case let .failure(error):
+            case .failure:
                _Concurrency.Task { [weak self] in
                   guard let self else { return }
                   if await refreshRequest() {

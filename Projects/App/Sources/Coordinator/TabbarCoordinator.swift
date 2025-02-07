@@ -27,7 +27,6 @@ public final class TabbarCoordinator: TabbarCoordinatorType {
    }
    
    private func setTabController(_ page: TempTabBarCase) -> UIViewController {
-//      let nav = UINavigationController()
       navigationController.setNavigationBarHidden(true, animated: false)
       switch page {
       case .home:

@@ -17,6 +17,7 @@ public enum Module: CaseIterable {
    
    /// - Feature Module
    case auth
+   case home
    case map
    case post
    case profile
@@ -36,6 +37,7 @@ public extension Module {
       case .demoLoginApp: return "DemoLoginApp"
 //      case .demoMapApp: return "DemoMapApp"
       case .auth: return "Auth"
+      case .home: return "Home"
       case .map: return "Map"
       case .post: return "Post"
       case .profile: return "Profile"
@@ -51,7 +53,7 @@ public extension Module {
       switch self {
       case .demoLoginApp:
          return .relativeToRoot("DemoApps/\(toName)")
-      case .auth, .map, .post, .profile, .chat:
+      case .auth, .map, .post, .profile, .chat, .home:
          return .relativeToRoot("Projects/Features/\(toName)")
       default:
          return .relativeToRoot("Projects/\(toName)")

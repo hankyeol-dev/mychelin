@@ -2,6 +2,7 @@
 import UIKit
 import NMapsMap
 import Domain
+import IQKeyboardManagerSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -10,6 +11,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
    ) -> Bool {
       NMFAuthManager.shared().clientId = nMapConfig.clientId.rawValue
+      IQKeyboardManager.shared.isEnabled = true
       return true
    }
 
