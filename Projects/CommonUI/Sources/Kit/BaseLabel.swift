@@ -17,6 +17,7 @@ public final class BaseLabel: UILabel {
    
    public enum LabelStyle {
       case base
+      case xLargeTitle
       case largeTitle
       case title
       case subtitle
@@ -27,6 +28,8 @@ public final class BaseLabel: UILabel {
          switch self {
          case .base, .error:
                .systemFont(ofSize: 12.0)
+         case .xLargeTitle:
+               .boldSystemFont(ofSize: 24.0)
          case .largeTitle:
                .boldSystemFont(ofSize: 20.0)
          case .title:

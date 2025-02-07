@@ -15,6 +15,7 @@ let project = Project.make(
    needResources: true,
    targetDependencies: [
       .project(target: Module.auth.toName, path: Module.auth.toPath),
+      .project(target: Module.home.toName, path: Module.home.toPath),
       .project(target: Module.profile.toName, path: Module.profile.toPath),
       .project(target: Module.map.toName, path: Module.map.toPath),
       .project(target: Module.post.toName, path: Module.post.toPath),

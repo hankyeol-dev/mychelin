@@ -4,9 +4,9 @@ import UIKit
 
 @frozen
 public enum FoodCategories: String, CaseIterable {
-   case beer = "맥주"
+   case beer = "술"
    case bingsu = "빙수"
-   case boong = "붕어빵/길거리 음식"
+   case boong = "길거리 음식"
    case bread = "빵"
    case bunsik = "기타 분식"
    case burger = "버거"
@@ -17,14 +17,14 @@ public enum FoodCategories: String, CaseIterable {
    case dessert = "디저트"
    case etc = "기타 음식"
    case fine = "파인다이닝"
-   case koreanBbq = "삼겹살/곱창"
+   case koreanBbq = "고기, 곱창"
    case korean = "한식"
-   case mexican = "멕시코 음식"
+   case mexican = "타코"
    case pizza = "피자"
    case ramen = "라면"
    case salad = "샐러드"
    case sandwich = "샌드위치"
-   case sushi = "스시/일식"
+   case sushi = "일식"
    case tteok = "떡볶이"
    case western = "서양식"
    
@@ -54,5 +54,13 @@ public enum FoodCategories: String, CaseIterable {
       case .tteok: return UIImage(resource: .tteok)
       case .western: return UIImage(resource: .western)
       }
+   }
+   
+   public static func toShuffled(_ prefix: FoodCategories) -> [Self] {
+      let shuffled = Self.allCases.filter({ $0 != prefix }).shuffled()
+      var newList: [Self] = []
+      newList.append(prefix)
+      newList.append(contentsOf: shuffled)
+      return newList
    }
 }
