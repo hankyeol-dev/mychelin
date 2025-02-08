@@ -5,7 +5,7 @@ import SnapKit
 import Then
 
 public final class BaseScrollView: BaseView {
-   private let scrollView: UIScrollView = .init().then {
+   public let scrollView: UIScrollView = .init().then {
       $0.backgroundColor = .clear
       $0.showsVerticalScrollIndicator = false
    }
@@ -36,6 +36,6 @@ public final class BaseScrollView: BaseView {
          make.height.equalTo(height)
          make.horizontalEdges.bottom.equalTo(contentView.safeAreaLayoutGuide)
       }
-      bottomView.backgroundColor = .black
+      bottomView.backgroundColor = .clear
    }
 }
