@@ -71,3 +71,46 @@ extension AuthRouter: RouterType {
       }
    }
 }
+
+public enum AsyncAuthRouter {
+   case login(LoginInputType)
+   case refreshToken
+}
+
+extension AsyncAuthRouter: RouterProtocol {
+   public var path: String {
+      switch self {
+      case .login: "/users/login"
+      case .refreshToken: "/auth/refresh"
+      }
+   }
+   
+   public var method: NetworkMethod {
+      switch self {
+      case .login: .POST
+      case .refreshToken: .GET
+      }
+   }
+   
+   public var parameters: [URLQueryItem]? {
+      return nil
+   }
+   
+   public var headers: [String : String] {
+      switch self {
+      case .login:
+         setHeader(.request, needToken: false, needProductId: true)
+      case .refreshToken:
+         setHeader(.refresh, needToken: false, needProductId: true)
+      }
+   }
+   
+   public var body: Data? {
+      switch self {
+      case let .login(input):
+         input.toJSON
+      case .refreshToken:
+         nil
+      }
+   }
+}

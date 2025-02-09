@@ -1,5 +1,6 @@
 .mise.toml
 Projects/App/ENV/*
+Projects/App/Sources/Temp/*
 Projects/Domain/Sources/ENV/*
 Projects/Data/ENV/*
 Projects/Data/Sources/ENV/*

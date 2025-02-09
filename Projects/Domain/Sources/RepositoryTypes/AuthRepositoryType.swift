@@ -8,3 +8,7 @@ public protocol AuthRepositoryType {
    func login(with loginInput: LoginInputVO) -> Single<Result<Bool, NetworkErrors>>
    func refreshToken() -> Single<Bool>
 }
+
+public protocol MockAuthRepositoryType {
+   func login(with loginInput: LoginInputVO) async -> Result<Bool, CommonError>
+}

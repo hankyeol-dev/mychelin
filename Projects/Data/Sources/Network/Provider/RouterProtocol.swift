@@ -8,7 +8,7 @@ public protocol RouterProtocol {
    var path: String { get }
    var method: NetworkMethod { get }
    var parameters: [URLQueryItem]? { get }
-   var headers: Task<[String : String], Never> { get }
+   var headers: [String: String] { get }
    var body: Data? { get }
 }
 
@@ -17,7 +17,7 @@ public extension RouterProtocol {
       return env.baseURL
    }
    
-   func asURL() throws(RouterError) -> URL {
+   func asURL() throws(NetworkError) -> URL {
       guard var component = URLComponents(string: baseURL + path) else {
          throw .invalidURL
       }
@@ -30,12 +30,12 @@ public extension RouterProtocol {
       }
    }
    
-   func asURLRequest() async throws(RouterError) -> URLRequest {
+   func asURLRequest() throws(NetworkError) -> URLRequest {
       do {
          var request = URLRequest(url: try asURL())
          request.httpMethod = method.rawValue
          
-         for (key, value) in await headers.value {
+         for (key, value) in headers {
             request.addValue(value, forHTTPHeaderField: key)
          }
          
@@ -49,7 +49,6 @@ public extension RouterProtocol {
       }
    }
    
-   // MARK: multipart/form-data 형식으로 요청을 보내야하는 경우, body 형식을 맵핑
    func asMultipartFormDatas(
       boundary: String,
       fileKey : String = "image",
@@ -82,7 +81,6 @@ public extension RouterProtocol {
       return dataSet
    }
    
-   // MARK: multipart/form-data 통신으로 들어올 때, content 형태로만 들어올 경우 활용
    func asMultipartContentDatas(input: Encodable?) -> [String : String]? {
       if let input,
          let contentData = try? JSONEncoder().encode(input),
@@ -90,5 +88,42 @@ public extension RouterProtocol {
          return contentDataDict.mapValues { String(describing: $0) }
       }
       return nil
+   }
+}
+
+public extension RouterProtocol {
+   func setHeader(_ routerCase: RouterCase,
+                  needToken: Bool,
+                  needProductId: Bool,
+                  boundary: String? = nil) -> [String: String] {
+      var defaultHeader: [String: String] = [
+         headerConfig.secretKey.rawValue: headerConfigValue.secret.rawValue,
+         
+         // MARK: content-type
+         headerConfig.contentKey.rawValue
+         : routerCase == .upload
+         ? headerConfigValue.contentMultipart.rawValue + "; boundary=\(boundary ?? UUID().uuidString)"
+         : routerCase == .image
+         ? headerConfigValue.contentImage.rawValue
+         : headerConfigValue.contentJson.rawValue,
+      ]
+      
+      // MARK: token
+      if needToken {
+         defaultHeader[headerConfig.authKey.rawValue]
+         = UserDefaultsProvider.shared.getStringValue(.accessToken)
+      }
+      
+      if routerCase == .refresh {
+         defaultHeader[headerConfig.refreshTokenKey.rawValue]
+         = UserDefaultsProvider.shared.getStringValue(.refreshToken)
+      }
+      
+      // MARK: productId
+      if needProductId {
+         defaultHeader[headerConfig.productIdKey.rawValue] = headerConfigValue.productId.rawValue
+      }
+      
+      return defaultHeader
    }
 }

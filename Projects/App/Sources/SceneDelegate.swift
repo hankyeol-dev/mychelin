@@ -2,6 +2,7 @@
 
 import UIKit
 import Domain
+import Data
 import Post
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -23,7 +24,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //      window?.rootViewController = nav
 //      coordinator = AppCoordinator(navigationController: nav)
 //      coordinator.start()
-      window?.rootViewController = UINavigationController(rootViewController: WriteMyBestVC())
+//      let reactor = WriteMyBestReactor(SearchUsecase(searchRepository: SearchRepository()))
+//      let vc = WriteMyBestVC()
+//      vc.reactor = reactor
+      let vc = APITestVC()
+      window?.rootViewController = UINavigationController(
+         rootViewController: vc
+      )
       window?.makeKeyAndVisible()
    }
    

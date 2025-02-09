@@ -75,3 +75,26 @@ extension AuthRepository: AuthRepositoryType {
       }
    }
 }
+
+public struct MockAuthRepository: MockAuthRepositoryType, DefaultRepositoryType {
+   private let disposeBag = DisposeBag()
+   
+   public init() {}
+   
+   public func login(with loginInput: LoginInputVO) async -> Result<Bool, CommonError> {
+      let input: LoginInputType = .init(email: loginInput.email, password: loginInput.password)
+      let result = await request(AsyncAuthRouter.login(input), of: LoginOutputType.self)
+      
+      switch result {
+      case let .success(output):
+         UserDefaultsProvider.shared.setStringValue(.accessToken, value: output.accessToken)
+         UserDefaultsProvider.shared.setStringValue(.refreshToken, value: output.refreshToken)
+         UserDefaultsProvider.shared.setStringValue(.userId, value: output.userId)
+         UserDefaultsProvider.shared.setStringValue(.userNickname, value: output.nick)
+         UserDefaultsProvider.shared.setBoolValue(.isLogined, value: true)
+         return .success(true)
+      case let .failure(error):
+         return .failure(error.mapToCommonError())
+      }
+   }
+}

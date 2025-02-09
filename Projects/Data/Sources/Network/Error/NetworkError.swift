@@ -13,15 +13,16 @@ public enum NetworkError: Int, Error, CaseIterable {
    case overCallStack = 429
    case unknown = 444
    case serverError = 500
+   
+   case invalidURL = 1
+   case invalidRequest = 2
+   case invalidResponse = 3
+   case noData = 4
 }
 
 extension NetworkError {
-   public func validateIsError(_ errorCode: Int) -> Bool {
-      return errorCode == self.rawValue
-   }
-   
-   public func validateErrorCode(_ errorCode: Int) -> Self {
-      return validateIsError(errorCode) ? self : .unknown
+   public static func validateErrorCode(_ errorCode: Int) -> Self {
+      return NetworkError(rawValue: errorCode) ?? .unknown
    }
    
    public func mapToCommonError() -> CommonError {
@@ -34,6 +35,8 @@ extension NetworkError {
       case .overCallStack: .error(message: "너무 많은 요청이 들어왔습니다.")
       case .unknown: .error(message: "알 수 없는 에러가 발생했습니다.")
       case .serverError: .error(message: "서버 에러가 발생했습니다.")
+      case .noData: .error(message: "데이터를 찾을 수 없습니다.")
+      default: .error(message: "라우터 요청에서 문제가 있습니다.")
       }
    }
 }

@@ -85,3 +85,11 @@ extension PostRouter: RouterType {
       }
    }
 }
+
+public enum MockPostRouter {
+   case uploadPost(input: PostInputType)
+   case uploadFiles(input: UploadFileInputType)
+   case getPost(postId: String)
+   case getPosts(query: GetPostQueryType)
+   case getPostsByUser(userId: String, query: GetPostQueryType)
+}

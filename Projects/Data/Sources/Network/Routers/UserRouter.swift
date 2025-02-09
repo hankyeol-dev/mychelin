@@ -55,3 +55,27 @@ extension UserRouter: RouterType {
       return generateHeaderFields(true, .base, fields)
    }
 }
+
+public enum MockUserRouter {
+   case me
+   case other(userId: String)
+}
+
+extension MockUserRouter: RouterProtocol {
+   public var path: String {
+      switch self {
+      case .me: "/users/me/profile"
+      case .other(let userId): "/users/\(userId)/profile"
+      }
+   }
+   
+   public var method: NetworkMethod { return .GET }
+   
+   public var parameters: [URLQueryItem]? { return nil }
+   
+   public var headers: [String : String] {
+      return setHeader(.request, needToken: true, needProductId: true)
+   }
+   
+   public var body: Data? { return nil }
+}

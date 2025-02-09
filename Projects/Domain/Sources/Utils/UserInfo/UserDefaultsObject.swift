@@ -4,6 +4,7 @@ import Foundation
 
 protocol UserDefaultsObjectType {
    var userId: String { get }
+   var userNickname: String { get }
    var productId: String { get }
    var accessToken: String { get }
    var refreshToken: String { get }
@@ -16,6 +17,9 @@ protocol UserDefaultsObjectType {
 struct UserDefaultsObject: UserDefaultsObjectType {
    @UserDefaultsWrapper(key: .userId, defaultValue: "")
    private(set) var userId: String
+   
+   @UserDefaultsWrapper(key: .userId, defaultValue: "")
+   private(set) var userNickname: String
 
    @UserDefaultsWrapper(key: .productId, defaultValue: "")
    private(set) var productId: String
@@ -33,6 +37,8 @@ struct UserDefaultsObject: UserDefaultsObjectType {
       switch key {
       case .userId:
          userId = value
+      case .userNickname:
+         userNickname = value
       case .productId:
          productId = value
       case .accessToken:

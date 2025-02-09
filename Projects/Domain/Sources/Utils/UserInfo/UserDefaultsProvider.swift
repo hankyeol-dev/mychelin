@@ -19,6 +19,8 @@ public final class UserDefaultsProvider: UserDefaultsProviderType {
       switch key {
       case .userId:
          return userInfo.userId
+      case .userNickname:
+         return userInfo.userNickname
       case .productId:
          return userInfo.productId
       case .accessToken:

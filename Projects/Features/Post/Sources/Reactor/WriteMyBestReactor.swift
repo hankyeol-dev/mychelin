@@ -8,7 +8,7 @@ import CommonUI
 
 public final class WriteMyBestReactor: Reactor {
    private let disposeBage: DisposeBag = .init()
-   private let searchUsecase: SearchUsecaseType = SearchUsecase(searchRepository: SearchRepository())
+   private let searchUsecase: SearchUsecaseType
    
    public var initialState: State
    
@@ -43,10 +43,11 @@ public final class WriteMyBestReactor: Reactor {
       case removeFromPhotos(NSItemProvider)
    }
    
-   public init() {
+   public init(_ searchUsecase: SearchUsecaseType) {
       self.initialState = .init(
          selectedFoodCategory: FoodCategories.allCases.randomElement() ?? .etc
       )
+      self.searchUsecase = searchUsecase
    }
 }
 

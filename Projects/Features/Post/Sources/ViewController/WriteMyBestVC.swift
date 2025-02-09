@@ -45,10 +45,9 @@ public final class WriteMyBestVC: BaseVC {
       view.isScrollEnabled = false
       return view
    }()
-   
+      
    public override func viewDidLoad() {
       super.viewDidLoad()
-      reactor = WriteMyBestReactor()
    }
    
    public override func setSubviews() {

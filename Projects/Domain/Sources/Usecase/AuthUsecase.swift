@@ -22,3 +22,19 @@ public struct AuthUsecase: AuthUsecaseType {
       return authRepository.login(with: loginInput)
    }
 }
+
+public protocol MockAuthUsecaseType {
+   func login(with loginInput: LoginInputVO) async -> Result<Bool, CommonError>
+}
+
+public struct MockAuthUsecase: MockAuthUsecaseType {
+   public let repository: MockAuthRepositoryType
+   
+   public init(repository: MockAuthRepositoryType) {
+      self.repository = repository
+   }
+   
+   public func login(with loginInput: LoginInputVO) async -> Result<Bool, CommonError> {
+      return await repository.login(with: loginInput)
+   }
+}

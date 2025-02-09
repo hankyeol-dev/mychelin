@@ -2,6 +2,7 @@
 
 import UIKit
 import SnapKit
+import Domain
 
 public final class FoodCategoryButton: UIButton {
    private let categoryName: BaseLabel = .init(.init(style: .largeTitle, color: .white))

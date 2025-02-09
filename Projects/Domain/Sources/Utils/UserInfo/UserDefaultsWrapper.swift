@@ -5,6 +5,7 @@ import Foundation
 @frozen
 public enum UserDefaultsKeys: String {
    case userId
+   case userNickname
    case productId
    case accessToken
    case refreshToken
