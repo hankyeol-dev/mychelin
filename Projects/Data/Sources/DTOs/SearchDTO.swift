@@ -5,7 +5,7 @@ import Domain
 
 public struct SearchQueryType {
    public let next: String
-   public let limit: Int = 5
+   public let limit: Int = 10
    public let category: String
    public let hashTag: String
 }
@@ -22,9 +22,9 @@ public struct SearchGEOQueryType {
       category: String,
       longitude: Double,
       latitude: Double,
-      maxDistance: Int = 100,
+      maxDistance: Int = 200,
       orderBy: SearchOrderBy = .distance,
-      sortBy: SearchSortBy = .asc
+      sortBy: SearchSortBy = .desc
    ) {
       self.category = category
       self.longitude = longitude

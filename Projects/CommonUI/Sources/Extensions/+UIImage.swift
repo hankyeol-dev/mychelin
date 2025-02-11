@@ -21,4 +21,17 @@ public extension UIImage {
    static let userLocation = UIImage(resource: .userLocation)
    static let starUnFill = UIImage(resource: .starUnFill)
    static let starFill = UIImage(resource: .starFill)
+   
+   func downscaleTOjpegData(maxBytes: UInt) -> Data? {
+      var quality = 1.0
+      while quality > 0 {
+         guard let jpeg = jpegData(compressionQuality: quality)
+         else { return nil }
+         if jpeg.count <= maxBytes {
+            return jpeg
+         }
+         quality -= 0.1
+      }
+      return nil
+   }
 }

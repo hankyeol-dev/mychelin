@@ -19,3 +19,21 @@ extension SearchUsecase: SearchUsecaseType {
       return searchRepository.nLocationSearch(query: query, start: start)
    }
 }
+
+public protocol MockSearchUsecaseType {
+   func kLocationSearch(query: String) async -> Result<KSearchVO, CommonError>
+}
+
+public struct MockSearchUsecase: MockSearchUsecaseType {
+   private let repository: MockSearchRepositoryType
+   
+   public init(repository: MockSearchRepositoryType) {
+      self.repository = repository
+   }
+   
+   public func kLocationSearch(query: String) async -> Result<KSearchVO, CommonError> {
+      return await repository.kLocationSearch(query: query)
+   }
+}
+
+

@@ -51,7 +51,7 @@ public extension RouterProtocol {
    
    func asMultipartFormDatas(
       boundary: String,
-      fileKey : String = "image",
+      fileKey : String = "files",
       files: [Data]?,
       content: [String: String]?
    ) -> Data {

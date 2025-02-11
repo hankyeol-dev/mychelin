@@ -21,3 +21,18 @@ public struct SearchRepository: SearchRepositoryType {
       }
    }
 }
+
+public struct MockSearchRepository: MockSearchRepositoryType, DefaultRepositoryType {
+   public init() {}
+   
+   public func kLocationSearch(query: String) async -> Result<KSearchVO, CommonError> {
+      let result = await request(KSearchRouter.kSearch(query: query), of: KSearchOutput.self)
+      switch result {
+      case .success(let success):
+         return .success(success.toVO)
+      case .failure(let failure):
+         print(failure)
+         return .failure(.error(message: "k search error"))
+      }
+   }
+}

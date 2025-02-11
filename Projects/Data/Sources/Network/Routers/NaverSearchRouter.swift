@@ -34,3 +34,41 @@ extension NaverSearchRouter: TargetType {
       return query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
    }
 }
+
+public enum KSearchRouter {
+   case kSearch(query: String)
+}
+
+extension KSearchRouter: RouterProtocol {
+   public var baseURL: String {
+      return env.KSearchConfig.baseurl.rawValue
+   }
+   public var path: String {
+      return ""
+   }
+   
+   public var method: NetworkMethod {
+      return .GET
+   }
+   
+   public var parameters: [URLQueryItem]? {
+      switch self {
+      case let .kSearch(query):
+         return [
+            .init(name: "query", value: query),
+            .init(name: "size", value: "10")
+         ]
+      }
+   }
+   
+   public var headers: [String : String] {
+      return [
+         "Authorization": env.KSearchConfig.authKey.rawValue,
+         "Content-Type": "application/json;charset=UTF-8"
+      ]
+   }
+   
+   public var body: Data? {
+      return nil
+   }
+}

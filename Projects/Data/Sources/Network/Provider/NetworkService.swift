@@ -18,12 +18,14 @@ public struct NetworkService {
       }
       
       guard res.statusCode == 200 else {
+         print(res.statusCode)
          throw handlerError(res.statusCode)
       }
       
       do {
          return try decoder.decode(T.self, from: data)
       } catch {
+         print(error)
          throw NetworkError.noData
       }
    }

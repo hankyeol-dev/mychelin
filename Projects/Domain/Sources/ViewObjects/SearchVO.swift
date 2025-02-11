@@ -15,3 +15,25 @@ public struct NaverSearchVO {
       self.mapy = mapy
    }
 }
+
+public struct KSearchVO {
+   public let documents: [kSearchDocument]
+   
+   public struct kSearchDocument {
+      let address: String
+      let place: String
+      let x: String
+      let y: String
+      
+      public init(address: String, place: String, x: String, y: String) {
+         self.address = address
+         self.place = place
+         self.x = x
+         self.y = y
+      }
+   }
+   
+   public init(documents: [kSearchDocument]) {
+      self.documents = documents
+   }
+}

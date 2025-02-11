@@ -92,4 +92,83 @@ public enum MockPostRouter {
    case getPost(postId: String)
    case getPosts(query: GetPostQueryType)
    case getPostsByUser(userId: String, query: GetPostQueryType)
+   case getPostsByHashtag(query: SearchQueryType)
+   case getPostsByLocation(query: SearchGEOQueryType)
+}
+
+extension MockPostRouter: RouterProtocol {
+   public var path: String {
+      switch self {
+      case .uploadPost:
+         return "/posts"
+      case .uploadFiles:
+         return "/posts/files"
+      case .getPost(let postId):
+         return "/posts/\(postId)"
+      case .getPosts:
+         return "/posts"
+      case .getPostsByUser(let userId, _):
+         return "/posts/users/\(userId)"
+      case .getPostsByHashtag:
+         return "/posts/hashtags"
+      case .getPostsByLocation:
+         return "/posts/geolocation"
+      }
+   }
+   
+   public var method: NetworkMethod {
+      switch self {
+      case .getPosts, .getPost, .getPostsByUser, .getPostsByHashtag, .getPostsByLocation: return .GET
+      case .uploadPost, .uploadFiles: return .POST
+      }
+   }
+   
+   public var parameters: [URLQueryItem]? {
+      switch self {
+      case let .getPosts(query), let .getPostsByUser(_, query):
+         return [
+            URLQueryItem(name: "next", value: query.next),
+            URLQueryItem(name: "limit", value: String(query.limit)),
+            URLQueryItem(name: "category[]", value: query.category)
+         ]
+      case let .getPostsByHashtag(query):
+         return [
+            .init(name: "next", value: query.next),
+            .init(name: "limit", value: String(query.limit)),
+            .init(name: "category", value: query.category),
+            .init(name: "hashTag", value: query.hashTag)
+         ]
+      case let .getPostsByLocation(query):
+         return [
+            .init(name: "category", value: query.category),
+            .init(name: "longitude", value: String(query.longitude)),
+            .init(name: "latitude", value: String(query.latitude)),
+            .init(name: "maxDistance", value: String(query.maxDistance)),
+            .init(name: "order_by", value: query.orderBy.rawValue),
+            .init(name: "sort_by", value: query.sortBy.rawValue)
+         ]
+      default:
+         return nil
+      }
+   }
+   
+   public var headers: [String : String] {
+      switch self {
+      case .uploadPost, .getPost, .getPosts, .getPostsByUser, .getPostsByHashtag, .getPostsByLocation:
+         return setHeader(.request, needToken: true, needProductId: true)
+      case .uploadFiles(let input):
+         return setHeader(.upload, needToken: true, needProductId: true, boundary: input.boundary)
+      }
+   }
+   
+   public var body: Data? {
+      switch self {
+      case let .uploadPost(input):
+         return input.toJSON
+      case let .uploadFiles(input):
+         return asMultipartFormDatas(boundary: input.boundary, files: input.files, content: nil)
+      default:
+         return nil
+      }
+   }
 }

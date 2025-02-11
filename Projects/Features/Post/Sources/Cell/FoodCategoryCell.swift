@@ -46,7 +46,7 @@ public final class FoodCategoryCell: BaseCollectionViewCell {
    }
    
    private func setName(_ category: FoodCategories, _ isSelected: Bool) {
-      name.setText(category.rawValue)
+      name.setText(category.toCategory)
       name.setTextColor(isSelected ? .white : .grayLg)
       name.textAlignment = .center
    }

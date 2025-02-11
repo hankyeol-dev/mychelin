@@ -49,6 +49,7 @@ public struct PostInputType: Encodable {
 }
 
 public struct UploadFileInputType: Encodable {
+   public let boundary: String = UUID().uuidString
    public let files: [Data]
 }
 
@@ -68,6 +69,10 @@ public struct GetPostQueryType {
 
 public struct PostsFileOutputType: Decodable {
    public let files: [String]
+   
+   public var toVO: UploadFilesOutputVO {
+      return .init(files: files)
+   }
 }
 
 public struct PostUploadOutputType: Decodable {
@@ -76,6 +81,8 @@ public struct PostUploadOutputType: Decodable {
    enum CodingKeys: String, CodingKey {
       case postId = "post_id"
    }
+   
+   public var toVO: UploadPostOutputVO { return .init(postId: postId) }
 }
 
 public struct PostOutputType: Decodable {
@@ -124,7 +131,19 @@ public struct PostOutputType: Decodable {
    }
    
    var toGetPostVO: GetPostVO {
-      return .init(postId: postId, category: category, title: title, likes: likes.count)
+      return .init(
+         postId: postId,
+         category: category,
+         title: title,
+         likes: likes.count,
+         content: content,
+         address: content1 ?? "",
+         rate: Double(content2!) ?? 0.0,
+         hashTags: hashTags,
+         files: files,
+         creatorId: creator.userId,
+         creatorNick: creator.nick
+      )
    }
    
    var toCreateCurationOutputVO: CreateCurationOutputVO {
@@ -156,6 +175,14 @@ public struct PostListOutputType: Decodable {
    
    var toGetCurationPostListVO: GetCurationPostListVO {
       return .init(data: data.map({ $0.toGetPostVO }), next: next)
+   }
+}
+
+public struct LocationSearchListOutput: Decodable {
+   public var data: [PostOutputType]
+   
+   public var toVO: GetPostListVO {
+      return .init(data: data.map({ $0.toGetPostVO }))
    }
 }
 
