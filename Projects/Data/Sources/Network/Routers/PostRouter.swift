@@ -128,8 +128,8 @@ extension MockPostRouter: RouterProtocol {
       case let .getPosts(query), let .getPostsByUser(_, query):
          return [
             URLQueryItem(name: "next", value: query.next),
-            URLQueryItem(name: "limit", value: String(query.limit)),
-            URLQueryItem(name: "category[]", value: query.category)
+            URLQueryItem(name: "limit", value: String(query.limit))
+//            URLQueryItem(name: "category[]", value: query.category)
          ]
       case let .getPostsByHashtag(query):
          return [
@@ -140,7 +140,7 @@ extension MockPostRouter: RouterProtocol {
          ]
       case let .getPostsByLocation(query):
          return [
-            .init(name: "category", value: query.category),
+//            .init(name: "category", value: query.category),
             .init(name: "longitude", value: String(query.longitude)),
             .init(name: "latitude", value: String(query.latitude)),
             .init(name: "maxDistance", value: String(query.maxDistance)),

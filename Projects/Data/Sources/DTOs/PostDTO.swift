@@ -142,7 +142,8 @@ public struct PostOutputType: Decodable {
          hashTags: hashTags,
          files: files,
          creatorId: creator.userId,
-         creatorNick: creator.nick
+         creatorNick: creator.nick,
+         creatorImage: creator.profileImage
       )
    }
    
@@ -198,6 +199,19 @@ public struct CommentOutputType: Decodable {
       case createdAt
       case creator
    }
+   
+   public var toVO: CommentOutputVO {
+      return .init(commentId: commentId,
+                   content: content,
+                   commentUserId: creator.userId,
+                   commentNick: creator.nick,
+                   createdAt: createdAt.
+      )
+   }
+}
+
+public struct CommentListOutput: Decodable {
+   public let comments: [CommentOutputType]
 }
 
 public struct PostLikeOutputType: Decodable {

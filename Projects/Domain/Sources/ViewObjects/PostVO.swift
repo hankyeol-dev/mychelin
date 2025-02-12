@@ -130,8 +130,9 @@ public struct GetPostVO {
    public let files: [String]?
    public let creatorId: String
    public let creatorNick: String
+   public let creatorImage: String?
    
-   public init(postId: String, category: String, title: String, likes: Int, content: String, address: String, rate: Double, hashTags: [String], files: [String]?, creatorId: String, creatorNick: String) {
+   public init(postId: String, category: String, title: String, likes: Int, content: String, address: String, rate: Double, hashTags: [String], files: [String]?, creatorId: String, creatorNick: String, creatorImage: String?) {
       self.postId = postId
       self.category = category
       self.title = title
@@ -143,6 +144,7 @@ public struct GetPostVO {
       self.files = files
       self.creatorId = creatorId
       self.creatorNick = creatorNick
+      self.creatorImage = creatorImage
    }
 }
 
@@ -205,5 +207,21 @@ public struct UploadPostOutputVO {
    
    public init(postId: String) {
       self.postId = postId
+   }
+}
+
+public struct CommentOutputVO {
+   let commentId: String
+   let content: String
+   let commentUserId: String
+   let commentNick: String
+   let createdAt: String
+   
+   public init(commentId: String, content: String, commentUserId: String, commentNick: String, createdAt: String) {
+      self.commentId = commentId
+      self.content = content
+      self.commentUserId = commentUserId
+      self.commentNick = commentNick
+      self.createdAt = createdAt
    }
 }

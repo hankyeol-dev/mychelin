@@ -27,7 +27,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //      let reactor = WriteMyBestReactor(SearchUsecase(searchRepository: SearchRepository()))
 //      let vc = WriteMyBestVC()
 //      vc.reactor = reactor
-      let vc = APITestVC()
+      let vc = PostDetailVC()
+      vc.reactor = PostDetailReactor()
       window?.rootViewController = UINavigationController(
          rootViewController: vc
       )

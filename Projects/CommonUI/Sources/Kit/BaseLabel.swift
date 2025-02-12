@@ -27,7 +27,7 @@ public final class BaseLabel: UILabel {
       var toFont: UIFont {
          switch self {
          case .base, .error:
-               .systemFont(ofSize: 12.0)
+               .systemFont(ofSize: 15.0)
          case .xLargeTitle:
                .boldSystemFont(ofSize: 24.0)
          case .largeTitle:
@@ -35,7 +35,7 @@ public final class BaseLabel: UILabel {
          case .title:
                .boldSystemFont(ofSize: 15.0)
          case .subtitle:
-               .systemFont(ofSize: 12.0, weight: .semibold)
+               .systemFont(ofSize: 13.0, weight: .semibold)
          case .caption:
                .systemFont(ofSize: 10.0)
          }
@@ -63,5 +63,16 @@ public final class BaseLabel: UILabel {
    
    public func setTextColor(_ color: UIColor) {
       self.textColor = color
+   }
+   
+   public func setLineHeight(_ spacing: CGFloat) {
+      guard let text else { return }
+      let attributeString = NSMutableAttributedString(string: text)
+      let style = NSMutableParagraphStyle()
+      style.lineSpacing = spacing
+      attributeString.addAttribute(.paragraphStyle,
+                                   value: style,
+                                   range: NSRange(location: 0, length: attributeString.length))
+      attributedText = attributeString
    }
 }
