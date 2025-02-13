@@ -28,7 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //      let vc = WriteMyBestVC()
 //      vc.reactor = reactor
       let vc = PostDetailVC()
-      vc.reactor = PostDetailReactor()
+      vc.reactor = PostDetailReactor(MockPost1.postId)
       window?.rootViewController = UINavigationController(
          rootViewController: vc
       )

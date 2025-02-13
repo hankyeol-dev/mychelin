@@ -4,12 +4,17 @@ import Foundation
 import ReactorKit
 import Domain
 import Data
+import RxDataSources
 
 public final class PostDetailReactor: Reactor {
+   private var postId: String
    public var initialState: State = .init()
    
    public struct State {
       var post: GetPostVO?
+      var postSection = PostDetailSection.Model(model: .post, items: [])
+      var divierSection = PostDetailSection.Model(model: .divider, items: [])
+      var commentSection = PostDetailSection.Model(model: .comment, items: [])
    }
    
    public enum Action {
@@ -20,7 +25,9 @@ public final class PostDetailReactor: Reactor {
       case fetchPost
    }
    
-   public init() {}
+   public init(_ postId: String) {
+      self.postId = postId
+   }
 }
 
 extension PostDetailReactor {
@@ -37,6 +44,9 @@ extension PostDetailReactor {
       switch mutation {
       case .fetchPost:
          newState.post = MockPost1
+         newState.postSection = .init(model: .post,
+                                      items: [.post(MockPost1)])
+         newState.divierSection = .init(model: .divider, items: [.divider])
       }
       
       return newState

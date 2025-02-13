@@ -118,7 +118,7 @@ public struct GetPostByHashtagVO {
 
 /// Output
 
-public struct GetPostVO {
+public struct GetPostVO: Equatable {
    public let postId: String
    public let category: String
    public let title: String
@@ -210,7 +210,7 @@ public struct UploadPostOutputVO {
    }
 }
 
-public struct CommentOutputVO {
+public struct CommentOutputVO: Equatable {
    let commentId: String
    let content: String
    let commentUserId: String
@@ -223,5 +223,13 @@ public struct CommentOutputVO {
       self.commentUserId = commentUserId
       self.commentNick = commentNick
       self.createdAt = createdAt
+   }
+}
+
+public struct CommentListOutputVO {
+   let comments: [CommentOutputVO]
+   
+   public init(comments: [CommentOutputVO]) {
+      self.comments = comments
    }
 }

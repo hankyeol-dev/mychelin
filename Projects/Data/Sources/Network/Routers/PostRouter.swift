@@ -90,6 +90,7 @@ public enum MockPostRouter {
    case uploadPost(input: PostInputType)
    case uploadFiles(input: UploadFileInputType)
    case getPost(postId: String)
+   case getPostComments(postId: String)
    case getPosts(query: GetPostQueryType)
    case getPostsByUser(userId: String, query: GetPostQueryType)
    case getPostsByHashtag(query: SearchQueryType)
@@ -103,7 +104,7 @@ extension MockPostRouter: RouterProtocol {
          return "/posts"
       case .uploadFiles:
          return "/posts/files"
-      case .getPost(let postId):
+      case .getPost(let postId), .getPostComments(let postId):
          return "/posts/\(postId)"
       case .getPosts:
          return "/posts"
@@ -118,7 +119,8 @@ extension MockPostRouter: RouterProtocol {
    
    public var method: NetworkMethod {
       switch self {
-      case .getPosts, .getPost, .getPostsByUser, .getPostsByHashtag, .getPostsByLocation: return .GET
+      case .getPosts, .getPost, .getPostsByUser, .getPostsByHashtag, .getPostsByLocation, .getPostComments:
+         return .GET
       case .uploadPost, .uploadFiles: return .POST
       }
    }
@@ -154,7 +156,13 @@ extension MockPostRouter: RouterProtocol {
    
    public var headers: [String : String] {
       switch self {
-      case .uploadPost, .getPost, .getPosts, .getPostsByUser, .getPostsByHashtag, .getPostsByLocation:
+      case .uploadPost,
+            .getPost,
+            .getPosts,
+            .getPostsByUser,
+            .getPostsByHashtag,
+            .getPostsByLocation,
+            .getPostComments:
          return setHeader(.request, needToken: true, needProductId: true)
       case .uploadFiles(let input):
          return setHeader(.upload, needToken: true, needProductId: true, boundary: input.boundary)

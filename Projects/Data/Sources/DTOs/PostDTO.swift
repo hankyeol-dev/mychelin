@@ -205,13 +205,17 @@ public struct CommentOutputType: Decodable {
                    content: content,
                    commentUserId: creator.userId,
                    commentNick: creator.nick,
-                   createdAt: createdAt.
+                   createdAt: createdAt.toISO860().toChatDate()
       )
    }
 }
 
 public struct CommentListOutput: Decodable {
    public let comments: [CommentOutputType]
+   
+   public var toVO: CommentListOutputVO {
+      return .init(comments: comments.map({ $0.toVO }))
+   }
 }
 
 public struct PostLikeOutputType: Decodable {
