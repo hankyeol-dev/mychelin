@@ -47,6 +47,7 @@ extension PostDetailReactor {
          newState.postSection = .init(model: .post,
                                       items: [.post(MockPost1)])
          newState.divierSection = .init(model: .divider, items: [.divider])
+         newState.commentSection = .init(model: .comment, items: [.comment(MockPostComment1), .comment(MockPostComment2)])
       }
       
       return newState

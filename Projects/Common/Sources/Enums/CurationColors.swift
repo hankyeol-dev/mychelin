@@ -31,4 +31,8 @@ public enum CurationColors: Int, CaseIterable {
       default: return .blue
       }
    }
+   
+   public static var randomColor: UIColor {
+      return Self.allCases.randomElement()?.toColor ?? UIColor(resource: .cBlue)
+   }
 }

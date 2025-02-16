@@ -37,7 +37,7 @@ public final class BaseLabel: UILabel {
          case .subtitle:
                .systemFont(ofSize: 13.0, weight: .semibold)
          case .caption:
-               .systemFont(ofSize: 10.0)
+               .systemFont(ofSize: 12.0)
          }
       }
    }

@@ -211,11 +211,11 @@ public struct UploadPostOutputVO {
 }
 
 public struct CommentOutputVO: Equatable {
-   let commentId: String
-   let content: String
-   let commentUserId: String
-   let commentNick: String
-   let createdAt: String
+   public let commentId: String
+   public let content: String
+   public let commentUserId: String
+   public let commentNick: String
+   public let createdAt: String
    
    public init(commentId: String, content: String, commentUserId: String, commentNick: String, createdAt: String) {
       self.commentId = commentId

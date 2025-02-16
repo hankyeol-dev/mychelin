@@ -22,6 +22,7 @@ public final class PostDetailVC: BaseVC {
       $0.register(cellType: DividerCell.self)
       $0.register(cellType: PostCommentCell.self)
       $0.rowHeight = UITableView.automaticDimension
+//      $0.separatorStyle = .none
    }
    
    public override func viewDidLoad() {
@@ -76,14 +77,18 @@ extension PostDetailVC: View {
             return cell
          case .divider:
             let cell = tv.dequeueReusableCell(for: index) as DividerCell
+            cell.selectionStyle = .none
             return cell
          case let .comment(commentVO):
             let cell = tv.dequeueReusableCell(for: index) as PostCommentCell
+            cell.selectionStyle = .none
+            cell.separatorInset = .init(top: 3.0, left: 20.0, bottom: 3.0, right: 20.0)
+            cell.setCell(commentVO)
             return cell
          }
       }
       
-      reactor.state.map({ [$0.postSection, $0.divierSection] })
+      reactor.state.map({ [$0.postSection, $0.divierSection, $0.commentSection, $0.divierSection] })
          .distinctUntilChanged()
          .observe(on: MainScheduler.instance)
          .bind(to: postTableView.rx.items(dataSource: dataSource))
