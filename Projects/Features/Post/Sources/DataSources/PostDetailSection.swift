@@ -12,11 +12,13 @@ public struct PostDetailSection {
       case post
       case divider
       case comment
+      case title
    }
    
    public enum Items: Equatable {
       case post(GetPostVO)
       case divider
       case comment(CommentOutputVO)
+      case title(String)
    }
 }

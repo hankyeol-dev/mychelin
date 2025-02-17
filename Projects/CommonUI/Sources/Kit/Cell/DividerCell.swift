@@ -19,12 +19,12 @@ public final class DividerCell: BaseTableViewCell {
          make.edges.equalToSuperview()
       }
       divider.snp.makeConstraints { make in
-         make.verticalEdges.equalToSuperview().inset(5.0)
+         make.verticalEdges.equalToSuperview().inset(2.5)
       }
    }
    
    public override func setView() {
       super.setView()
-      back.backgroundColor = .graySm
+      back.backgroundColor = .grayXs
    }
 }

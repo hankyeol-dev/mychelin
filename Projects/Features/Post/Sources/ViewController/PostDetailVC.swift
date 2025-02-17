@@ -21,9 +21,27 @@ public final class PostDetailVC: BaseVC {
       $0.register(cellType: PostDetailCell.self)
       $0.register(cellType: DividerCell.self)
       $0.register(cellType: PostCommentCell.self)
+      $0.register(cellType: SectionTitleCell.self)
       $0.rowHeight = UITableView.automaticDimension
-//      $0.separatorStyle = .none
+      $0.separatorStyle = .none
    }
+   private let commentBox: UIView = .init().then {
+      $0.backgroundColor = .grayXs
+      $0.layer.cornerRadius = 20.0
+      $0.layer.maskedCorners = CACornerMask(arrayLiteral: .layerMinXMinYCorner, .layerMaxXMinYCorner)
+   }
+   private let commentField: UITextField = .init().then {
+      $0.font = .systemFont(ofSize: 13.0, weight: .regular)
+      $0.tintColor = .grayLg
+      $0.leftViewMode = .always
+      $0.leftView = .init(frame: .init(x: 0.0, y: 0.0, width: 10.0, height: 20.0))
+      $0.clearButtonMode = .whileEditing
+      $0.placeholder = "댓글 작성"
+   }
+   public let commentBtn: RoundedChip = .init(.grayMd.withAlphaComponent(0.5), .grayLg.withAlphaComponent(1.8)).then {
+      $0.setText("작성")
+   }
+   
    
    public override func viewDidLoad() {
       super.viewDidLoad()
@@ -36,13 +54,32 @@ public final class PostDetailVC: BaseVC {
    
    public override func setSubviews() {
       super.setSubviews()
-      view.addSubview(postTableView)
+      view.addSubviews(postTableView, commentBox)
+      commentBox.addSubviews(commentField, commentBtn)
    }
    
    public override func setLayouts() {
       super.setLayouts()
       postTableView.snp.makeConstraints { make in
-         make.edges.equalTo(view.safeAreaLayoutGuide)
+         make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+         make.bottom.equalTo(commentBox.snp.top)
+      }
+      commentBox.snp.makeConstraints { make in
+         make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+         make.bottom.equalToSuperview()
+         make.height.equalTo(80.0)
+      }
+      commentField.snp.makeConstraints { make in
+         make.height.equalTo(25.0)
+         make.top.equalTo(commentBox.safeAreaLayoutGuide).inset(20.0)
+         make.leading.equalTo(commentBox.safeAreaLayoutGuide).inset(20.0)
+         make.trailing.equalTo(commentBtn.snp.leading).offset(-20.0)
+      }
+      commentBtn.snp.makeConstraints { make in
+         make.height.equalTo(25.0)
+         make.top.equalTo(commentBox.safeAreaLayoutGuide).inset(20.0)
+         make.trailing.equalTo(commentBox.safeAreaLayoutGuide).inset(20.0)
+         make.width.equalTo(50.0)
       }
    }
    
@@ -85,10 +122,14 @@ extension PostDetailVC: View {
             cell.separatorInset = .init(top: 3.0, left: 20.0, bottom: 3.0, right: 20.0)
             cell.setCell(commentVO)
             return cell
+         case let .title(label):
+            let cell = tv.dequeueReusableCell(for: index) as SectionTitleCell
+            cell.setCell(label)
+            return cell
          }
       }
       
-      reactor.state.map({ [$0.postSection, $0.divierSection, $0.commentSection, $0.divierSection] })
+      reactor.state.map({ [$0.postSection, $0.divierSection, $0.commentSectionTitle, $0.commentSection, $0.divierSection] })
          .distinctUntilChanged()
          .observe(on: MainScheduler.instance)
          .bind(to: postTableView.rx.items(dataSource: dataSource))

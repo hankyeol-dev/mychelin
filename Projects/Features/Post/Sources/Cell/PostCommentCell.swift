@@ -9,15 +9,12 @@ import RxSwift
 import Then
 
 public final class PostCommentCell: BaseTableViewCell {
-   public let nickLabel: BaseLabel = .init(.init(style: .subtitle))
+   public let nickLabel: BaseLabel = .init(.init(style: .subtitle)).then {
+      $0.setTextColor(CurationColors.randomColor)
+   }
    private let createdAtLabel: BaseLabel = .init(.init(style: .caption, color: .grayMd))
    private let commentLabel: BaseLabel = .init(.init(style: .caption)).then {
       $0.numberOfLines = 0
-   }
-   
-   convenience init() {
-      self.init()
-      nickLabel.setTextColor(CurationColors.randomColor)
    }
    
    public override func setSubviews() {

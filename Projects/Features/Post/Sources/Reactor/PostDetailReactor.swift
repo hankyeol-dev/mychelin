@@ -15,6 +15,7 @@ public final class PostDetailReactor: Reactor {
       var postSection = PostDetailSection.Model(model: .post, items: [])
       var divierSection = PostDetailSection.Model(model: .divider, items: [])
       var commentSection = PostDetailSection.Model(model: .comment, items: [])
+      var commentSectionTitle = PostDetailSection.Model(model: .title, items: [])
    }
    
    public enum Action {
@@ -48,6 +49,7 @@ extension PostDetailReactor {
                                       items: [.post(MockPost1)])
          newState.divierSection = .init(model: .divider, items: [.divider])
          newState.commentSection = .init(model: .comment, items: [.comment(MockPostComment1), .comment(MockPostComment2)])
+         newState.commentSectionTitle = .init(model: .title, items: [.title("댓글")])
       }
       
       return newState
