@@ -26,12 +26,17 @@ public final class PostDetailCell: BaseTableViewCell {
    private let postContent: BaseLabel = .init(.init(style: .base)).then {
       $0.numberOfLines = 0
    }
+   private lazy var postImages: UICollectionView = .init(frame: .zero, collectionViewLayout: createCollectionLayout()).then {
+      $0.showsHorizontalScrollIndicator = false
+      $0.register(cellType: PostImageCell.self)
+   }
    
    public override func setSubviews() {
       super.setSubviews()
       contentView.addSubviews(
          profileImage, nickLabel, categoryChip, followButton,
-         postTitle, postAddressIcon, postAddress, postContent
+         postTitle, postAddressIcon, postAddress, postContent,
+         postImages
       )
    }
    
@@ -78,6 +83,11 @@ public final class PostDetailCell: BaseTableViewCell {
       postContent.snp.makeConstraints { make in
          make.top.equalTo(postAddress.snp.bottom).offset(inset)
          make.horizontalEdges.equalTo(guide).inset(inset)
+      }
+      postImages.snp.makeConstraints { make in
+         make.top.equalTo(postContent.snp.bottom).offset(inset)
+         make.leading.equalTo(guide).inset(inset)
+         make.trailing.equalTo(guide)
          make.bottom.equalTo(guide).inset(inset)
       }
    }
@@ -98,5 +108,50 @@ public final class PostDetailCell: BaseTableViewCell {
       } else {
          profileImage.backgroundColor = .graySm
       }
+      
+      if let files = post.files, files.count > 0 {
+         postImages.snp.remakeConstraints { make in
+            make.top.equalTo(postContent.snp.bottom).offset(20.0)
+            make.leading.equalTo(contentView.safeAreaLayoutGuide).inset(20.0)
+            make.trailing.equalTo(contentView.safeAreaLayoutGuide)
+            make.bottom.equalTo(contentView.safeAreaLayoutGuide).inset(20.0)
+            make.height.equalTo(210.0)
+         }
+         postImages.delegate = nil
+         postImages.dataSource = nil
+         Observable.just(files)
+            .bind(to: postImages.rx.items(
+               cellIdentifier: PostImageCell.id,
+               cellType: PostImageCell.self)) { _, item, cell in
+                  cell.setCell(item)
+               }.disposed(by: disposeBag)
+         contentView.setNeedsLayout()
+      } else {
+         postImages.snp.remakeConstraints { make in
+            make.top.equalTo(postContent.snp.bottom).offset(20.0)
+            make.leading.equalTo(contentView.safeAreaLayoutGuide).inset(20.0)
+            make.trailing.equalTo(contentView.safeAreaLayoutGuide)
+            make.bottom.equalTo(contentView.safeAreaLayoutGuide).inset(20.0)
+            make.height.equalTo(0.0)
+         }
+         contentView.setNeedsLayout()
+      }
+   }
+   
+   private func createCollectionLayout() -> UICollectionViewCompositionalLayout {
+      let itemSize = NSCollectionLayoutSize(
+         widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+      let item = NSCollectionLayoutItem(layoutSize: itemSize)
+      item.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 8)
+      
+      let groupSize = NSCollectionLayoutSize(
+         widthDimension: .fractionalWidth(0.8), heightDimension: .fractionalHeight(1.0))
+      let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+      
+      let section = NSCollectionLayoutSection(group: group)
+      section.orthogonalScrollingBehavior = .continuous
+      section.contentInsets = .init(top: 8.0, leading: 0.0, bottom: 8.0, trailing: 0.0)
+      
+      return UICollectionViewCompositionalLayout(section: section)
    }
 }

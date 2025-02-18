@@ -143,7 +143,9 @@ public struct PostOutputType: Decodable {
          files: files,
          creatorId: creator.userId,
          creatorNick: creator.nick,
-         creatorImage: creator.profileImage
+         creatorImage: creator.profileImage,
+         postLat: geolocation.latitude,
+         postLng: geolocation.longitude
       )
    }
    

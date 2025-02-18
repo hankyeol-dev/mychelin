@@ -4,6 +4,7 @@ import UIKit
 import Domain
 import Data
 import Post
+import Home
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
    
@@ -27,11 +28,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //      let reactor = WriteMyBestReactor(SearchUsecase(searchRepository: SearchRepository()))
 //      let vc = WriteMyBestVC()
 //      vc.reactor = reactor
-      let vc = PostDetailVC()
-      vc.reactor = PostDetailReactor(MockPost1.postId)
-      window?.rootViewController = UINavigationController(
-         rootViewController: vc
-      )
+      let vc = HomeVC()
+      vc.reactor = HomeReactor()
+//      vc.reactor = PostDetailReactor(MockPost1.postId)
+      window?.rootViewController = vc
       window?.makeKeyAndVisible()
    }
    

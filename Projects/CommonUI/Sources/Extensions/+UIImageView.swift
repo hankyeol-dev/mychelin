@@ -24,7 +24,6 @@ public extension UIImageView {
                      case let .success(retrived):
                         self?.image = retrived.image
                      case let .failure(error):
-                        print("setImage error: ", error)
                         self?.image = UIImage(systemName: "star")
                      }
                   }

@@ -124,6 +124,7 @@ extension PostDetailVC: View {
             return cell
          case let .title(label):
             let cell = tv.dequeueReusableCell(for: index) as SectionTitleCell
+            cell.selectionStyle = .none
             cell.setCell(label)
             return cell
          }

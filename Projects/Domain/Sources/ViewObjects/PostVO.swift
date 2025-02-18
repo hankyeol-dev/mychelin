@@ -131,8 +131,25 @@ public struct GetPostVO: Equatable {
    public let creatorId: String
    public let creatorNick: String
    public let creatorImage: String?
+   public let postLat: Double
+   public let postLng: Double
    
-   public init(postId: String, category: String, title: String, likes: Int, content: String, address: String, rate: Double, hashTags: [String], files: [String]?, creatorId: String, creatorNick: String, creatorImage: String?) {
+   public init(
+      postId: String,
+      category: String,
+      title: String,
+      likes: Int,
+      content: String,
+      address: String,
+      rate: Double,
+      hashTags: [String],
+      files: [String]?,
+      creatorId: String,
+      creatorNick: String,
+      creatorImage: String?,
+      postLat: Double,
+      postLng: Double
+   ) {
       self.postId = postId
       self.category = category
       self.title = title
@@ -145,6 +162,8 @@ public struct GetPostVO: Equatable {
       self.creatorId = creatorId
       self.creatorNick = creatorNick
       self.creatorImage = creatorImage
+      self.postLat = postLat
+      self.postLng = postLng
    }
 }
 
