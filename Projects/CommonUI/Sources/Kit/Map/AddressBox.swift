@@ -18,13 +18,13 @@ public final class AddressBox: BaseView {
       $0.textColor = .grayLg
    }
    
-   override func setSubviews() {
+   public override func setSubviews() {
       super.setSubviews()
       addSubview(back)
       back.addSubviews(icon, address)
    }
    
-   override func setLayouts() {
+   public override func setLayouts() {
       super.setLayouts()
       let safe: CGFloat = 20.0
       back.snp.makeConstraints { make in

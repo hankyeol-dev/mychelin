@@ -21,16 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       
       window = UIWindow(windowScene: scene)
 
-//      let nav = UINavigationController()
-//      window?.rootViewController = nav
-//      coordinator = AppCoordinator(navigationController: nav)
-//      coordinator.start()
-//      let reactor = WriteMyBestReactor(SearchUsecase(searchRepository: SearchRepository()))
-//      let vc = WriteMyBestVC()
-//      vc.reactor = reactor
       let vc = HomeVC()
-      vc.reactor = HomeReactor()
-//      vc.reactor = PostDetailReactor(MockPost1.postId)
+      vc.reactor = HomeReactor(MockPostUsecase(repository: MockPostRepository()))
       window?.rootViewController = vc
       window?.makeKeyAndVisible()
    }

@@ -12,13 +12,13 @@ public final class BaseScrollView: BaseView {
    public let contentView: UIView = .init()
    private let bottomView: UIView = .init().then { $0.backgroundColor = .clear }
    
-   override func setSubviews() {
+   public override func setSubviews() {
       super.setSubviews()
       addSubview(scrollView)
       scrollView.addSubview(contentView)
    }
    
-   override func setLayouts() {
+   public override func setLayouts() {
       super.setLayouts()
       scrollView.snp.makeConstraints { make in
          make.edges.equalTo(safeAreaLayoutGuide)

@@ -15,19 +15,19 @@ public final class RoundedChip: BaseView {
       self.text.setTextColor(baseColor)
    }
    
-   override func setSubviews() {
+   override public func setSubviews() {
       super.setSubviews()
       addSubview(text)
    }
    
-   override func setLayouts() {
+   override public func setLayouts() {
       super.setLayouts()
       text.snp.makeConstraints { make in
          make.center.equalToSuperview()
       }
    }
    
-   override func setView() {
+   override public func setView() {
       super.setView()
       layer.cornerRadius = 10.0
       clipsToBounds = true

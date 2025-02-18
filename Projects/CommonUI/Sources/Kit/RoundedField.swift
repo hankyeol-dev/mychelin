@@ -23,12 +23,12 @@ public final class RoundedField: BaseView {
       self.textField.placeholder = placeholder
    }
    
-   override func setSubviews() {
+   override public func setSubviews() {
       super.setSubviews()
       addSubviews(label, textField)
    }
    
-   override func setLayouts() {
+   override public func setLayouts() {
       super.setLayouts()
       let inset: CGFloat = 20.0
       label.snp.makeConstraints { make in

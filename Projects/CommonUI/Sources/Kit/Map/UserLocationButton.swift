@@ -8,7 +8,7 @@ public final class UserLocationButton: UIButton {
    private let locationImage: UIImageView = .init().then {
       $0.image = .userLocation.withRenderingMode(.alwaysTemplate)
       $0.backgroundColor = .clear
-      $0.tintColor = .greenMd
+      $0.tintColor = .grayMd
    }
    
    public override init(frame: CGRect) {
@@ -17,7 +17,7 @@ public final class UserLocationButton: UIButton {
       addSubview(locationImage)
       locationImage.snp.makeConstraints { make in
          make.center.equalToSuperview()
-         make.size.equalTo(30.0)
+         make.size.equalTo(20.0)
       }
       
       backgroundColor = .white

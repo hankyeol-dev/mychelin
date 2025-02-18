@@ -16,12 +16,12 @@ public final class CircleLazyImage: BaseView {
       setRounds(round)
    }
    
-   override func setSubviews() {
+   public override func setSubviews() {
       super.setSubviews()
       addSubview(imageView)
    }
    
-   override func setLayouts() {
+   public override func setLayouts() {
       super.setLayouts()
       imageView.snp.makeConstraints { make in
          make.edges.equalToSuperview()

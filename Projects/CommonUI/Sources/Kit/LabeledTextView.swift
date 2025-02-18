@@ -26,12 +26,12 @@ public class LabeledTextView: BaseView {
       self.textView.delegate = self
    }
    
-   override func setSubviews() {
+   override public func setSubviews() {
       super.setSubviews()
       addSubviews(label, textView)
    }
    
-   override func setLayouts() {
+   override public func setLayouts() {
       super.setLayouts()
       label.snp.makeConstraints { make in
          make.top.horizontalEdges.equalTo(safeAreaLayoutGuide)

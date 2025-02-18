@@ -10,8 +10,7 @@ import RxDataSources
 
 public final class MeProfileReactor: Reactor {
    private let disposeBag: DisposeBag = .init()
-   private let userUsecase: UserUsecaseType = UserUsecase(
-      userRepository: UserRepositoryMock())
+   private let userUsecase: MockUserUsecaseType
    
    public var initialState: State = .init()
    
@@ -46,8 +45,12 @@ public final class MeProfileReactor: Reactor {
    }
    
    public enum Mutation {
-      case didLoad(Result<MeProfileVO, NetworkErrors>)
+      case didLoad(Result<MeProfileVO, CommonError>)
       case tapMenu(indexPath: [Int])
+   }
+   
+   public init(_ usecase: MockUserUsecaseType) {
+      self.userUsecase = usecase
    }
    
    deinit { print(#function) }
@@ -57,9 +60,7 @@ extension MeProfileReactor {
    public func mutate(action: Action) -> Observable<Mutation> {
       switch action {
       case .didLoad:
-         userUsecase.getMe()
-            .asObservable()
-            .map({ Mutation.didLoad($0) })
+            .just(.didLoad(userUsecase.getMe()))
       case let .tapMenu(indexPath):
             .just(Mutation.tapMenu(indexPath: indexPath))
       }
@@ -85,7 +86,7 @@ extension MeProfileReactor {
             newState.logoutSection = .init(model: .logout,
                                            items: [.logout(.init(icon: .xMark, label: "로그아웃"))])
          case let .failure(error):
-            newState.errorMessage = error.toErrorMessage
+            newState.errorMessage = error.toMessage
          }
       case let .tapMenu(indexPath):
          print(indexPath)

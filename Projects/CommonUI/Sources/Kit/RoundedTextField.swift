@@ -18,12 +18,12 @@ public final class RoundedTextField: BaseView {
       case normal, error
    }
    
-   override func setSubviews() {
+   override public func setSubviews() {
       super.setSubviews()
       addSubview(textField)
    }
    
-   override func setLayouts() {
+   override public func setLayouts() {
       super.setLayouts()
       textField.snp.makeConstraints { make in
          make.edges.equalToSuperview()

@@ -28,7 +28,6 @@ public final class MeProfileVC: BaseVC {
    public override func viewDidLoad() {
       super.viewDidLoad()
       title = "마이페이지"
-      self.reactor = MeProfileReactor()
    }
    
    public override func viewWillDisappear(_ animated: Bool) {

@@ -32,16 +32,3 @@ extension UserRepository: UserRepositoryType {
    }
 }
 
-public struct MockUserRepository: MockUserRepositoryType, DefaultRepositoryType {
-   public init() {}
-   
-   public func getMe() async -> Result<MeProfileVO, CommonError> {
-      let output = await request(MockUserRouter.me, of: ProfileOutputType.self)
-      switch output {
-      case .success(let success):
-         return .success(success.toVO)
-      case .failure(let failure):
-         return .failure(failure.mapToCommonError())
-      }
-   }
-}

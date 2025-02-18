@@ -8,8 +8,8 @@ protocol BaseViewType: UIView {
    func setView()
 }
 
-public class BaseView: UIView, BaseViewType {
-   override init(frame: CGRect) {
+open class BaseView: UIView, BaseViewType {
+   public override init(frame: CGRect) {
       super.init(frame: .zero)
       setSubviews()
       setLayouts()
@@ -17,11 +17,11 @@ public class BaseView: UIView, BaseViewType {
    }
    
    @available(*, unavailable)
-   required init?(coder: NSCoder) {
+   required public init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
    }
 
-   func setSubviews() {}
-   func setLayouts() {}
-   func setView() {}
+   open func setSubviews() {}
+   open func setLayouts() {}
+   open func setView() {}
 }

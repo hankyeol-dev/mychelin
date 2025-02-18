@@ -75,4 +75,9 @@ public final class BaseLabel: UILabel {
                                    range: NSRange(location: 0, length: attributeString.length))
       attributedText = attributeString
    }
+   
+   public func updateStyle(_ style: LabelSetting) {
+      font = style.style.toFont
+      textColor = style.color
+   }
 }

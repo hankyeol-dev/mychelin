@@ -13,12 +13,12 @@ public final class LabeledPhotoBox: BaseView {
       self.label.setText(label)
    }
    
-   override func setSubviews() {
+   override public func setSubviews() {
       super.setSubviews()
       addSubviews(label, photoButton)
    }
    
-   override func setLayouts() {
+   override public func setLayouts() {
       super.setLayouts()
       label.snp.makeConstraints { make in
          make.top.horizontalEdges.equalTo(safeAreaLayoutGuide)

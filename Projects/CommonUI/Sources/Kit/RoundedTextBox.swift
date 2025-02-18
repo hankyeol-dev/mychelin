@@ -35,12 +35,12 @@ public final class RoundedTextBox: BaseView {
       layoutIfNeeded()
    }
    
-   override func setSubviews() {
+   override public func setSubviews() {
       super.setSubviews()
       addSubviews(iconView, textView)
    }
    
-   override func setLayouts() {
+   override public func setLayouts() {
       super.setLayouts()
       iconView.snp.makeConstraints { make in
          make.centerY.equalToSuperview()

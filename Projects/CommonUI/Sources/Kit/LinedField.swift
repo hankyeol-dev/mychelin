@@ -20,12 +20,12 @@ public final class LinedField: BaseView {
       self.textField.placeholder = placeholder
    }
    
-   override func setSubviews() {
+   override public func setSubviews() {
       super.setSubviews()
       addSubviews(label, line, textField)
    }
    
-   override func setLayouts() {
+   override public func setLayouts() {
       super.setLayouts()
       label.snp.makeConstraints { make in
          make.top.horizontalEdges.equalTo(safeAreaLayoutGuide)

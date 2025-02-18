@@ -25,18 +25,18 @@ public final class SearchField: BaseView {
       $0.tintColor = .grayLg
    }
    
-   override func setSubviews() {
+   public override func setSubviews() {
       super.setSubviews()
       addSubviews(searchIcon, textField, deleteButton)
    }
    
-   override func setView() {
+   public override func setView() {
       super.setView()
       backgroundColor = .grayXs
       layer.cornerRadius = 10.0
    }
    
-   override func setLayouts() {
+   public override func setLayouts() {
       super.setLayouts()
       let inset = 20.0
       searchIcon.snp.makeConstraints { make in

@@ -13,12 +13,12 @@ public final class RoundedDropdown: BaseView {
       $0.tintColor = .grayLg
    }
    
-   override func setSubviews() {
+   override public func setSubviews() {
       super.setSubviews()
       addSubviews(label, arrow)
    }
    
-   override func setLayouts() {
+   override public func setLayouts() {
       super.setLayouts()
       let inset = 20.0
       label.snp.makeConstraints { make in
@@ -33,7 +33,7 @@ public final class RoundedDropdown: BaseView {
       }
    }
    
-   override func setView() {
+   override public func setView() {
       super.setView()
       backgroundColor = .grayXs
       layer.cornerRadius = 10.0

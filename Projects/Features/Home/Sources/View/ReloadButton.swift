@@ -8,9 +8,9 @@ import Then
 public final class ReloadButton: UIButton {
    private let reloadImage: UIImageView = .init().then {
       $0.image = .init(systemName: "arrow.clockwise")?.withRenderingMode(.alwaysTemplate)
-      $0.tintColor = .black
+      $0.tintColor = .greenLg
    }
-   private let reloadLabel: BaseLabel = .init(.init(style: .caption, color: .black)).then {
+   private let reloadLabel: BaseLabel = .init(.init(style: .caption, color: .greenLg)).then {
       $0.textAlignment = .center
       $0.text = "지금 장소에서 조회"
    }
@@ -25,7 +25,7 @@ public final class ReloadButton: UIButton {
    }
    
    private func setViews() {
-      backgroundColor = .graySm.withAlphaComponent(0.9)
+      backgroundColor = .greenSm
       layer.cornerRadius = 15.0
       addSubviews(reloadImage, reloadLabel)
       reloadImage.snp.makeConstraints { make in

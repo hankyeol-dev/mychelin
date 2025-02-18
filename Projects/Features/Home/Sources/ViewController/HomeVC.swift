@@ -6,6 +6,7 @@ import NMapsMap
 import ReactorKit
 import Then
 import SnapKit
+import Domain
 
 public final class HomeVC: BaseVC {
    public var disposeBag: DisposeBag = .init()
@@ -17,9 +18,13 @@ public final class HomeVC: BaseVC {
    public let mapView: NMFMapView = .init().then {
       $0.positionMode = .normal
       $0.setLayerGroup(NMF_LAYER_GROUP_TRANSIT, isEnabled: true)
+      $0.minZoomLevel = 12.0
+      $0.maxZoomLevel = 18.0
       $0.zoomLevel = 15.0
    }
    public let reloadBtn: ReloadButton = .init()
+   private let userLocationButton: UserLocationButton = .init()
+   private let bottomSheet: CustomBottomSheet = .init()
    
    public override func viewDidLoad() {
       super.viewDidLoad()
@@ -30,13 +35,21 @@ public final class HomeVC: BaseVC {
    
    public override func setSubviews() {
       super.setSubviews()
-      view.addSubview(mapView)
+      view.addSubviews(mapView, userLocationButton, bottomSheet)
    }
    
    public override func setLayouts() {
       super.setLayouts()
       mapView.snp.makeConstraints { make in
          make.edges.equalTo(view.safeAreaLayoutGuide)
+      }
+      userLocationButton.snp.makeConstraints { make in
+         make.size.equalTo(30.0)
+         make.trailing.equalToSuperview().inset(20.0)
+         make.bottom.equalToSuperview().inset(100.0)
+      }
+      bottomSheet.snp.makeConstraints { make in
+         make.edges.equalToSuperview()
       }
    }
 }
@@ -47,12 +60,41 @@ extension HomeVC: View {
       bindState(reactor: reactor)
    }
    private func bindAction(reactor: HomeReactor) {
+      reloadBtn.rx.tap
+         .compactMap({ [weak self] in
+            guard let self else { return nil }
+            return Reactor.Action.switchLocation(lat: mapView.latitude, lng: mapView.longitude)
+         })
+         .bind(to: reactor.action)
+         .disposed(by: disposeBag)
       
+      userLocationButton.rx.tap
+         .debug()
+         .map({ Reactor.Action.moveToInitialLocation })
+         .bind(to: reactor.action)
+         .disposed(by: disposeBag)
    }
    private func bindState(reactor: HomeReactor) {
-      Observable.just((reactor.initialState.initialLat, reactor.initialState.initialLng))
+      reactor.state.map(\.postList)
+         .bind(with: self) { vc, data in
+            vc.bottomSheet.setInnerview(data.data)
+         }.disposed(by: disposeBag)
+         
+      reactor.state.map(\.curLocation)
+         .skip(1)
          .bind(with: self) { vc, loc in
             vc.moveToLocation(.init(lat: loc.0, lng: loc.1))
+            vc.hideReloadBtn()
+         }.disposed(by: disposeBag)
+      
+      reactor.state.map(\.postList)
+         .bind(with: self) { vc, list in
+            if !list.data.isEmpty {
+               list.data.forEach {
+                  let marker = NMFMarker(position: .init(lat: $0.postLat, lng: $0.postLng), iconImage: .init(image: .pin))
+                  marker.mapView = vc.mapView
+               }
+            }
          }.disposed(by: disposeBag)
    }
 }
@@ -77,11 +119,10 @@ extension HomeVC: NMFMapViewCameraDelegate {
    }
    
    public func mapViewCameraIdle(_ mapView: NMFMapView) {
-      hideReloadBtn()
       if let distance = locationManager.location?.distance(
          from: .init(latitude: mapView.latitude,
                      longitude: mapView.longitude)),
-         distance > 150 {
+         distance > 300 {
          displayReloadBtn()
       }
    }
@@ -91,7 +132,6 @@ extension HomeVC: NMFMapViewCameraDelegate {
    }
    
    private func displayReloadBtn() {
-      hideReloadBtn()
       view.addSubview(reloadBtn)
       reloadBtn.snp.makeConstraints { make in
          make.centerX.equalToSuperview()
