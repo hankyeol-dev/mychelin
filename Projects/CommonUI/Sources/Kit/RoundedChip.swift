@@ -29,11 +29,17 @@ public final class RoundedChip: BaseView {
    
    override public func setView() {
       super.setView()
-      layer.cornerRadius = 10.0
+      layer.cornerRadius = 5.0
       clipsToBounds = true
    }
    
    public func setText(_ text: String) {
       self.text.setText(text)
+   }
+   
+   public func setBorder(_ color: UIColor) {
+      self.clipsToBounds = true
+      self.layer.borderColor = color.cgColor
+      self.layer.borderWidth = 1.0
    }
 }

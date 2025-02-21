@@ -27,7 +27,7 @@ public final class MeProfileVC: BaseVC {
    
    public override func viewDidLoad() {
       super.viewDidLoad()
-      title = "마이페이지"
+      navigationController?.navigationBar.isHidden = true
    }
    
    public override func viewWillDisappear(_ animated: Bool) {

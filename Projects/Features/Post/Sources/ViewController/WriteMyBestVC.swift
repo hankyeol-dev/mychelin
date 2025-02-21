@@ -13,16 +13,16 @@ public final class WriteMyBestVC: BaseVC {
    
    private let scrollView: BaseScrollView = .init()
    private let postButton: UIButton = .init().then {
-      $0.setTitle("나의 베스트 스팟 등록", for: .normal)
-      $0.setTitleColor(.grayXs, for: .normal)
+      $0.setTitle("마이슐랭 등록", for: .normal)
+      $0.setTitleColor(.greenLg, for: .normal)
       $0.titleLabel?.font = .boldSystemFont(ofSize: 20.0)
-      $0.backgroundColor = .grayLg
+      $0.backgroundColor = .greenSm
       $0.isEnabled = false
    }
    
    private let userNameLabel: BaseLabel = .init(.init(style: .xLargeTitle))
-   private let categoryLabel: BaseLabel = .init(.init(text: "스팟 중에서", style: .xLargeTitle))
-   private let selectLabel: BaseLabel = .init(.init(text: "베스트 오브 베스트는?", style: .xLargeTitle))
+   private let categoryLabel: BaseLabel = .init(.init(text: "베스트 스팟을", style: .xLargeTitle))
+   private let selectLabel: BaseLabel = .init(.init(text: "마이슐랭에 등록해보세요.", style: .xLargeTitle))
    private let categoryButton: FoodCategoryButton = .init(.boong)
    
    private let spotNameField: LinedField = .init("스팟 이름", placeholder: "스팟 이름을 작성해주세요.")
@@ -66,9 +66,9 @@ public final class WriteMyBestVC: BaseVC {
       let inset = 20.0
       
       postButton.snp.makeConstraints { make in
-         make.height.equalTo(100.0)
+         make.height.equalTo(70.0)
          make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-         make.bottom.equalTo(view)
+         make.bottom.equalTo(view.safeAreaLayoutGuide)
       }
       scrollView.snp.makeConstraints { make in
          make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
@@ -183,7 +183,6 @@ extension WriteMyBestVC: View {
       
       spotNameField.textField.rx.text
          .orEmpty
-         .skip(2)
          .distinctUntilChanged()
          .debounce(.seconds(1), scheduler: MainScheduler.instance)
          .map({ Reactor.Action.searchSpotLocation(query: $0) })
@@ -237,6 +236,18 @@ extension WriteMyBestVC: View {
          .bind(with: self) { vc, items in
             vc.showPhotoCollection(items)
          }.disposed(by: disposeBag)
+      
+      reactor.state.map(\.spotName)
+         .distinctUntilChanged()
+         .bind(with: self) { vc, name in
+            vc.spotNameField.textField.text = name
+         }.disposed(by: disposeBag)
+      
+      reactor.state.map(\.isCanPost)
+         .distinctUntilChanged()
+         .bind(with: self) { vc, canPost in
+            vc.postButton.isEnabled = canPost
+         }.disposed(by: disposeBag)
    }
    
    private func hideSearchedTable() {
@@ -253,7 +264,7 @@ extension WriteMyBestVC: View {
       searchedSpotTable.delegate = nil
       UIView.animate(withDuration: 1.5, delay: 1.0, options: .curveEaseInOut) { [weak self] in
          self?.searchedSpotTable.snp.remakeConstraints { make in
-            make.height.equalTo(180.0)
+            make.height.equalTo(100.0)
          }
          self?.view.setNeedsLayout()
       }

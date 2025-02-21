@@ -3,7 +3,6 @@
 import Foundation
 import ReactorKit
 import Domain
-import Data
 import CoreLocation
 
 public final class HomeReactor: NSObject, Reactor {
@@ -17,21 +16,23 @@ public final class HomeReactor: NSObject, Reactor {
    public var initialState: State = .init()
    
    public struct State {
-      var initialLat: Double = 0.0
-      var initialLng: Double = 0.0
-      
       var curLocation: (Double, Double) = (0.0, 0.0)
-      
       var postList: GetPostListVO = .init(data: [])
+      var tappedPost: GetPostVO?
+      var next: String = ""
+      var errorMessage: String? = nil
    }
    public enum Action {
       case didLoad
       case switchLocation(lat: Double, lng: Double)
       case moveToInitialLocation
+      case tapPostMarker(GetPostVO?)
    }
    public enum Mutation {
-      case fetchLocationPosts
+      case fetchLocationPosts(Result<GetPostListVO, CommonError>)
       case switchLocation(lat: Double, lng: Double)
+      case setTappedPost(GetPostVO)
+      case resetTappedPost
    }
    
    public init(_ postUsecase: MockPostUsecaseType) {
@@ -47,11 +48,24 @@ extension HomeReactor {
    public func mutate(action: Action) -> Observable<Mutation> {
       switch action {
       case .didLoad:
-         return .just(.fetchLocationPosts)
+         let list = postUsecase.getPosts(query: .init(next: currentState.next, category: ""))
+         return .just(.fetchLocationPosts(list))
       case let .switchLocation(lat, lng):
          return .just(.switchLocation(lat: lat, lng: lng))
       case .moveToInitialLocation:
-         return .just(.switchLocation(lat: initialState.initialLat, lng: initialState.initialLng))
+         let location = getCurrentLocation()
+         return .just(.switchLocation(lat: location.0, lng: location.1))
+      case let .tapPostMarker(post):
+         guard let post else { return .just(.resetTappedPost) }
+         if let curPost = currentState.tappedPost {
+            if curPost.postId == post.postId {
+               return .just(.resetTappedPost)
+            } else {
+               return .just(.setTappedPost(post))
+            }
+         } else {
+            return .just(.setTappedPost(post))
+         }
       }
    }
    
@@ -60,8 +74,17 @@ extension HomeReactor {
       switch mutation {
       case let .switchLocation(lat, lng):
          newState.curLocation = (lat, lng)
-      case .fetchLocationPosts:
-         newState.postList = .init(data: [MockPost1, MockPost2, MockPost3, MockPost4, MockPost5])
+      case let .fetchLocationPosts(result):
+         switch result {
+         case let .success(list):
+            newState.postList = list
+         case let .failure(error):
+            newState.errorMessage = error.toMessage
+         }
+      case let .setTappedPost(post):
+         newState.tappedPost = post
+      case .resetTappedPost:
+         newState.tappedPost = nil
       }
       return newState
    }
@@ -75,7 +98,15 @@ extension HomeReactor: CLLocationManagerDelegate {
       }
       if status == .authorizedAlways || status == .authorizedWhenInUse {
          manager.startUpdatingLocation()
-         initialState.initialLat = manager.location?.coordinate.latitude ?? 0.0
+         let lat = manager.location?.coordinate.latitude ?? 0.0
+         let lng = manager.location?.coordinate.longitude ?? 0.0
+         self.action.onNext(.switchLocation(lat: lat, lng: lng))
       }
+   }
+   
+   private func getCurrentLocation() -> (Double, Double) {
+      let lat = locationManager.location?.coordinate.latitude ?? 0.0
+      let lng = locationManager.location?.coordinate.longitude ?? 0.0
+      return (lat, lng)
    }
 }

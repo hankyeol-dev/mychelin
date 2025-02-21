@@ -18,12 +18,12 @@ public final class FoodCategoryCell: BaseCollectionViewCell {
    public override func setLayouts() {
       super.setLayouts()
       icon.snp.makeConstraints { make in
-         make.size.equalTo(20.0)
+         make.size.equalTo(25.0)
          make.top.equalTo(contentView.safeAreaLayoutGuide).inset(20.0)
          make.centerX.equalToSuperview()
       }
       name.snp.makeConstraints { make in
-         make.top.equalTo(icon.snp.bottom).offset(10.0)
+         make.top.equalTo(icon.snp.bottom).offset(5.0)
          make.height.equalTo(30.0)
          make.horizontalEdges.bottom.equalTo(contentView.safeAreaLayoutGuide).inset(20.0)
       }
@@ -37,17 +37,17 @@ public final class FoodCategoryCell: BaseCollectionViewCell {
    
    private func setContentView(_ isSelected: Bool) {
       contentView.layer.cornerRadius = 20.0
-      contentView.backgroundColor = isSelected ? .black : .grayXs
+      contentView.backgroundColor = isSelected ? .greenSm.withAlphaComponent(0.5) : .grayXs
    }
    
    private func setIcon(_ category: FoodCategories, _ isSelected: Bool) {
       icon.image = category.toIcons.withRenderingMode(.alwaysTemplate)
-      icon.tintColor = isSelected ? .white: .grayLg
+      icon.tintColor = isSelected ? .greenLg: .grayLg
    }
    
    private func setName(_ category: FoodCategories, _ isSelected: Bool) {
       name.setText(category.toCategory)
-      name.setTextColor(isSelected ? .white : .grayLg)
+      name.setTextColor(isSelected ? .greenLg : .grayLg)
       name.textAlignment = .center
    }
 }

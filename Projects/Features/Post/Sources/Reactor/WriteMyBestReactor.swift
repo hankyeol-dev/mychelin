@@ -3,12 +3,13 @@
 import Foundation
 import ReactorKit
 import Domain
-import Data
 import CommonUI
 
 public final class WriteMyBestReactor: Reactor {
    private let disposeBage: DisposeBag = .init()
    private let searchUsecase: SearchUsecaseType
+   private let postUsecase: MockPostUsecaseType
+   private let userUsecase: MockUserUsecaseType
    
    public var initialState: State
    
@@ -34,7 +35,7 @@ public final class WriteMyBestReactor: Reactor {
    }
    
    public enum Mutation {
-      case setUsername
+      case setUsername(Result<MeProfileVO, CommonError>)
       case updateFoodCategory(FoodCategories)
       case searchSpotLocation(Result<[NaverSearchVO], NetworkErrors>)
       case setSpotLocation(NaverSearchVO?)
@@ -43,11 +44,17 @@ public final class WriteMyBestReactor: Reactor {
       case removeFromPhotos(NSItemProvider)
    }
    
-   public init(_ searchUsecase: SearchUsecaseType) {
+   public init(
+      searchUsecase: SearchUsecaseType,
+      postUsecase: MockPostUsecaseType,
+      userUsecase: MockUserUsecaseType
+   ) {
       self.initialState = .init(
          selectedFoodCategory: FoodCategories.allCases.randomElement() ?? .etc
       )
       self.searchUsecase = searchUsecase
+      self.postUsecase = postUsecase
+      self.userUsecase = userUsecase
    }
 }
 
@@ -55,7 +62,7 @@ extension WriteMyBestReactor {
    public func mutate(action: Action) -> Observable<Mutation> {
       switch action {
       case .didLoad:
-         return .just(.setUsername)
+         return .just(.setUsername(userUsecase.getMe()))
       case let .updateFoodCategory(category):
          return .just(.updateFoodCategory(category))
       case let .searchSpotLocation(query):
@@ -76,10 +83,16 @@ extension WriteMyBestReactor {
    public func reduce(state: State, mutation: Mutation) -> State {
       var newState = state
       switch mutation {
-      case .setUsername:
-         newState.userNickname = "최대6자까지할까"
+      case let .setUsername(profile):
+         switch profile {
+         case let .success(profile):
+            newState.userNickname = profile.nick
+         case .failure:
+            newState.isCanPost = false
+         }
       case let .updateFoodCategory(category):
          newState.selectedFoodCategory = category
+         newState.isCanPost = validateCanPost()
       case let .searchSpotLocation(result):
          switch result {
          case let .success(output):
@@ -91,14 +104,17 @@ extension WriteMyBestReactor {
          if let spot {
             newState.selectedSpotLocation = spot
             newState.spotName = spot.title
+            newState.isCanPost = validateCanPost()
          } else {
             newState.selectedSpotLocation = nil
          }
       case let .setSpotRate(rate):
          newState.spotRate = rate
+         newState.isCanPost = validateCanPost()
       case let .setPhotos(items):
          if newState.spotPhotos.isEmpty {
             newState.spotPhotos = items
+            newState.isCanPost = validateCanPost()
          } else {
             newState.spotPhotos.append(contentsOf: items)
          }
@@ -110,4 +126,9 @@ extension WriteMyBestReactor {
       return newState
    }
    
+   private func validateCanPost() -> Bool {
+      return !currentState.spotName.isEmpty
+      && currentState.selectedSpotLocation != nil
+      && currentState.spotRate != 0.0
+   }
 }

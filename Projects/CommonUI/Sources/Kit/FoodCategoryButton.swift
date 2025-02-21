@@ -5,7 +5,7 @@ import SnapKit
 import Domain
 
 public final class FoodCategoryButton: UIButton {
-   private let categoryName: BaseLabel = .init(.init(style: .largeTitle, color: .white))
+   private let categoryName: BaseLabel = .init(.init(style: .largeTitle, color: .greenLg))
    
    public override init(frame: CGRect) {
       super.init(frame: frame)
@@ -18,7 +18,7 @@ public final class FoodCategoryButton: UIButton {
    public convenience init(_ category: FoodCategories) {
       self.init()
       addSubview(categoryName)
-      backgroundColor = .black
+      backgroundColor = .greenSm.withAlphaComponent(0.5)
       layer.cornerRadius = 20.0
       
       categoryName.snp.makeConstraints { make in
@@ -29,7 +29,7 @@ public final class FoodCategoryButton: UIButton {
    }
    
    public func updateCategory(_ category: FoodCategories) {
-      categoryName.setText(category.rawValue)
+      categoryName.setText(category.toCategory)
       categoryName.textAlignment = .center
    }
 }

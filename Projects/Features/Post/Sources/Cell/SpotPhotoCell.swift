@@ -10,8 +10,7 @@ public final class SpotPhotoCell: BaseCollectionViewCell {
    public var disposeBag: DisposeBag = .init()
    
    private let imageView: UIImageView = .init().then {
-      $0.layer.cornerRadius = 10.0
-      $0.clipsToBounds = true
+      $0.contentMode = .scaleAspectFill
    }
    public let closeButton: UIButton = .init().then {
       $0.backgroundColor = .errors

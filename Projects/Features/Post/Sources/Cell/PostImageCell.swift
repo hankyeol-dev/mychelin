@@ -13,6 +13,7 @@ public final class PostImageCell: BaseCollectionViewCell {
    private let imageView: UIImageView = .init().then {
       $0.layer.cornerRadius = 8
       $0.clipsToBounds = true
+      $0.contentMode = .scaleAspectFill
    }
    
    public override func setSubviews() {

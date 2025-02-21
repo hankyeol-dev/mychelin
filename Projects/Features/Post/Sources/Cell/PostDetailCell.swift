@@ -115,7 +115,7 @@ public final class PostDetailCell: BaseTableViewCell {
             make.leading.equalTo(contentView.safeAreaLayoutGuide).inset(20.0)
             make.trailing.equalTo(contentView.safeAreaLayoutGuide)
             make.bottom.equalTo(contentView.safeAreaLayoutGuide).inset(20.0)
-            make.height.equalTo(210.0)
+            make.height.equalTo(300.0)
          }
          postImages.delegate = nil
          postImages.dataSource = nil
@@ -145,7 +145,7 @@ public final class PostDetailCell: BaseTableViewCell {
       item.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 8)
       
       let groupSize = NSCollectionLayoutSize(
-         widthDimension: .fractionalWidth(0.8), heightDimension: .fractionalHeight(1.0))
+         widthDimension: .fractionalWidth(0.95), heightDimension: .fractionalHeight(1.0))
       let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
       
       let section = NSCollectionLayoutSection(group: group)

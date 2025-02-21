@@ -6,29 +6,28 @@ import CommonUI
 import Map
 import Profile
 import Post
-import Chat
+import Home
+import Data
+import Domain
 
 @frozen
 public enum TabPage: Int, CaseIterable {
    case home
    case writePost
-   case chat
    case profile
    
    private var toIcon: UIImage {
       switch self {
       case .home: return .pin.withRenderingMode(.alwaysTemplate)
-      case .writePost: return .writePost.withRenderingMode(.alwaysTemplate)
-      case .chat: return .chat.withRenderingMode(.alwaysTemplate)
+      case .writePost: return .starFill.withRenderingMode(.alwaysTemplate)
       case .profile: return .profile.withRenderingMode(.alwaysTemplate)
       }
    }
    
    private var toTabTitle: String {
       switch self {
-      case .home: return "동네 지도"
-      case .writePost: return "글 작성"
-      case .chat: return "채팅"
+      case .home: return "마이슐랭 지도"
+      case .writePost: return "마이슐랭 작성"
       case .profile: return "프로필"
       }
    }
@@ -38,19 +37,27 @@ public enum TabPage: Int, CaseIterable {
    }
    
    var toViewController: UIViewController {
-      var vc: UIViewController
       switch self {
       case .home:
-         vc = /*MapVC()*/ PostMapTabVC()
+         let vc = HomeVC()
+         vc.reactor = HomeReactor(MockPostUsecase(repository: MockPostRepository()))
+         vc.tabBarItem = toTabbarItem
+         return UINavigationController(rootViewController: vc)
       case .writePost:
-         vc = WritePostMapVC()
-      case .chat:
-         vc = ChatListVC()
+         let vc = WriteMyBestVC()
+         vc.reactor = WriteMyBestReactor(
+            searchUsecase: SearchUsecase(searchRepository: SearchRepository()),
+            postUsecase: MockPostUsecase(repository: MockPostRepository()),
+            userUsecase: MockUserUsecase(repository: MockUserRepository())
+         )
+         vc.tabBarItem = toTabbarItem
+         return vc
       case .profile:
-         vc = MeProfileVC()
+         let vc = MeProfileVC()
+         vc.reactor = MeProfileReactor(MockUserUsecase(repository: MockUserRepository()))
+         vc.tabBarItem = toTabbarItem
+         return UINavigationController(rootViewController: vc)
       }
-      vc.tabBarItem = toTabbarItem
-      return UINavigationController(rootViewController: vc)
    }
 }
 
@@ -62,38 +69,13 @@ final class MainTabbarController: UITabBarController {
    }
    
    private func setTabbar() {
-      delegate = self
+      let appearance = UITabBarAppearance()
+      appearance.backgroundColor = .grayXs
+      tabBar.standardAppearance = appearance
+      
       tabBar.unselectedItemTintColor = .grayMd
       tabBar.tintColor = .black
       tabBar.backgroundColor = .white
       viewControllers = TabPage.allCases.map(\.toViewController)
-   }
-}
-
-extension MainTabbarController: UITabBarControllerDelegate {
-   func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-      if viewController == tabBarController.viewControllers?[1] {
-         let vc = PostTypeBottomSheetVC()
-
-         if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.custom(resolver: { _ in 200.0 })]
-            sheet.prefersGrabberVisible = true
-         }
-         
-         vc.didDisappearHandler = { [weak self] selectedType in
-            var presentedVC: UIViewController
-            switch selectedType {
-            case .curation:
-               presentedVC = UINavigationController(rootViewController: WritePostCurationVC())
-            case .post:
-               presentedVC = UINavigationController(rootViewController: WritePostMapVC())
-            }
-            presentedVC.modalPresentationStyle = .fullScreen
-            self?.present(presentedVC, animated: true)
-         }
-         
-         present(vc, animated: true)
-         return false
-      } else { return true }
    }
 }

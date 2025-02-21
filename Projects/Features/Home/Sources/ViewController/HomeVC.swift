@@ -11,10 +11,6 @@ import Domain
 public final class HomeVC: BaseVC {
    public var disposeBag: DisposeBag = .init()
    
-   private let locationManager: CLLocationManager = .init().then {
-      $0.requestWhenInUseAuthorization()
-      $0.desiredAccuracy = kCLLocationAccuracyBest
-   }
    public let mapView: NMFMapView = .init().then {
       $0.positionMode = .normal
       $0.setLayerGroup(NMF_LAYER_GROUP_TRANSIT, isEnabled: true)
@@ -28,9 +24,10 @@ public final class HomeVC: BaseVC {
    
    public override func viewDidLoad() {
       super.viewDidLoad()
-      locationManager.delegate = self
       mapView.addCameraDelegate(delegate: self)
-      self.locationManagerDidChangeAuthorization(locationManager)
+      mapView.touchDelegate = self
+      navigationController?.setNavigationBarHidden(true, animated: true)
+      reactor?.action.onNext(.didLoad)
    }
    
    public override func setSubviews() {
@@ -41,15 +38,16 @@ public final class HomeVC: BaseVC {
    public override func setLayouts() {
       super.setLayouts()
       mapView.snp.makeConstraints { make in
-         make.edges.equalTo(view.safeAreaLayoutGuide)
+         make.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
+         make.top.equalToSuperview()
       }
       userLocationButton.snp.makeConstraints { make in
          make.size.equalTo(30.0)
-         make.trailing.equalToSuperview().inset(20.0)
-         make.bottom.equalToSuperview().inset(100.0)
+         make.trailing.equalTo(view.safeAreaLayoutGuide).inset(20.0)
+         make.bottom.equalTo(view.safeAreaLayoutGuide).inset(120.0)
       }
       bottomSheet.snp.makeConstraints { make in
-         make.edges.equalToSuperview()
+         make.edges.equalTo(view.safeAreaLayoutGuide)
       }
    }
 }
@@ -90,28 +88,42 @@ extension HomeVC: View {
       reactor.state.map(\.postList)
          .bind(with: self) { vc, list in
             if !list.data.isEmpty {
-               list.data.forEach {
-                  let marker = NMFMarker(position: .init(lat: $0.postLat, lng: $0.postLng), iconImage: .init(image: .pin))
+               list.data.forEach { post in
+                  let marker = NMFMarker(
+                     position: .init(lat: post.postLat, lng: post.postLng),
+                     iconImage: .init(image: vc.bindMapIcons(post.rate))
+                  )
+                  let touchHandler = { (overlay: NMFOverlay) -> Bool in
+                     reactor.action.onNext(.tapPostMarker(post))
+                     return true
+                  }
+                  marker.touchHandler = touchHandler
                   marker.mapView = vc.mapView
                }
             }
          }.disposed(by: disposeBag)
+      
+      reactor.state.map(\.tappedPost)
+         .debug("tappedPost")
+         .skip(2)
+         .bind(with: self) { vc, post in
+            if let post {
+               vc.bottomSheet.setSinglePost(post)
+            } else {
+               vc.bottomSheet.hideSinglePost()
+            }
+         }.disposed(by: disposeBag)
+   }
+   private func bindMapIcons(_ rate: Double) -> UIImage {
+      if rate >= 5.0 { return .rate5 }
+      if rate >= 4.0 && rate < 5.0 { return .rate4 }
+      if rate >= 3.0 && rate < 4.0 { return .rate3 }
+      if rate >= 2.0 && rate < 3.0 { return .rate2 }
+      return .rate1
    }
 }
 
-extension HomeVC: CLLocationManagerDelegate {
-   public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-      let status = manager.authorizationStatus
-      if status == .denied || status == .notDetermined {
-         manager.requestWhenInUseAuthorization()
-      }
-      if status == .authorizedAlways || status == .authorizedWhenInUse {
-         manager.startUpdatingLocation()
-      }
-   }
-}
-
-extension HomeVC: NMFMapViewCameraDelegate {
+extension HomeVC: NMFMapViewCameraDelegate, NMFMapViewTouchDelegate {
    private func moveToLocation(_ location: NMGLatLng) {
       let camera = NMFCameraUpdate(scrollTo: location)
       camera.animation = .easeIn
@@ -119,16 +131,16 @@ extension HomeVC: NMFMapViewCameraDelegate {
    }
    
    public func mapViewCameraIdle(_ mapView: NMFMapView) {
-      if let distance = locationManager.location?.distance(
-         from: .init(latitude: mapView.latitude,
-                     longitude: mapView.longitude)),
-         distance > 300 {
-         displayReloadBtn()
-      }
+      displayReloadBtn()
    }
    
    public func mapView(_ mapView: NMFMapView, cameraWillChangeByReason reason: Int, animated: Bool) {
       hideReloadBtn()
+   }
+   
+   public func mapView(_ mapView: NMFMapView, didTapMap latlng: NMGLatLng, point: CGPoint) {
+      print("here?")
+      self.reactor?.action.onNext(.tapPostMarker(nil))
    }
    
    private func displayReloadBtn() {

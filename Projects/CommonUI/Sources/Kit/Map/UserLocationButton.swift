@@ -20,7 +20,7 @@ public final class UserLocationButton: UIButton {
          make.size.equalTo(20.0)
       }
       
-      backgroundColor = .white
+      backgroundColor = .grayXs
       layer.cornerRadius = 20.0
       clipsToBounds = true
    }

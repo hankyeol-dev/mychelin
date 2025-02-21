@@ -3,8 +3,7 @@
 import UIKit
 import Domain
 import Data
-import Post
-import Home
+import Profile
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
    
@@ -20,16 +19,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       guard let scene = (scene as? UIWindowScene) else { return }
       
       window = UIWindow(windowScene: scene)
-
-      let vc = HomeVC()
-      vc.reactor = HomeReactor(MockPostUsecase(repository: MockPostRepository()))
-      window?.rootViewController = vc
+      let vc = MeProfileVC()
+      vc.reactor = MeProfileReactor(MockUserUsecase(repository: MockUserRepository()))
+      window?.rootViewController = UINavigationController(rootViewController: vc)
       window?.makeKeyAndVisible()
    }
    
    func sceneDidDisconnect(_ scene: UIScene) {   }
    
-   func sceneDidBecomeActive(_ scene: UIScene) {   }
+   func sceneDidBecomeActive(_ scene: UIScene) {
+//      Task {
+//         let usecase = MockAuthUsecase(repository: MockAuthRepository())
+//         let result = await usecase.login(with: .init(email: env.tempEmail, password: env.tempPW))
+//         switch result {
+//         case .success(let success):
+//            print("login \(success)")
+//         case .failure(let failure):
+//            print(failure.toMessage)
+//         }
+//      }
+   }
    
    func sceneWillResignActive(_ scene: UIScene) {   }
    

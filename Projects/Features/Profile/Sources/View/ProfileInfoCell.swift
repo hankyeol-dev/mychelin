@@ -12,7 +12,7 @@ final class ProfileInfoCell: BaseTableViewCell {
    private let infoBox: UIView = .init().then {
       $0.backgroundColor = .greenSm
    }
-   private let profileImage: CircleLazyImage = .init(round: 28)
+   private let profileImage: CircleLazyImage = .init(round: 40.0)
    private let profileNick: BaseLabel = .init(.init(style: .largeTitle))
    private let followBox: UIStackView = .init()
    private let following: RoundedTextBox = .init(icon: .follow, text: "팔로잉: ", iconColor: .grayLg)
@@ -32,11 +32,12 @@ final class ProfileInfoCell: BaseTableViewCell {
          make.edges.equalToSuperview()
       }
       profileImage.snp.makeConstraints { make in
-         make.leading.top.equalTo(contentView.safeAreaLayoutGuide).inset(safeAreaInset)
-         make.size.equalTo(56.0)
+         make.top.equalTo(contentView.safeAreaLayoutGuide).inset(safeAreaInset)
+         make.centerX.equalToSuperview()
+         make.size.equalTo(80.0)
       }
       profileNick.snp.makeConstraints { make in
-         make.leading.equalTo(contentView.safeAreaLayoutGuide).inset(safeAreaInset)
+         make.centerX.equalToSuperview()
          make.top.equalTo(profileImage.snp.bottom).offset(20.0)
       }
       followBox.snp.makeConstraints { make in
@@ -58,7 +59,7 @@ final class ProfileInfoCell: BaseTableViewCell {
 extension ProfileInfoCell {
    func setCell(_ item: MeProfileVO) {
       if let image = item.profileImage {
-         profileImage.setMockImage(image)
+         profileImage.setImage(image)
       } else {
          profileImage.setDefaultImage(UIImage(systemName: "person")!)
       }
