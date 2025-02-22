@@ -22,7 +22,7 @@ public struct MeProfileSection {
       case info(MeProfileVO)
       case divider
       case edit(MeProfileMenuItem)
-      case post(MeProfileMenuItem)
+      case post([ProfileMyPostCell.CellData])
       case logout(MeProfileMenuItem)
    }
 }

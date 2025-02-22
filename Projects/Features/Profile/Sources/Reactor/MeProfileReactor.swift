@@ -1,10 +1,7 @@
 // hankyeol-dev. Profile
 
 import Foundation
-
 import Domain
-import Data
-
 import ReactorKit
 import RxDataSources
 
@@ -21,10 +18,6 @@ public final class MeProfileReactor: Reactor {
          model: .info,
          items: []
       )
-      var editSection = MeProfileSection.Model(
-         model: .edit,
-         items: []
-      )
       var divider = MeProfileSection.Model(
          model: .divider,
          items: []
@@ -33,20 +26,16 @@ public final class MeProfileReactor: Reactor {
          model: .post,
          items: []
       )
-      var logoutSection = MeProfileSection.Model(
-         model: .logout,
-         items: []
-      )
    }
    
    public enum Action {
       case didLoad
-      case tapMenu(indexPath: [Int])
    }
    
    public enum Mutation {
-      case didLoad(Result<MeProfileVO, CommonError>)
-      case tapMenu(indexPath: [Int])
+      case fetchUserInfo(Result<MeProfileVO, CommonError>)
+      case fetchUserPosts([ProfileMyPostCell.CellData])
+      case setDivider
    }
    
    public init(_ usecase: MockUserUsecaseType) {
@@ -60,36 +49,37 @@ extension MeProfileReactor {
    public func mutate(action: Action) -> Observable<Mutation> {
       switch action {
       case .didLoad:
-            .just(.didLoad(userUsecase.getMe()))
-      case let .tapMenu(indexPath):
-            .just(Mutation.tapMenu(indexPath: indexPath))
+         let profile = userUsecase.getMe()
+         let posts = FoodCategories.allCases.map({
+            let result = userUsecase.getMyPosts($0.rawValue)
+            switch result {
+            case let .success(list):
+               return ProfileMyPostCell.CellData(category: $0, count: list.count)
+            case .failure:
+               return ProfileMyPostCell.CellData(category: $0, count: 0)
+            }
+         })
+         return .concat(.just(.fetchUserInfo(profile)), .just(.fetchUserPosts(posts)), .just(.setDivider))
       }
    }
    
    public func reduce(state: State, mutation: Mutation) -> State {
       var newState = state
-      
       switch mutation {
-      case let .didLoad(result):
+      case let .fetchUserInfo(result):
          switch result {
          case let .success(vo):
-            newState.profileObject = vo
             newState.infoSection = .init(model: .info, items: [.info(vo)])
-            newState.divider = .init(model: .divider, items: [.divider])
-            newState.editSection = .init(model: .edit,
-                                         items: [.edit(.init(icon: .id, label: "내 정보 관리"))])
-            newState.postSection = .init(model: .post,
-                                         items: [
-                                          .post(.init(icon: .posts, label: "내가 작성한 글")),
-                                          .post(.init(icon: .like, label: "내가 좋아요한 글"))
-                                         ])
-            newState.logoutSection = .init(model: .logout,
-                                           items: [.logout(.init(icon: .xMark, label: "로그아웃"))])
          case let .failure(error):
             newState.errorMessage = error.toMessage
          }
-      case let .tapMenu(indexPath):
-         print(indexPath)
+      case let .fetchUserPosts(results):
+         newState.postSection = .init(model: .post, items: .init(
+            arrayLiteral: .post(results.sorted(by: { data, data2 in
+               data.count > data2.count
+            }))))
+      case .setDivider:
+         newState.divider = .init(model: .divider, items: [.divider])
       }
       return newState
    }

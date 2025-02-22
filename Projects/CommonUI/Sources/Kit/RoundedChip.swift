@@ -42,4 +42,9 @@ public final class RoundedChip: BaseView {
       self.layer.borderColor = color.cgColor
       self.layer.borderWidth = 1.0
    }
+   
+   public func updateStyle(_ background: UIColor, _ base: UIColor) {
+      self.text.setTextColor(base)
+      self.backgroundColor = background
+   }
 }

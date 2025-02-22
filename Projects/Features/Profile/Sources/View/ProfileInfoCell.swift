@@ -4,19 +4,21 @@ import UIKit
 
 import CommonUI
 import Domain
-
+import RxSwift
 import SnapKit
 import Then
 
 final class ProfileInfoCell: BaseTableViewCell {
+   public let disposeBag: DisposeBag = .init()
+   
    private let infoBox: UIView = .init().then {
-      $0.backgroundColor = .greenSm
+      $0.backgroundColor = .white
    }
    private let profileImage: CircleLazyImage = .init(round: 40.0)
    private let profileNick: BaseLabel = .init(.init(style: .largeTitle))
    private let followBox: UIStackView = .init()
-   private let following: RoundedTextBox = .init(icon: .follow, text: "팔로잉: ", iconColor: .grayLg)
-   private let follower: RoundedTextBox = .init(icon: .follow, text: "팔로워: ", iconColor: .grayLg)
+   public let following: BaseLabel = .init(.init(style: .base, color: .grayLg))
+   public let follower: BaseLabel = .init(.init(style: .base, color: .grayLg))
    
    override func setSubviews() {
       super.setSubviews()
@@ -41,9 +43,9 @@ final class ProfileInfoCell: BaseTableViewCell {
          make.top.equalTo(profileImage.snp.bottom).offset(20.0)
       }
       followBox.snp.makeConstraints { make in
-         make.horizontalEdges.equalTo(contentView.safeAreaLayoutGuide).inset(safeAreaInset)
-         make.top.equalTo(profileNick.snp.bottom).offset(20.0)
-         make.height.equalTo(40.0)
+         make.centerX.equalToSuperview()
+         make.top.equalTo(profileNick.snp.bottom).offset(10.0)
+         make.height.equalTo(22.0)
          make.bottom.equalTo(contentView.snp.bottom).inset(safeAreaInset)
       }
    }
@@ -52,10 +54,9 @@ final class ProfileInfoCell: BaseTableViewCell {
       super.setView()
       followBox.axis = .horizontal
       followBox.distribution = .fillEqually
-      followBox.spacing = 20.0
+      followBox.spacing = 10.0
    }
 }
-
 extension ProfileInfoCell {
    func setCell(_ item: MeProfileVO) {
       if let image = item.profileImage {
@@ -65,7 +66,7 @@ extension ProfileInfoCell {
       }
       
       profileNick.setText(item.nick)
-      follower.appendText("\(item.followers.count)명")
-      following.appendText("\(item.following.count)명")
+      following.setText("팔로잉 \(item.following.count)")
+      follower.setText("팔로우 \(item.followers.count)")
    }
 }

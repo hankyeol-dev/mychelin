@@ -15,10 +15,14 @@ import RxDataSources
 public final class MeProfileVC: BaseVC {
    public var disposeBag: DisposeBag = .init()
    
+   private let menuBtn: UIButton = .init().then {
+      $0.setImage(.dotMenu, for: .normal)
+   }
    private let profileTableView: UITableView = .init().then {
       $0.register(cellType: ProfileInfoCell.self)
       $0.register(cellType: DividerCell.self)
       $0.register(cellType: IconMenuCell.self)
+      $0.register(cellType: ProfileMyPostListCell.self)
       $0.sectionIndexColor = .clear
       $0.separatorColor = .clear
       $0.rowHeight = UITableView.automaticDimension
@@ -27,7 +31,8 @@ public final class MeProfileVC: BaseVC {
    
    public override func viewDidLoad() {
       super.viewDidLoad()
-      navigationController?.navigationBar.isHidden = true
+      navigationItem.setRightBarButton(.init(customView: menuBtn), animated: true)
+      reactor?.action.onNext(.didLoad)
    }
    
    public override func viewWillDisappear(_ animated: Bool) {
@@ -55,12 +60,23 @@ extension MeProfileVC: View {
    }
    
    private func bindActions(reactor: MeProfileReactor) {
-      reactor.action.onNext(.didLoad)
-      
-      profileTableView.rx.itemSelected
-         .map({ indexPath in Reactor.Action.tapMenu(indexPath: [indexPath.section, indexPath.row]) })
-         .bind(to: reactor.action)
-         .disposed(by: disposeBag)
+      menuBtn.rx.tap
+         .bind(with: self) { vc, _ in
+            let alert = UIAlertController(title: nil,
+                                          message: nil,
+                                          preferredStyle: .actionSheet)
+            let profileEdit = UIAlertAction(title: "내 정보 관리",
+                                            style: .default) { _ in
+               print("push to edit profile")
+            }
+            let logout = UIAlertAction(title: "로그아웃",
+                                       style: .destructive) { _ in
+               print("logout")
+            }
+            let cancel = UIAlertAction(title: "닫기", style: .cancel)
+            [profileEdit, logout, cancel].forEach({ alert.addAction($0) })
+            vc.present(alert, animated: true)
+         }.disposed(by: disposeBag)
    }
    
    private func bindStates(reactor: MeProfileReactor) {
@@ -70,22 +86,21 @@ extension MeProfileVC: View {
             let cell = tableView.dequeueReusableCell(for: index) as ProfileInfoCell
             cell.setCell(sectionItem)
             return cell
+         case let .post(data):
+            let cell = tableView.dequeueReusableCell(for: index) as ProfileMyPostListCell
+            cell.setCell(data)
+            return cell
          case .divider:
             let cell = tableView.dequeueReusableCell(for: index) as DividerCell
             return cell
-         case let .edit(sectionMenu), let .post(sectionMenu):
+         default:
             let cell = tableView.dequeueReusableCell(for: index) as IconMenuCell
-            cell.setCell(sectionMenu.icon, sectionMenu.label)
-            return cell
-         case let .logout(sectionMenu):
-            let cell = tableView.dequeueReusableCell(for: index) as IconMenuCell
-            cell.setCell(sectionMenu.icon, sectionMenu.label, .errors)
             return cell
          }
       }
       
       reactor.state.map({
-         [$0.infoSection, $0.divider, $0.editSection, $0.divider, $0.postSection, $0.divider, $0.logoutSection]
+         [$0.infoSection, $0.divider, $0.postSection, $0.divider]
       })
       .distinctUntilChanged()
       .observe(on: MainScheduler.instance)
