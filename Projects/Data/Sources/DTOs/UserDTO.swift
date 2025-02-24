@@ -49,6 +49,9 @@ public struct ProfileOutputType: Decodable {
                    following: following.map({ $0.userId}),
                    posts: posts)
    }
+   
+   public var toUpdatedProfileVO: ProfileUpdateVO { return .init(nick: nick, phoneNum: phoneNum) }
+   public var toImageVO: ProfileImageVO { return .init(profileImage: profileImage) }
 }
 
 public struct MinProfileOutputType: Decodable {
@@ -59,6 +62,14 @@ public struct MinProfileOutputType: Decodable {
    enum CodingKeys: String, CodingKey {
       case userId = "user_id"
       case nick, profileImage
+   }
+}
+
+public struct UserListOutput: Decodable {
+   public let data: [MinProfileOutputType]
+   
+   public var toUserListVO: UserListVO {
+      return .init(list: data.map({ .init(userId: $0.userId, nick: $0.nick) }))
    }
 }
 

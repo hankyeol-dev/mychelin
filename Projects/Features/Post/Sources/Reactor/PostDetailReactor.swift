@@ -3,11 +3,12 @@
 import Foundation
 import ReactorKit
 import Domain
-import Data
 import RxDataSources
 
 public final class PostDetailReactor: Reactor {
    private var postId: String
+   private let postUsecase: MockPostUsecaseType
+
    public var initialState: State = .init()
    
    public struct State {
@@ -16,6 +17,7 @@ public final class PostDetailReactor: Reactor {
       var divierSection = PostDetailSection.Model(model: .divider, items: [])
       var commentSection = PostDetailSection.Model(model: .comment, items: [])
       var commentSectionTitle = PostDetailSection.Model(model: .title, items: [])
+      var errorMsg: String?
    }
    
    public enum Action {
@@ -26,8 +28,9 @@ public final class PostDetailReactor: Reactor {
       case fetchPost
    }
    
-   public init(_ postId: String) {
+   public init(_ postId: String, postUsecase: MockPostUsecaseType) {
       self.postId = postId
+      self.postUsecase = postUsecase
    }
 }
 
@@ -44,12 +47,17 @@ extension PostDetailReactor {
       
       switch mutation {
       case .fetchPost:
-         newState.post = MockPost1
-         newState.postSection = .init(model: .post,
-                                      items: [.post(MockPost1)])
-         newState.divierSection = .init(model: .divider, items: [.divider])
-         newState.commentSection = .init(model: .comment, items: [.comment(MockPostComment1), .comment(MockPostComment2)])
-         newState.commentSectionTitle = .init(model: .title, items: [.title("댓글")])
+         let result = postUsecase.getPost(postId: postId)
+         switch result {
+         case let .success(post):
+            newState.post = post
+            newState.postSection = .init(model: .post, items: [.post(post)])
+            newState.divierSection = .init(model: .divider, items: [.divider])
+            newState.commentSectionTitle = .init(model: .title, items: [.title("댓글")])
+            
+         case let .failure(error):
+            newState.errorMsg = error.toMessage
+         }
       }
       
       return newState

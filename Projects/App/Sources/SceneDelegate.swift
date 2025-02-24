@@ -3,7 +3,7 @@
 import UIKit
 import Domain
 import Data
-import Profile
+import Post
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
    
@@ -19,8 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       guard let scene = (scene as? UIWindowScene) else { return }
       
       window = UIWindow(windowScene: scene)
-      let vc = MeProfileVC()
-      vc.reactor = MeProfileReactor(MockUserUsecase(repository: MockUserRepository()))
+      let vc = PostDetailVC()
+      vc.reactor = PostDetailReactor("", postUsecase: MockPostUsecase(repository: MockPostRepository()))
       window?.rootViewController = UINavigationController(rootViewController: vc)
       window?.makeKeyAndVisible()
    }
