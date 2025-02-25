@@ -39,4 +39,8 @@ extension UserUsecase: UserUsecaseType {
    public func searchUser(query: String) -> Single<Result<UserListVO, NetworkErrors>> {
       return userRepository.searchUser(query: query)
    }
+   
+   public func follow(userID: String, isFollow: Bool) -> Single<Bool> {
+      return userRepository.follow(userID: userID, isFollow: isFollow)
+   }
 }

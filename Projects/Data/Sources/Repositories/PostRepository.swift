@@ -3,12 +3,9 @@
 import Foundation
 import Domain
 import RxSwift
-import Moya
 
 public struct PostRepository {
    private let disposeBag: DisposeBag = .init()
-   private let userProvider: UserDefaultsProvider = .shared
-   
    public init() {}
 }
 
@@ -39,6 +36,36 @@ extension PostRepository: PostRepositoryType {
          return Disposables.create()
       }
    }
+   public func getPost(postId: String) -> Single<Result<GetPostVO, NetworkErrors>> {
+      let router: PostRouter = .getPost(postId: postId)
+      return Single.create { single in
+         NetworkProvider.request(router, of: PostOutputType.self) { result in
+            switch result {
+            case .success(let success):
+               single(.success(.success(success.toGetPostVO)))
+            case .failure(let failure):
+               single(.success(.failure(failure)))
+            }
+         }
+         return Disposables.create()
+      }
+   }
+   public func getPostsByCategory(query: GetPostQueryVO) -> Single<Result<GetPostListVO, NetworkErrors>> {
+      let router: PostRouter = .getPosts(query: .init(next: query.next, category: query.category))
+      return Single.create { single in
+         NetworkProvider.request(router, of: PostListOutputType.self) { result in
+            switch result {
+            case .success(let success):
+               single(.success(.success(success.toGetPostListVO)))
+            case .failure(let failure):
+               single(.success(.failure(failure)))
+            }
+         }
+         
+         return Disposables.create()
+      }
+   }
+   
    public func getCuration(curationId: String) -> Single<Result<GetCurationOutputVO, NetworkErrors>> {
       return Single.create { single in
          NetworkProvider.request(PostRouter.getPost(postId: curationId),
