@@ -23,6 +23,7 @@ public final class MeProfileVC: BaseVC {
       $0.register(cellType: DividerCell.self)
       $0.register(cellType: IconMenuCell.self)
       $0.register(cellType: ProfileMyPostListCell.self)
+      $0.register(cellType: ProfileMyLikePostListCell.self)
       $0.sectionIndexColor = .clear
       $0.separatorColor = .clear
       $0.rowHeight = UITableView.automaticDimension
@@ -93,6 +94,10 @@ extension MeProfileVC: View {
          case .divider:
             let cell = tableView.dequeueReusableCell(for: index) as DividerCell
             return cell
+         case let .likes(datas):
+            let cell = tableView.dequeueReusableCell(for: index) as ProfileMyLikePostListCell
+            cell.setCell(datas)
+            return cell
          default:
             let cell = tableView.dequeueReusableCell(for: index) as IconMenuCell
             return cell
@@ -100,7 +105,7 @@ extension MeProfileVC: View {
       }
       
       reactor.state.map({
-         [$0.infoSection, $0.divider, $0.postSection, $0.divider]
+         [$0.infoSection, $0.postSection, $0.likesSection]
       })
       .distinctUntilChanged()
       .observe(on: MainScheduler.instance)

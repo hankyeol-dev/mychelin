@@ -15,7 +15,7 @@ public struct MeProfileSection {
       case divider
       case edit
       case post
-      case logout
+      case likes
    }
    
    public enum Items: Equatable {
@@ -23,7 +23,7 @@ public struct MeProfileSection {
       case divider
       case edit(MeProfileMenuItem)
       case post([ProfileMyPostCell.CellData])
-      case logout(MeProfileMenuItem)
+      case likes([GetPostVO])
    }
 }
 

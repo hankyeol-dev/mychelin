@@ -26,6 +26,10 @@ public final class MeProfileReactor: Reactor {
          model: .post,
          items: []
       )
+      var likesSection = MeProfileSection.Model(
+         model: .likes,
+         items: []
+      )
    }
    
    public enum Action {
@@ -35,6 +39,7 @@ public final class MeProfileReactor: Reactor {
    public enum Mutation {
       case fetchUserInfo(Result<MeProfileVO, CommonError>)
       case fetchUserPosts([ProfileMyPostCell.CellData])
+      case fetchLikesPosts(Result<[GetPostVO], CommonError>)
       case setDivider
    }
    
@@ -59,7 +64,12 @@ extension MeProfileReactor {
                return ProfileMyPostCell.CellData(category: $0, count: 0)
             }
          })
-         return .concat(.just(.fetchUserInfo(profile)), .just(.fetchUserPosts(posts)), .just(.setDivider))
+         let likes = userUsecase.getMyLikes()
+         return .concat(
+            .just(.fetchUserInfo(profile)),
+            .just(.fetchUserPosts(posts)),
+            .just(.setDivider),
+            .just(.fetchLikesPosts(likes)))
       }
    }
    
@@ -80,6 +90,13 @@ extension MeProfileReactor {
             }))))
       case .setDivider:
          newState.divider = .init(model: .divider, items: [.divider])
+      case let .fetchLikesPosts(result):
+         switch result {
+         case let .success(vos):
+            newState.likesSection = .init(model: .likes, items: [.likes(vos)])
+         case let .failure(error):
+            newState.errorMessage = error.toMessage
+         }
       }
       return newState
    }

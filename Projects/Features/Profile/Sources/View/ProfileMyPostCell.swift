@@ -9,56 +9,89 @@ import Then
 
 public final class ProfileMyPostListCell: BaseTableViewCell {
    public let disposeBag: DisposeBag = .init()
-   private let sectionLabel: BaseLabel = .init(.init(text: "나의 마이슐랭", style: .base, color: .grayLg))
-   private let collection: UICollectionView = {
-      let layout = UICollectionViewFlowLayout()
-      let width = (UIScreen.main.bounds.width / 3) - 20.0
-      layout.itemSize = CGSize(width: width, height: width)
-      layout.scrollDirection = .vertical
-      layout.minimumLineSpacing = 10.0
-
-      let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+   private let width = (UIScreen.main.bounds.width - 60.0) / 3
+   
+   private let labelSection: UIView = .init().then {
+      $0.backgroundColor = .white
+   }
+   private let label: BaseLabel = .init(.init(text: "마이슐랭 리스트 👀", style: .largeTitle, color: .black.withAlphaComponent(0.8)))
+   private lazy var postCollection: UICollectionView = {
+      let flow = UICollectionViewFlowLayout()
+      flow.itemSize = .init(width: width, height: width)
+      flow.minimumLineSpacing = 10.0
+      let view = UICollectionView(frame: .zero, collectionViewLayout: flow)
       view.register(cellType: ProfileMyPostCell.self)
       view.showsVerticalScrollIndicator = false
-      view.isScrollEnabled = false
       return view
    }()
-   private let bottom: UIView = .init()
+   private let arrow: UIImageView = .init(image: .init(systemName: "chevron.right")?.withRenderingMode(.alwaysTemplate)).then {
+      $0.tintColor = .black.withAlphaComponent(0.8)
+   }
    
-   public override func setView() {
-      super.setView()
-      contentView.addSubviews(sectionLabel, collection, bottom)
-      sectionLabel.snp.makeConstraints { make in
-         make.top.equalTo(contentView.safeAreaLayoutGuide).inset(10.0)
-         make.leading.equalTo(contentView.safeAreaLayoutGuide).inset(20.0)
-         make.height.equalTo(20.0)
+   public override func setSubviews() {
+      super.setSubviews()
+      contentView.addSubviews(labelSection, postCollection)
+      labelSection.addSubviews(label, arrow)
+   }
+   
+   public override func setLayouts() {
+      super.setLayouts()
+      let guide = contentView.safeAreaLayoutGuide
+      let inset = 20.0
+      labelSection.snp.makeConstraints { make in
+         make.top.horizontalEdges.equalTo(guide).inset(inset)
       }
-      collection.snp.makeConstraints { make in
-         make.top.equalTo(sectionLabel.snp.bottom).offset(10.0)
-         make.horizontalEdges.equalTo(contentView.safeAreaLayoutGuide).inset(20.0)
+      label.snp.makeConstraints { make in
+         make.centerY.equalToSuperview()
+         make.leading.equalTo(labelSection.safeAreaLayoutGuide).inset(5.0)
       }
-      bottom.snp.makeConstraints { make in
-         make.top.equalTo(collection.snp.bottom)
-         make.horizontalEdges.bottom.equalTo(contentView.safeAreaLayoutGuide)
-         make.height.equalTo(10.0)
+      arrow.snp.makeConstraints { make in
+         make.centerY.equalToSuperview()
+         make.height.equalTo(18.0)
+         make.width.equalTo(10.0)
+         make.trailing.equalTo(labelSection.safeAreaLayoutGuide).inset(5.0)
+      }
+      postCollection.snp.makeConstraints { make in
+         make.top.equalTo(label.snp.bottom).offset(10.0)
+         make.horizontalEdges.equalTo(guide).inset(inset)
+         make.bottom.equalTo(contentView.safeAreaLayoutGuide)
       }
    }
    
    public func setCell(_ datas: [ProfileMyPostCell.CellData]) {
-      collection.delegate = nil
-      collection.dataSource = nil
+      postCollection.delegate = nil
+      postCollection.dataSource = nil
+      
+      let ratio = CGFloat((datas.count / 3) + 1)
+      let height = (width * ratio) + (10.0 * (ratio - 1)) + 60.0
+      
+      postCollection.snp.remakeConstraints { make in
+         make.top.equalTo(label.snp.bottom).offset(20.0)
+         make.height.equalTo(height)
+         make.horizontalEdges.equalTo(contentView.safeAreaLayoutGuide).inset(20.0)
+         make.bottom.equalTo(contentView.safeAreaLayoutGuide)
+      }
+      
       Observable.just(datas)
-         .bind(to: collection.rx.items(
-            cellIdentifier: ProfileMyPostCell.id,
-            cellType: ProfileMyPostCell.self)) { _, item, cell in
-               cell.setCell(item)
-            }.disposed(by: disposeBag)
+         .bind(to: postCollection.rx.items(cellIdentifier: ProfileMyPostCell.id,
+                                           cellType: ProfileMyPostCell.self)) { _ ,item, cell in
+            cell.setCell(item)
+         }.disposed(by: disposeBag)
+   }
+   
+   public override func setView() {
+      super.setView()
+      selectionStyle = .none
    }
 }
 
 public final class ProfileMyPostCell: BaseCollectionViewCell {
-   private let icon: UIImageView = .init()
-   private let countLabel: BaseLabel = .init(.init(style: .largeTitle, color: .grayMd))
+   public let sectionChip: UIView = .init().then {
+      $0.backgroundColor = .greenSm.withAlphaComponent(0.5)
+      $0.layer.cornerRadius = 5.0
+   }
+   private let chipLabel: BaseLabel = .init(.init(style: .subtitle, color: .greenLg))
+   private let countLabel: BaseLabel = .init(.init(style: .xLargeTitle, color: .grayMd))
    
    public struct CellData: Equatable {
       let category: FoodCategories
@@ -67,15 +100,19 @@ public final class ProfileMyPostCell: BaseCollectionViewCell {
    
    public override func setSubviews() {
       super.setSubviews()
-      contentView.addSubviews(icon, countLabel)
+      contentView.addSubviews(sectionChip, countLabel)
+      sectionChip.addSubview(chipLabel)
    }
    
    public override func setLayouts() {
       super.setLayouts()
-      icon.snp.makeConstraints { make in
-         make.top.equalTo(contentView.safeAreaLayoutGuide).inset(18.0)
-         make.leading.equalTo(contentView.safeAreaLayoutGuide).inset(20.0)
-         make.size.equalTo(40.0)
+      sectionChip.snp.makeConstraints { make in
+         make.top.leading.equalTo(contentView.safeAreaLayoutGuide).inset(10.0)
+         make.height.equalTo(30.0)
+      }
+      chipLabel.snp.makeConstraints { make in
+         make.centerY.equalToSuperview()
+         make.horizontalEdges.equalTo(sectionChip.safeAreaLayoutGuide).inset(10.0)
       }
       countLabel.snp.makeConstraints { make in
          make.bottom.trailing.equalTo(contentView.safeAreaLayoutGuide).inset(20.0)
@@ -84,13 +121,13 @@ public final class ProfileMyPostCell: BaseCollectionViewCell {
    
    public override func setView() {
       super.setView()
-      contentView.backgroundColor = .grayXs.withAlphaComponent(0.5)
+      contentView.backgroundColor = .grayXs
       contentView.clipsToBounds = true
       contentView.layer.cornerRadius = 10.0
    }
    
    public func setCell(_ data: CellData) {
-      icon.image = data.category.toIcons
+      chipLabel.setText(data.category.toCategory)
       countLabel.setText(String(data.count))
       if data.count > 0 {
          countLabel.setTextColor(.black)
