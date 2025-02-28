@@ -12,6 +12,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    ) -> Bool {
       NMFAuthManager.shared().clientId = nMapConfig.clientId.rawValue
       IQKeyboardManager.shared.isEnabled = true
+      IQKeyboardManager.shared.resignOnTouchOutside = true
       return true
    }
 

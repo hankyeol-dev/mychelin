@@ -61,7 +61,8 @@ extension HomeVC: View {
       reloadBtn.rx.tap
          .compactMap({ [weak self] in
             guard let self else { return nil }
-            return Reactor.Action.switchLocation(lat: mapView.latitude, lng: mapView.longitude)
+            hideReloadBtn()
+            return Reactor.Action.switchLocation(lat: mapView.latitude, lng: mapView.longitude, cur: false)
          })
          .bind(to: reactor.action)
          .disposed(by: disposeBag)
@@ -80,6 +81,7 @@ extension HomeVC: View {
          
       reactor.state.map(\.curLocation)
          .skip(1)
+         .take(1)
          .bind(with: self) { vc, loc in
             vc.moveToLocation(.init(lat: loc.0, lng: loc.1))
             vc.hideReloadBtn()
@@ -104,7 +106,6 @@ extension HomeVC: View {
          }.disposed(by: disposeBag)
       
       reactor.state.map(\.tappedPost)
-         .debug("tappedPost")
          .skip(2)
          .bind(with: self) { vc, post in
             if let post {
@@ -131,7 +132,7 @@ extension HomeVC: NMFMapViewCameraDelegate, NMFMapViewTouchDelegate {
    }
    
    public func mapViewCameraIdle(_ mapView: NMFMapView) {
-      displayReloadBtn()
+       displayReloadBtn()
    }
    
    public func mapView(_ mapView: NMFMapView, cameraWillChangeByReason reason: Int, animated: Bool) {
@@ -139,7 +140,6 @@ extension HomeVC: NMFMapViewCameraDelegate, NMFMapViewTouchDelegate {
    }
    
    public func mapView(_ mapView: NMFMapView, didTapMap latlng: NMGLatLng, point: CGPoint) {
-      print("here?")
       self.reactor?.action.onNext(.tapPostMarker(nil))
    }
    

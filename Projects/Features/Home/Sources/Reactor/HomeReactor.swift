@@ -17,6 +17,7 @@ public final class HomeReactor: NSObject, Reactor {
    
    public struct State {
       var curLocation: (Double, Double) = (0.0, 0.0)
+      var switchedLocation: (Double, Double) = (0.0, 0.0)
       var postList: GetPostListVO = .init(data: [])
       var tappedPost: GetPostVO?
       var next: String = ""
@@ -24,13 +25,13 @@ public final class HomeReactor: NSObject, Reactor {
    }
    public enum Action {
       case didLoad
-      case switchLocation(lat: Double, lng: Double)
+      case switchLocation(lat: Double, lng: Double, cur: Bool)
       case moveToInitialLocation
       case tapPostMarker(GetPostVO?)
    }
    public enum Mutation {
       case fetchLocationPosts(Result<GetPostListVO, CommonError>)
-      case switchLocation(lat: Double, lng: Double)
+      case switchLocation(lat: Double, lng: Double, cur: Bool)
       case setTappedPost(GetPostVO)
       case resetTappedPost
    }
@@ -50,11 +51,11 @@ extension HomeReactor {
       case .didLoad:
          let list = postUsecase.getPosts(query: .init(next: currentState.next, category: ""))
          return .just(.fetchLocationPosts(list))
-      case let .switchLocation(lat, lng):
-         return .just(.switchLocation(lat: lat, lng: lng))
+      case let .switchLocation(lat, lng, cur):
+         return .just(.switchLocation(lat: lat, lng: lng, cur: cur))
       case .moveToInitialLocation:
          let location = getCurrentLocation()
-         return .just(.switchLocation(lat: location.0, lng: location.1))
+         return .just(.switchLocation(lat: location.0, lng: location.1, cur: true))
       case let .tapPostMarker(post):
          guard let post else { return .just(.resetTappedPost) }
          if let curPost = currentState.tappedPost {
@@ -72,8 +73,12 @@ extension HomeReactor {
    public func reduce(state: State, mutation: Mutation) -> State {
       var newState = state
       switch mutation {
-      case let .switchLocation(lat, lng):
-         newState.curLocation = (lat, lng)
+      case let .switchLocation(lat, lng, cur):
+         if cur {
+            newState.curLocation = (lat, lng)
+         } else {
+            newState.switchedLocation = (lat, lng)
+         }
       case let .fetchLocationPosts(result):
          switch result {
          case let .success(list):
@@ -100,7 +105,7 @@ extension HomeReactor: CLLocationManagerDelegate {
          manager.startUpdatingLocation()
          let lat = manager.location?.coordinate.latitude ?? 0.0
          let lng = manager.location?.coordinate.longitude ?? 0.0
-         self.action.onNext(.switchLocation(lat: lat, lng: lng))
+         action.onNext(.switchLocation(lat: lat, lng: lng, cur: true))
       }
    }
    
