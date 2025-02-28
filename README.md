@@ -41,16 +41,16 @@
 #### ReactorKit 기반 아키텍처 적용
 <img src="https://github.com/user-attachments/assets/b26b0dff-aa4f-4d99-9377-ab855b3fce2e" width="400" />
 
-- ReactorKit을 적용하여 View를 업데이트하는 상태값이 연결된 **Reactor의 Reducer로만 변경되는 단방향 아키텍처 반영**
+- ReactorKit을 적용하여 **Reactor의 Reducer로만 View 상태값이 변경되는 단방향 데이터 플로우 아키텍처 반영**
 - ViewController에서는 Reactor에 등록된 Action Case로만 요청을 보내고, 업데이트된 상태를 Observable로 구독하여 View 업데이트
-- Feature ViewController가 동일한 형식의 Reactor와 연결되어 예측하기 쉬운 코드 구성
+- Features 모듈의 ViewController가 동일한 형식의 Reactor와 연결되어 예측하기 쉬운 코드 구성
+<br />
 
 #### Tuist를 활용한 프로젝트 모듈 구분
 
 <img src="https://github.com/user-attachments/assets/992b9a2e-c3bf-494d-aa0c-3174ef978293" width="600" />
 
 - App을 구성하는 Scene, UI, Domain Logic, Data Logic 계층 단위로 모듈을 구분하기 위해 Tuist 활용
-- 
 
 #### 위치 기반 포스트 작성, 조회
 
