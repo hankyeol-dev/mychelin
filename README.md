@@ -50,7 +50,10 @@
 
 <img src="https://github.com/user-attachments/assets/992b9a2e-c3bf-494d-aa0c-3174ef978293" width="600" />
 
-- App을 구성하는 Scene, UI, Domain Logic, Data Logic 계층 단위로 모듈을 구분하기 위해 Tuist 활용
+- Tuist를 이용해 App을 구성하는 Scene(Feature), UI, Domain Logic, Data Logic 계층 단위로 구분
+- 네트워크, DTO 객체를 관리하는 **Data Layer** / Usecase, 비즈니스 로직을 관리하는 **Domain Layer** 구분
+- 서드파티 프레임워크를 다이내믹 프레임워크 형태로 각 모듈에 주입
+<br />
 
 #### 위치 기반 포스트 작성, 조회
 
@@ -58,6 +61,13 @@
 - 네이버 지도 상에서 CoreLocationManager의 실시간 유저 위치를 반영
 - 서버 Geolocation Search API를 활용해 **유저의 위·경도 값을 중심으로 특정 거리(Max Distance)안에 등록된 포스트를 조회**
 - 네이버 지도 API의 CameraDelegate로 **유저가 이동하거나 지도상의 위치를 수동으로 변경하는 경우를 감지하여 포스트를 다시 받아오는 버튼 노출 (Reload Button)**
+<br />
+
+#### RxDataSource의 SectionModel 기반 뷰 구조 설계
+
+<br />
+
+#### NWMonitor를 활용한 네트워크 연결 모니터링
 
 
 <br />
