@@ -38,6 +38,14 @@
 
 ## 프로젝트 주요 구현 사항
 
+### 위치 기반 포스트 작성, 조회
+
+- 마이슐랭(나의 맛집) 포스트 작성 시, 카카오 장소 검색 API를 활용하여 지정 장소의 정확한 위·경도 값을 조회하여 POST API 바디에 함께 전송
+- **서버 Geolocation Search API를 활용해 유저의 위·경도 값을 중심으로 특정 거리(Max Distance)안에 등록된 포스트를 조회**
+- 네이버 지도 API의 CameraDelegate로 **유저가 이동하거나 지도 상의 위치를 수동으로 변경하는 경우를 감지하여 포스트를 다시 받아오는 버튼 노출 (Reload Button)**
+- 네이버 지도 상에서 불러온 **포스트 리스트를 커스텀 마커로 노출하고, Marker Tap API로 특정 포스트 조회**
+- CoreLocationManager로 유저의 실시간 위치 정보를 네이버 지도에 반영
+
 ### ReactorKit 기반 아키텍처 적용
 <img src="https://github.com/user-attachments/assets/b26b0dff-aa4f-4d99-9377-ab855b3fce2e" width="400" />
 
@@ -52,14 +60,6 @@
 - Tuist를 이용해 App을 구성하는 Scene(Feature), UI, Domain Logic, Data Logic 계층 단위로 구분
 - 네트워크, DTO 객체를 관리하는 **Data Layer** / Usecase, 서비스 로직을 관리하는 **Domain Layer** 구분
 - 서드파티 프레임워크를 다이내믹 프레임워크 형태로 각 모듈에 주입
-
-### 위치 기반 포스트 작성, 조회
-
-- 마이슐랭(나의 맛집) 포스트 작성 시, 카카오 장소 검색 API를 활용하여 지정 장소의 정확한 위·경도 값을 조회하여 POST API 바디에 함께 전송
-- **서버 Geolocation Search API를 활용해 유저의 위·경도 값을 중심으로 특정 거리(Max Distance)안에 등록된 포스트를 조회**
-- 네이버 지도 API의 CameraDelegate로 **유저가 이동하거나 지도 상의 위치를 수동으로 변경하는 경우를 감지하여 포스트를 다시 받아오는 버튼 노출 (Reload Button)**
-- 네이버 지도 상에서 불러온 **포스트 리스트를 커스텀 마커로 노출하고, Marker Tap API로 특정 포스트 조회**
-- CoreLocationManager로 유저의 실시간 위치 정보를 네이버 지도에 반영
 
 ### SectionModel 기반 테이블/컬랙션 뷰 설계
 
