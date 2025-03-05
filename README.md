@@ -55,11 +55,12 @@
 
 ### Tuist를 활용한 프로젝트 모듈 구분
 
-<img src="https://github.com/user-attachments/assets/992b9a2e-c3bf-494d-aa0c-3174ef978293" width="600" />
+<img src="https://github.com/user-attachments/assets/1c3db59a-f6dc-47f4-ab1b-c1331efff445" width="600" />
 
-- Tuist를 이용해 App을 구성하는 Scene(Feature), UI, Domain Logic, Data Logic 계층 단위로 구분
-- 네트워크, DTO 객체를 관리하는 **Data Layer** / Usecase, 서비스 로직을 관리하는 **Domain Layer** 구분
-- 서드파티 프레임워크를 다이내믹 프레임워크 형태로 각 모듈에 주입
+- ViewObject, Usecase, Repository 프로토콜, 서비스 객체를 관리하는 **Domain Layer 모듈로 App의 모든 비즈니스 로직 처리 책임**을 구분
+- DTO, Repository 구현체, Network Provider를 관리하는 **Data Layer 모듈로 백앤드 서버 데이터 처리 책임**을 구분
+- 공통 UI, Asset을 관리하는 **CommonUI 모듈**, Extension을 기반으로 공통 유틸리티 자원을 관리하는 **Common 모듈**을 비롯해, 각 Scene의 View와 Reactor로 **앱 실제 기능을 담당하는 Features 모듈**을 종합하여 **Presentation Layer 책임**을 구분
+- 각 Feature 모듈의 Scene 전환과 상태값 공유를 위해 **Coordinator 패턴**을 적용했습니다. (AppCoordinator, TabbarCoordinator)
 
 ### SectionModel 기반 테이블/컬랙션 뷰 설계
 
